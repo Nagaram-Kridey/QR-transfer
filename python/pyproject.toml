@@ -15,7 +15,7 @@ dependencies = ["segno>=1.6,<2", "opencv-python>=4.10,<5", "zxing-cpp>=2.3,<4"]
 lumenlink = "lumenlink.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8,<10", "pytest-cov>=6,<8", "hypothesis>=6,<7", "ruff>=0.11,<1", "mypy>=1.15,<2", "pip-audit>=2.9,<3"]
+dev = ["pytest>=8,<10", "pytest-cov>=6,<8", "hypothesis>=6,<7", "ruff>=0.11,<1", "mypy>=1.15,<3", "pip-audit>=2.9,<3"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/lumenlink"]
