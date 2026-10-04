@@ -1,0 +1,55 @@
+name: Publish feasibility harness
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+        id: pages
+      - run: npm ci
+        working-directory: web
+      - run: uv sync --project python --locked
+      - run: uv run --project python ruff check python/src python/tests
+      - run: uv run --project python mypy python/src
+      - run: uv run --project python pytest python/tests --cov=lumenlink --cov-config=python/pyproject.toml
+      - run: npm run lint && npm run typecheck && npm run test:coverage && npm run vectors:emit && npm run build
+        working-directory: web
+      - run: uv run --project python python tools/verify_ts_vectors.py
+      - run: uv run --project python python tools/generate_camera_fixtures.py
+      - run: npx playwright install --with-deps chromium firefox webkit
+        working-directory: web
+      - run: npm run e2e
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: web/dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+        id: deployment

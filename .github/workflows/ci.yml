@@ -1,0 +1,67 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  python:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          python-version: '3.12'
+          enable-cache: true
+          cache-dependency-glob: python/uv.lock
+      - run: uv sync --project python --locked
+      - run: uv run --project python ruff check python/src python/tests
+      - run: uv run --project python ruff format --check python/src python/tests
+      - run: uv run --project python mypy python/src
+      - run: uv run --project python pytest python/tests --cov=lumenlink --cov-config=python/pyproject.toml
+      - run: uv run --project python python tools/generate_vectors.py --check
+      - run: uv build --project python
+      - run: uv run --isolated --no-project --python 3.12 --with ./python/dist/lumenlink-0.1.0.dev0-py3-none-any.whl lumenlink --help
+  web-and-interop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          python-version: '3.12'
+      - run: uv sync --project python --locked
+      - run: npm ci
+        working-directory: web
+      - run: npm run lint && npm run typecheck && npm run test:coverage && npm run build
+        working-directory: web
+      - run: npm run vectors:emit
+        working-directory: web
+      - run: uv run --project python python tools/verify_ts_vectors.py
+      - run: uv run --project python python tools/generate_camera_fixtures.py
+      - run: npx playwright install --with-deps chromium firefox webkit
+        working-directory: web
+      - run: npm run e2e
+        working-directory: web
+  dependency-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          python-version: '3.12'
+      - run: uv sync --project python --locked
+      - run: uv run --project python pip-audit
+      - run: npm ci && npm audit --audit-level=high
+        working-directory: web
