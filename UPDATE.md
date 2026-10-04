@@ -4,6 +4,9 @@ Update this file after every meaningful project change. Each entry records **don
 **next**, and **blockers**. Do not call a planned step complete or replace physical data with simulation.
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
+**Current handoff:** code pushed to main; hosted CI and Pages deployment passed; live harness at
+https://nagaram-kridey.github.io/QR-transfer/. Next required evidence is physical Android/iPhone trials.
+
 ## 2026-10-04 — Repository connection and persistent log
 
 **Done:** Connected origin to https://github.com/Nagaram-Kridey/QR-transfer.git. Fetched and retained
@@ -55,3 +58,26 @@ feasibility URL, then collect Android/iPhone physical trials using the documente
 
 **Blockers:** Physical gate pending. GitHub Pages currently returns no configured site. Secure mode,
 PWA/offline cold-start, LT research, Link Lab and final PyPI release remain future gated milestones.
+
+## 2026-10-04 — GitHub push, hosted CI and live Pages verification
+
+**Done:** Pushed implementation commit `8eb1d1c` to the supplied repository's main branch without
+rewriting its initial history. Enabled HTTPS GitHub Pages with workflow builds and published the
+feasibility harness. Updated README/planning status to link the live app and distinguish deployment
+from the still-unpassed physical feasibility gate. UPDATE.md is now a persistent working agreement.
+
+**Verified:** [Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37196930373) passed
+all Windows/Linux Python, browser/interoperability and dependency-audit jobs.
+[Pages workflow](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37196947717) succeeded.
+The live HTTPS page returned 200 and passed a browser export/import/verified-download roundtrip using
+its deployed worker and local WASM. No page errors or cross-origin requests were observed. Inspected
+desktop/mobile screenshots; no layout overflow found. The live build remains explicitly plaintext.
+
+**Next:** Open the live harness on Android and iPhone, generate public 10/100 KiB test payloads with
+`tools/make_trial_payloads.py`, and record the physical trials in docs/benchmarks using its protocol.
+Report every failure and complete the G2 decision before production PWA/security/fountain work.
+Future meaningful changes must update this log and the implementation checklist before pushing.
+
+**Blockers:** The physical gate needs the user's phone hardware and observations. Automated videos
+cannot satisfy it. Encryption, compression, installed/offline cold-start, LT, Link Lab and PyPI remain
+unimplemented future milestones; no secure-v1 or physical-performance claim has been made.

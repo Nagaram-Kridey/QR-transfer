@@ -27,7 +27,8 @@ QR, start timing, verify and explicitly save. No receiver progress is sent back 
 
 For a phone camera, use an HTTPS-hosted build. A plain HTTP LAN address is not equivalent to
 localhost on the phone. Repository: [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer).
-The Pages workflow is prepared; deployment status is tracked in [UPDATE.md](UPDATE.md).
+Live feasibility harness: **https://nagaram-kridey.github.io/QR-transfer/**. Deployment and verification
+history is tracked in [UPDATE.md](UPDATE.md).
 An already-open page can transfer with networking disabled after its runtime assets are loaded;
 offline reload/installation is a later milestone, not currently supported.
 

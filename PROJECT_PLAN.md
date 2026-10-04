@@ -17,9 +17,9 @@ offline screen-to-camera transfers. This is a portfolio/engineering study, not a
 
 | Milestone | Required evidence | Current status |
 |---|---|---|
-| Foundation | Spec, vectors, passing checks, reproducible setup | Implemented; hosted CI awaits repository |
+| Foundation | Spec, vectors, passing checks, reproducible setup | Implemented; hosted CI passed on Windows/Linux |
 | Feasibility | Python CLI + minimal browser harness, physical camera trials | Software implemented; physical trials pending |
-| Early portfolio demo | Qualified real-camera result, hosted sender, measured README/demo | Pending physical gate and GitHub destination |
+| Early portfolio demo | Qualified real-camera result, hosted sender, measured README/demo | Harness deployed; physical gate pending |
 | Browser workflow | Reliable mobile receiving, installable PWA, verified offline startup | Pending gate |
 | Secure mode | Both-language crypto vectors, adversarial tests, threat model | Planned; current build is plaintext |
 | Transport decision | Bounded LT study versus repeat baseline, published ADR | Planned; repeat is provisional |

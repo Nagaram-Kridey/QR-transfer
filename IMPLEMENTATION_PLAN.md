@@ -13,7 +13,7 @@ must not be inferred from passing unit tests.
 - [x] CI configuration for Windows/Linux Python, browser engines, interoperability and audits.
 - [x] Document prior art, threat assumptions and benchmark protocol.
 - [x] Connect to the supplied Nagaram-Kridey/QR-transfer repository and retain its initial history.
-- [ ] Push verified work and run hosted CI.
+- [x] Push verified work and run hosted CI (Windows/Linux Python, browser/interop and audits passed).
 
 Exit: reproducible setup and passing checks. No camera or security claims.
 
@@ -37,7 +37,8 @@ controls exist to run the experiment; they do not establish a supported mobile p
 
 Dependency: physical gate passes Tier A or Tier B.
 
-- [ ] Configure GitHub repository/Pages and publish the feasibility/demo build with its warning.
+- [x] Configure GitHub repository/Pages and publish the warned feasibility harness for physical testing.
+  This early deployment enables the experiment; it does not complete the Stage 2 performance gate.
 - [ ] Tune only from exploratory measurements; freeze settings before acceptance runs.
 - [ ] Record usable Python-receiver/browser-sender demonstration and verified README numbers.
 - [ ] Package installation smoke test and honest résumé wording tied to raw evidence.
