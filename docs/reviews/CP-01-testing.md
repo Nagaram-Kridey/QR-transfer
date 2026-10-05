@@ -97,3 +97,43 @@ publication remain future gated work. Existing Pages still serves the earlier im
 
 Await explicit CP-01 user approval before commit/push/deployment or starting CP-02. The physical
 checkpoint must record every actual trial outcome and evaluate G2 under the benchmark contract.
+
+## Delivery correction — 2026-10-05 (Asia/Kolkata)
+
+The approved original snapshot was committed/pushed as `91d76e6`. Its
+[hosted CI run](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37276850490) failed the
+Linux Python Ruff job: the final exception-stub test function signature exceeded 100 columns.
+Windows Python was cancelled; browser/interoperability and audit jobs passed, as reported by the
+coordinator. Deployment was held. This run did **not** pass overall.
+
+My last exception-stub edit lengthened that signature after the coordinator's earlier static checks.
+I accepted those stale checks as final-revision evidence. The original static-check statement above
+therefore did not cover the precise final Python test file and is superseded by this correction.
+The executed Python/browser suites genuinely passed, but that did not establish the final lint check.
+
+Ran Ruff format on **only** `python/tests/test_qr_io.py`, wrapping the function signature over three
+lines. The diff changes formatting only; no assertion, application source, wire contract, dependency,
+browser test or behavior changed. This repairs a delivery failure within the approved CP-01 scope.
+
+Fresh checks executed on the repaired revision:
+
+| Command | Observed result |
+|---|---|
+| `uv run --project python ruff check python/src python/tests` | Passed |
+| `uv run --project python ruff format --check python/src python/tests` | Passed; all 14 files formatted |
+| `uv run --project python mypy python/src` | Passed; no issues in 10 source files |
+| `uv run --project python pytest python/tests --cov=lumenlink --cov-config=python/pyproject.toml` | **97 passed** in 3.99 seconds; protocol coverage **100%** |
+
+New application/test snapshot, using the same sorted-path/LF-normalized algorithm:
+`702603a47b09b605066d60d2b74af0059147bac1d3e13410c104448778d368b8`.
+The prior aggregate and per-file table remain historical evidence for the original candidate.
+Browser source/tests are unchanged; their passing local results and hosted browser job are retained,
+without implying a new browser rerun. Independent development confirmation is required before the
+coordinator retries delivery. Testing finds no unresolved in-scope blocking issue on this repair.
+
+Read Development's delivery-correction addendum. Development independently confirmed the new
+fingerprint, full source/test Ruff lint/format checks and identical Python AST versus `91d76e6`
+after removing location attributes. **Testing renews explicit agreement with Development** on
+`702603a47b09b605066d60d2b74af0059147bac1d3e13410c104448778d368b8` for the formatting-only
+repair. Both verdicts are PASS within CP-01. Hosted CI retry, deployment and physical G2 remain
+outstanding; agreement does not claim successful delivery.

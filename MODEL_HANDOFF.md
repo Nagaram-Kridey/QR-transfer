@@ -14,8 +14,9 @@ The user has now resumed application work and requested explicit approval checkp
 development and adversarial-testing agents. Follow [CHECKPOINTS.md](CHECKPOINTS.md): build locally,
 resolve confirmed issues with both agents' agreement on the same revision, then wait for user approval
 before commit/push or starting the next checkpoint. CP-01 corrects existing trial-readiness defects;
-physical G2 evidence remains the next phase dependency. Available hardware is Windows + Android;
-no iPhone availability or real trial results have been recorded. Full v1 still needs both device pairs.
+physical G2 evidence remains the next phase dependency. Reported hardware is Windows 10 + Samsung
+A17 5G / Android 16; Chrome/camera details remain to record. No iPhone availability or real trial
+results have been recorded. Full v1 still needs both device pairs.
 
 | Item | Snapshot |
 |---|---|

@@ -8,8 +8,9 @@ Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_
 [CHECKPOINTS.md](CHECKPOINTS.md): separate development/adversarial-testing agents, agreement on each
 reviewed revision, then explicit user approval before commit/push or starting the next checkpoint.
 CP-01 local acceptance and both independent reviews passed; user approved commit/push/deployment on
-2026-10-05 and delivery is in progress. Stage 1 physical G2 is
-still pending; available hardware is Windows + Android, and iPhone qualification remains required
+2026-10-05; commit `91d76e6` is pushed but CI found a final regression-test formatting error,
+which is being corrected within the approved scope before deployment. Stage 1 physical
+G2 is still pending; the reported pair is Windows 10 + Samsung A17 5G / Android 16, and iPhone qualification remains required
 for v1. [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the continuation guide. Implementation `8eb1d1c`
 passed hosted checks/deployment on October 4; live harness: https://nagaram-kridey.github.io/QR-transfer/.
 
@@ -179,11 +180,38 @@ after hosted checks. The next checkpoint remains physical Windows–Android feas
 **Verified:** Recomputed the approved source/test snapshot before delivery; it exactly matches both
 agent verdicts (`a35ba8645d9cb206a8f9b30cda0eb558c87f79c28ac524aabf0ee23b2b86c1b1`). The testing
 agent independently confirmed unchanged scope. `git diff --check` passed; only reviewed source,
-tests, current workflow documents and review reports are selected for the commit.
+tests, current workflow documents and review reports were committed as `91d76e6`. Push succeeded
+without rewriting history; local HEAD and remote main both equal
+`91d76e641728f53cd186abd3f7ef6155de8687d1`. Hosted CI run `37276850490` is in progress, not yet
+recorded as passing. User identified Windows 10 and Samsung A17 5G with Android 16; Chrome version
+and camera hardware details remain unspecified. Regenerated ignored public 10/100 KiB fixtures.
 
-**Next:** Commit/push CP-01, inspect hosted CI, redeploy the approved harness, verify deployed asset
+**Next:** Inspect hosted CI, redeploy the approved harness, verify deployed asset
 paths and lifecycle fixes, then assist the Windows–Android physical trials. Git/CI/Pages outcomes
 will be recorded after they actually complete.
 
 **Blockers:** Physical observations and hardware/browser metadata are still needed for CP-02/G2.
-No iPhone availability reported. Delivery is authorized but not yet recorded as complete.
+No iPhone availability reported. Push is complete; CI/deployment verification is still pending.
+
+## 2026-10-05 — CP-01 hosted CI formatting correction
+
+**Done:** Held Pages deployment when CI found a formatting failure in the final Python regression
+signature. The testing agent wrapped that signature without changing test behavior and reran full
+Python/static checks; development independently verified the same parsed test behavior and revised
+snapshot. Both agents added delivery-correction records without erasing the failed run.
+The previous static check preceded the last test-stub edit; that stale pass is not a final lint pass.
+
+**Verified:** CI run `37276850490` passed browser/interoperability and dependency-audit jobs, failed
+Linux Python at Ruff, and cancelled the Windows job. Locally reproduced E501 (101-character signature
+against a 100-character limit) and the matching Ruff format-check failure in test_qr_io.py. This is a
+test-layout correction within approved CP-01; no application behavior or wire changes are intended.
+
+Fresh Ruff lint/format and mypy pass; all 97 Python tests pass with 100% protocol coverage. Revised
+snapshot: `702603a47b09b605066d60d2b74af0059147bac1d3e13410c104448778d368b8`. Browser source/tests
+are unchanged, so the passing browser job/results remain relevant; no new browser rerun is claimed.
+
+**Next:** Obtain both agents' revised agreement and final lint/type/test results, commit/push the
+formatting repair, inspect passing hosted CI and then deploy. Keep the original failed CI evidence.
+
+**Blockers:** Current code commit has not passed all hosted jobs; deployment remains held. Physical
+Windows–Android trial evidence, Chrome/webcam details and iPhone qualification remain pending.

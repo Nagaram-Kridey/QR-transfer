@@ -104,7 +104,9 @@ def test_closed_receive_window_records_cancellation(monkeypatch):
         (qr_io.cv2.error, "failed"),
     ],
 )
-def test_adapter_interruptions_preserve_started_trial_observations(monkeypatch, error_type, outcome):
+def test_adapter_interruptions_preserve_started_trial_observations(
+    monkeypatch, error_type, outcome
+):
     blank = np.full((100, 100), 255, dtype=np.uint8)
     camera = mock_camera(monkeypatch, [blank], [ord(" ")])
 

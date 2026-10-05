@@ -34,7 +34,8 @@ or starting the next checkpoint. This replaces the earlier automatic-push author
 CP-01 fixes existing trial readiness and establishes this workflow; the user approved delivery on
 2026-10-05. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI/deployment status. Physical camera evidence
 and the G2 decision remain the next phase dependency before production PWA/security/fountain work.
-The user reports **Windows + Android** available; iPhone qualification remains a v1 requirement.
+The user reports **Windows 10 + Samsung A17 5G / Android 16** available; record the actual Chrome
+version and laptop/webcam details before acceptance. iPhone qualification remains a v1 requirement.
 
 The authorized remote is `https://github.com/Nagaram-Kridey/QR-transfer.git`; preserve its history.
 Implementation commit `8eb1d1c` was tested and deployed on 2026-10-04. The

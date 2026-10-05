@@ -92,3 +92,42 @@ uncompressed repeat-mode experiment; no PWA, security, fountain or release miles
 The existing Pages build contains the previous source. No candidate hosted CI, push, deployment
 or user approval has occurred. Present CP-01 for approval of commit/push and the explicitly planned
 Pages redeployment after hosted checks; then use the corrected deployment for CP-02 physical trials.
+
+## Delivery correction and renewed agreement — 2026-10-05 (Asia/Kolkata)
+
+The user subsequently approved CP-01, and the coordinator committed/pushed it as `91d76e6`.
+[Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37276850490) failed the Linux
+Python Ruff check because the final regression-test function signature exceeded the 100-column
+limit. The initial local source-only Ruff checks I ran were valid, but I repeated the coordinator's
+earlier broader static result as final-revision evidence without checking the final test-file edit.
+That broader statement is superseded by this correction. Passing test suites did not establish
+final lint acceptance. Deployment was held; the failed run must not be reported as overall success.
+
+The tester repaired only the line wrapping of the function signature in
+`python/tests/test_qr_io.py`. I independently inspected its diff against `91d76e6` and compared
+parsed Python ASTs with location attributes excluded: **identical**. No assertion, runtime source,
+codec, vector, browser file, dependency or behavior changed. This is a repair of the approved scope.
+
+Fresh development checks on the repaired files:
+
+| Check | Observed result |
+|---|---|
+| `uv run --project python ruff check python/src python/tests` | Passed |
+| `uv run --project python ruff format --check python/src python/tests` | Passed; all 14 files formatted |
+| Python AST comparison against the committed test file | Identical ignoring source locations |
+| `git diff --check` | Passed |
+| Independent five-file/LF-normalized fingerprint calculation | Matches the tester's revised snapshot |
+
+Read the tester's delivery addendum, which records fresh mypy and **97 passing Python tests** with
+100% protocol coverage. Browser application/test files are unchanged; existing passing browser
+evidence is retained, without implying another browser execution.
+
+**Renewed PASS and agreement:** all confirmed CP-01 findings are resolved, and no known unresolved
+blocking issue remains within the repaired scope on the shared revised snapshot:
+
+`702603a47b09b605066d60d2b74af0059147bac1d3e13410c104448778d368b8`
+
+The old fingerprint is historical, not the repaired candidate identity. I agree with the tester's
+scoped verdict on this identical snapshot. The coordinator can retry the approved delivery after
+both renewed verdicts. Hosted retry/deployment results and physical G2 remain pending; this
+formatting correction provides no phone-performance evidence or broader feature authorization.

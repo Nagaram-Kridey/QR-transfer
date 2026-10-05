@@ -51,7 +51,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 
 | ID | Reviewable part | Required evidence / dependency | State |
 |---|---|---|---|
-| CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | User approved 2026-10-05; delivery in progress |
+| CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved/pushed; CI test-format repair in review, deployment held |
 | CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | Pending CP-01 approval/delivery and physical observations |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
@@ -73,8 +73,10 @@ Scope is existing camera/import cancellation, interruption and outcome-recording
 the requested approval/agent workflow. The wire contract, security/PWA status and physical gates
 remain governed by the existing plans.
 
-Available hardware reported by the user: **Windows + Android**. No iPhone availability has been
-reported. Initial feasibility can use the available pair; complete v1 cannot qualify without both pairs.
+Available hardware reported by the user: **Windows 10 + Samsung A17 5G / Android 16**. Chrome
+version and laptop/webcam model remain unspecified; record them before frozen acceptance trials.
+No iPhone availability has been reported. Initial feasibility can use the available pair;
+complete v1 cannot qualify without both pairs.
 
 ### Completed local candidate
 
@@ -91,7 +93,10 @@ reported. Initial feasibility can use the available pair; complete v1 cannot qua
 The five application/test files are `python/src/lumenlink/qr_io.py`,
 `python/tests/test_qr_io.py`, `web/src/ui/App.tsx`, `web/e2e/camera.spec.ts` and
 `web/e2e/harness.spec.ts`. Source/test snapshot SHA-256:
-`a35ba8645d9cb206a8f9b30cda0eb558c87f79c28ac524aabf0ee23b2b86c1b1`.
+`702603a47b09b605066d60d2b74af0059147bac1d3e13410c104448778d368b8`
+after the formatting-only delivery correction. The originally approved aggregate was
+`a35ba8645d9cb206a8f9b30cda0eb558c87f79c28ac524aabf0ee23b2b86c1b1`; both review reports preserve
+that history and include revised signoff for the equivalent test layout.
 The review reports define the sorted-path/LF-normalized hash algorithm. The snapshot identifies
 application changes and regressions; this packet, logs and verdicts separately record the process.
 
@@ -120,6 +125,17 @@ harness after hosted checks. The reviewed part includes the source/tests above, 
 handoff docs, this packet, both review reports and UPDATE.md. The deployed site still serves the older
 code at delivery start. Record actual commit/CI/Pages/live smoke results before CP-02 physical trials.
 No secure/PWA/mobile-performance claims are included; real trial observations are still required.
+
+Delivery started: approved source/tests were committed/pushed as `91d76e6`; local HEAD and remote
+main matched. [Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37276850490)
+passed browser/interoperability and dependency audits, but Linux Python failed Ruff on the final
+test signature (101 characters; limit 100); Windows was cancelled. The earlier static check preceded
+that last test-stub edit. A formatting-only repair is being independently reviewed and retested
+within the approved scope. Keep the failed run in the audit history. Pages remains held until all
+required jobs pass; application behavior and the wire contract remain unchanged by this repair.
+Fresh full Python checks passed on the repaired layout: Ruff lint/format, mypy and 97 tests with
+100% protocol coverage. Development independently verified identical parsed test behavior and the
+same revised snapshot; both agents recorded explicit renewed repair agreement before the retry push.
 
 ## Approval packet template
 
