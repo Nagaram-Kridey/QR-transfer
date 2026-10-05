@@ -15,10 +15,14 @@ development and adversarial-testing agents. Follow [CHECKPOINTS.md](CHECKPOINTS.
 resolve confirmed issues with both agents' agreement on the same revision, then wait for user approval
 before commit/push or starting the next checkpoint. CP-01 corrects existing trial-readiness defects;
 physical G2 evidence remains the next phase dependency. CP-01 code `be174e1` is pushed/deployed and
-passed hosted CI plus independent development/testing live checks. CP-02 awaits real observations.
+passed hosted CI plus independent development/testing live checks. The user now reports both-direction
+physical smoke success and supplied one browser timeout report (60.0165 seconds, 434/506 symbols).
+Successful measured exports and 20-trial acceptance cells are still missing. CP-02A observation
+recording/per-cell summaries passed both agent reviews and were explicitly approved on 2026-10-05;
+delivery is in progress. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI outcomes.
 Reported hardware is Windows 10 + Samsung A17 5G / Android 16; this workspace instead reports
 Windows 11 build 26200 / Lenovo 83K1, so the selected computer needs clarification. Chrome/camera
-details remain to record. No iPhone availability or real trial results have been recorded.
+details remain to record. No iPhone availability or qualifying acceptance results have been recorded.
 Full v1 still needs both device pairs.
 
 | Item | Snapshot |
@@ -102,7 +106,7 @@ transfer uploads, native mobile apps, receiver-key exchange, color codes or YOLO
 | Browser harness | [App.tsx](web/src/ui/App.tsx), [style.css](web/src/ui/style.css) | File/text preparation, QR playback/pause/settings, camera alignment/start/cancel, verified explicit download and local observation export |
 | Shared conformance | [repeat-v2.json](vectors/repeat-v2.json), [generate_vectors.py](tools/generate_vectors.py), [emit-vectors.ts](web/scripts/emit-vectors.ts), [verify_ts_vectors.py](tools/verify_ts_vectors.py) | Python fixture reproduction plus independent TS-to-Python transfers |
 | Automated tests | [Python tests](python/tests/), [codec tests](web/src/codec/core.test.ts), [browser tests](web/e2e/) | Properties, malformed inputs, boundaries, session conflicts, camera errors and synthetic video decoding |
-| Experiment preparation | [make_trial_payloads.py](tools/make_trial_payloads.py), [benchmark procedure](docs/benchmarks/README.md), [CSV header](docs/benchmarks/trial-template.csv) | Reproducible public 10/100 KiB inputs; no physical results yet |
+| Experiment preparation | [make_trial_payloads.py](tools/make_trial_payloads.py), [benchmark procedure](docs/benchmarks/README.md), [CSV header](docs/benchmarks/trial-template.csv), [CP-02A contract](docs/benchmarks/CP-02A-CONTRACT.md) | Public fixtures, one raw timeout, operator metadata/summary tooling in local review; no qualifying physical results |
 | Delivery | [CI workflow](.github/workflows/ci.yml), [Pages workflow](.github/workflows/pages.yml) | Windows/Linux Python, browser/interoperability/audit checks; manual Pages publication |
 
 Maintain separation between protocol, optical adapters and UI. Keep the two codecs independent;

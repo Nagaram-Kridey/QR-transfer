@@ -1,6 +1,9 @@
 # Physical benchmark protocol
 
-**No real-device results are recorded yet.** Generated videos, synthetic QR images, browser tests and
+**No frozen acceptance run is recorded yet.** The user reports successful physical transfers in both
+directions. The one supplied [raw browser report](raw/2026-10-05-browser-timeout.json) is a timeout
+at 60.0165 seconds, with 434/506 symbols recovered; actual file size/settings and successful exports
+are still missing. Keep that failure. Generated videos, synthetic QR images, browser tests and
 simulator runs are software verification, not evidence of camera throughput on Android or iPhone.
 
 ## Before acceptance trials
@@ -26,7 +29,10 @@ simulator runs are software verification, not evidence of camera throughput on A
 - User interruption after timing begins counts as cancelled, not an invisible retry. Abandoning setup
   before timing begins is not a trial. Backgrounding either device invalidates success; record a failure.
 
-Use `trial-template.csv` as the header. The source column must be physical for field results. Keep
+Use `trial-template.csv` as the header. Each `run_id` identifies one frozen cell/run; use a new ID
+for a rerun or a different direction/payload/settings. Label `phase` exploratory or acceptance and
+record explicit operator `physical_attested` plus the actual configured `timeout_seconds`.
+The source column must be physical for field results. Keep
 payload bytes and KiB distinct (1 KiB = 1024 bytes). Record relative direction explicitly. Never combine
 opposite directions or different settings into one success percentage.
 
@@ -45,3 +51,34 @@ codec limit is not evidence for transferring 1 MiB through real cameras.
 
 The CLI/browser reports are intentionally local and incomplete metadata records, not automatic gate
 certificates. Commit raw trials and their settings before changing README/résumé claims.
+
+## CP-02A observation recording and summaries
+
+The [CP-02A contract](CP-02A-CONTRACT.md) defines the independently reviewed CLI feature approved
+on 2026-10-05; see [checkpoint status](../../CHECKPOINTS.md) for delivery status. The header adds
+run identity, phase, attestation and timeout to the original columns. Legacy CSVs require explicit
+migration; missing phase/attestation is never assumed.
+
+Copy [metadata.example.json](metadata.example.json) to an ignored local file, then fill every empty
+identity/version/settings field using the actual test cell. The example's 10 KiB fixture hash and
+256 B / 8 fps / ECC M settings are defaults, not a statement that those were your tested settings.
+Use the actual original file size/hash, chosen timeout, lighting and distance. The supplied timeout
+export must remain raw until its real payload/settings are known; do not invent them from the selector.
+
+Commands from the repository root:
+
+```powershell
+uv run --project python lumenlink benchmark record --observation ./artifacts/trial.json --metadata ./artifacts/cell.json --csv ./artifacts/trials.csv --trial-id wa-001 --phase exploratory --attest-physical
+uv run --project python lumenlink benchmark summarize ./artifacts/trials.csv
+```
+
+Use `--phase acceptance` only after freezing the cell. Preserve original observation JSON and all
+failed runs. Parsing/summarization cannot verify physical provenance: the tool supplies candidates
+from operator-attested evidence, and the user/coordinator reviews the G2 decision. Twenty rows are
+required per acceptance cell; >20 is not silently trimmed. Setup failures with no elapsed time remain
+exploratory observations, outside the timed denominator.
+
+Summaries label median/p95 completion times as successful-only, use nearest-rank p95, and calculate
+median throughput from individual original-file KiB/s values. Cells and reruns are never pooled.
+Tier B remains conditional on the matching Tier A failure; the eight-hour investigation allowance
+and full device-pair decisions remain manual.

@@ -9,7 +9,10 @@ Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_
 reviewed revision, then explicit user approval before commit/push or starting the next checkpoint.
 CP-01 local acceptance and both independent reviews passed; user approved commit/push/deployment on
 2026-10-05; repair commit `be174e1` is pushed/deployed and hosted CI/Pages plus both agents' live
-reviews passed. CP-02 is awaiting physical smoke observations and computer identity clarification.
+reviews passed. The user reports both-direction physical smoke success, but supplied one timeout
+report; measured successes and acceptance runs remain missing. CP-02A evidence tooling is being
+built/reviewed; both final agent reviews passed and the user approved CP-02A on 2026-10-05.
+Commit/push/CI delivery is in progress. Computer identity needs clarification.
 G2 remains pending; the reported pair is Windows 10 + Samsung A17 5G / Android 16, while this
 workspace reports Windows 11 build 26200 / Lenovo 83K1. iPhone qualification remains required
 for v1. [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the continuation guide. Implementation `8eb1d1c`
@@ -263,3 +266,59 @@ and stop for user approval at the completed physical checkpoint before further p
 **Blockers:** No physical outcome reported yet. User's Windows 10 report versus observed workspace
 Windows 11/Lenovo host needs clarification; Android Chrome version/camera selection remain to record.
 No iPhone availability. PWA/security/fountain/release work remains gated.
+
+## 2026-10-05 — User smoke report and CP-02A evidence tooling
+
+**Done:** User confirmed transfers in both directions and supplied Downloads/camera-observation.json.
+Read that observation without changing the original; retained an exact copy under docs/benchmarks/raw.
+Started development/testing agents on a bounded observation recorder and per-cell summary feature,
+defined CP-02A-CONTRACT.md and an incomplete metadata template requiring actual operator values.
+
+**Verified:** Git started clean at `79f25e9`, tracking origin/main. Supplied JSON is a timeout at
+60.0165 seconds: recovered 434/506, seen 585, duplicates 151, rejected 0, expected payload selector
+10 KiB, verified payload size/hash absent. This is preserved as an incomplete exploratory observation,
+not counted as a success or frozen acceptance trial. Browser UA reports Chrome 154.0.0.0 and a reduced
+Android 10/K string; the user-reported Android 16/device identity is not overwritten from that UA.
+Successful exports and actual payload sizes/settings were requested. The tester reproduced Windows
+lockfile cleanup, nonfinite JSON and inconsistent-success-counter issues; development fixed them.
+Final review raised symbol-total/payload consistency: successful reports must agree, while failed
+wrong-stream observations are retained with a warning. Final independent runs after all fixes passed
+293 Python tests (196 benchmark regressions + existing 97) with 100% protocol coverage; full Ruff
+lint/format (16 files), mypy (11 sources) and diff checks passed. Original wire fixtures reproduce.
+Root built wheel/sdist and verified the new summary command from an isolated Python 3.12 wheel
+installation. An incomplete metadata example was rejected without creating a CSV. No new browser
+checks/audits were run because browser/dependency code is unchanged. Source/test snapshot:
+`e1b284d84dc6468fd121a763c88941dc7caab6b26b8a718fb2caf932b7d01383`, independently confirmed
+by both agents. Raw timeout SHA remains
+`ebc4c11d2afb45ac13b0e35960a997f3d25c7d96e5f58cb6f47fadf8fe87b080`. Both review reports in
+docs/reviews/ record explicit mutual PASS with no known unresolved blocking issue within scope.
+Final validation passed 89 local documentation links, Markdown whitespace/newlines, the matching
+27-column CSV/metadata schema, the frozen source/test identity and raw evidence hash. Git remains
+at `79f25e9` with this new checkpoint uncommitted/unpushed locally.
+
+**Next:** Wait for CP-02A user approval before commit/push.
+The reviewed packet includes the CLI evidence tool, extended schemas/docs/reviews and non-sensitive
+raw timeout report; no Pages deployment is needed. Collect measured physical acceptance data and
+successful exports/settings before moving past Stage 1.
+
+**Blockers:** Only one timeout export is available; no full 20-trial cells or verified success exports.
+Computer identity and complete versions/settings remain unresolved. No CP-02A approval/push/deployment.
+
+## 2026-10-05 — CP-02A approved; GitHub delivery
+
+**Done:** Recorded the user's explicit "approved" response for the presented CP-02A tool,
+documentation/reviews/schema and non-sensitive raw timeout report. Reconciled current approval
+status across the plan/context/handoff/benchmark documents. No new feature or Pages deployment
+is part of this delivery.
+
+**Verified:** The three-file source/test snapshot still matches both agent signoffs:
+`e1b284d84dc6468fd121a763c88941dc7caab6b26b8a718fb2caf932b7d01383`. Raw timeout evidence remains
+byte-identical, and the 27-column template/metadata example still match the module's contract.
+`git diff --check` passed. Previous final checks were 293 Python tests, Ruff/format/mypy and package
+installation; no new test run or hosted pass is assumed before inspecting delivery.
+
+**Next:** Commit/push only the approved files, inspect hosted CI, record actual results, then collect
+successful physical exports and complete frozen acceptance cells for the manual G2 decision.
+
+**Blockers:** CI delivery not yet verified. Only one timeout export is available; successful
+exports/actual file metadata, full 20-trial cells and device/settings confirmation remain missing.

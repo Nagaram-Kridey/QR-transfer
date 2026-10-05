@@ -1,0 +1,20 @@
+{
+  "run_id": "",
+  "commit": "",
+  "source": "physical",
+  "sender_device": "",
+  "receiver_device": "",
+  "sender_os": "",
+  "receiver_os": "",
+  "sender_app": "",
+  "receiver_app": "",
+  "direction": "windows-to-android",
+  "payload_bytes": 10240,
+  "payload_sha256": "fc41d86cc014589d9167ec3df7cc82c907328a437ed9269261c94b12135f116b",
+  "symbol_size": 256,
+  "fps": 8,
+  "ecc": "M",
+  "distance_cm": null,
+  "lighting": "",
+  "timeout_seconds": 60
+}

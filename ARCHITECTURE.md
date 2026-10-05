@@ -25,6 +25,10 @@ completion percentage. Wire layout and canonicalization are specified in `docs/s
 - Python base45/frame/container/repeat form the camera-independent reference library.
 - qr_io adapts local OpenCV display/capture and Segno/zxing-cpp. The CLI handles commands and
   bounded file I/O. The simulator models delivery opportunities, not camera physics.
+- The CP-02A benchmark module normalizes camera observations plus operator metadata into
+  bounded CSV rows, locks each frozen cell/run identity and computes per-run summaries. It has no
+  camera/network access, does not certify physical provenance and cannot advance the physical gate.
+  Actual feature review/approval status is in CHECKPOINTS.md.
 - Browser codec/core is independent TypeScript. The receiver worker owns scanning and collection;
   the UI handles explicit controls, video capture, download and local observation exports.
 - One camera image is transferred to the worker at a time; busy workers cause frames to be dropped.

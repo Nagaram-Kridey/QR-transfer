@@ -60,6 +60,43 @@ def parser() -> argparse.ArgumentParser:
     simulation.add_argument("--burst-length", type=int, default=0)
     simulation.add_argument("--max-cycles", type=int, default=20)
     simulation.add_argument("--symbol-size", type=int, choices=[256, 512, 1024], default=256)
+    benchmark = commands.add_parser(
+        "benchmark", help="Record local operator-supplied trials; never automatically certify G2"
+    )
+    evidence = benchmark.add_subparsers(dest="benchmark_command", required=True)
+    record = evidence.add_parser(
+        "record", help="Normalize a camera report and explicit cell metadata"
+    )
+    record.add_argument(
+        "--observation", type=Path, required=True, help="Original Python/browser camera report JSON"
+    )
+    record.add_argument(
+        "--metadata",
+        type=Path,
+        required=True,
+        help="Exact frozen cell metadata JSON, including run_id and configured timeout",
+    )
+    record.add_argument(
+        "--csv", type=Path, required=True, help="Create/append a validated extended trial CSV"
+    )
+    record.add_argument(
+        "--trial-id", required=True, help="Globally unique trial ID within this CSV"
+    )
+    record.add_argument(
+        "--phase",
+        choices=["exploratory", "acceptance"],
+        default="exploratory",
+        help="Default exploratory; acceptance explicitly declares a frozen, timed trial",
+    )
+    record.add_argument(
+        "--attest-physical",
+        action="store_true",
+        help="I witnessed this real-camera observation; this statement is not verified by the tool",
+    )
+    summary = evidence.add_parser("summarize", help="Summarize each frozen run without pooling")
+    summary.add_argument(
+        "csv", type=Path, help="Extended trial CSV; outputs candidate metrics for manual review"
+    )
     return root
 
 
@@ -136,6 +173,33 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
             output = result.save(args.out)
             print(f"Verified SHA-256 {result.sha256}\nSaved {output}")
+        elif args.command == "benchmark":
+            from .benchmark import EVIDENCE, read_trials, record_observation, summarize_trials
+
+            if args.benchmark_command == "record":
+                row = record_observation(
+                    args.observation,
+                    args.metadata,
+                    args.csv,
+                    trial_id=args.trial_id,
+                    phase=args.phase,
+                    attest_physical=args.attest_physical,
+                )
+                print(
+                    json.dumps(
+                        {
+                            "format": "lumenlink-benchmark-record-v1",
+                            "evidence": EVIDENCE,
+                            "record": row,
+                        },
+                        indent=2,
+                        allow_nan=False,
+                    )
+                )
+            else:
+                print(
+                    json.dumps(summarize_trials(read_trials(args.csv)), indent=2, allow_nan=False)
+                )
         else:
             if not 0 <= args.bytes <= MAX_FILE_BYTES:
                 raise ValueError("Payload size must be between 0 and 1 MiB")

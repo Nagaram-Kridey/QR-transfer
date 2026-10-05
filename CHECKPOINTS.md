@@ -53,6 +53,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 |---|---|---|---|
 | CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved and delivered as be174e1; CI, Pages and both live reviews passed |
 | CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | In progress: awaiting computer identity and real smoke observations |
+| CP-02A | Observation recorder and per-cell benchmark summaries | Independent dev/test agreement, strict metadata/provenance boundaries, retained failures | User approved 2026-10-05; commit/push and hosted checks in progress |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -158,8 +159,51 @@ The user reported Windows 10 and Samsung A17 5G / Android 16. Local read-only in
 identified this workspace host as Windows 11 build 26200, Lenovo 83K1, with Integrated Camera and
 Integrated IR Camera (plus an unavailable Smart Connect virtual camera). The physical computer is
 awaiting clarification; do not silently combine these identities. Chrome version and camera index
-remain to record before acceptance. No physical transfer result has been reported yet. CP-02 cannot
-be signed off or its phase exit approved from the deployed synthetic checks.
+remain to record before acceptance. The user now reports successful physical transfers in both
+directions. Their supplied JSON instead records one timeout at 60.0165 seconds (434/506 symbols);
+successful exports and actual file/settings metadata have been requested. CP-02 cannot be signed
+off from that general smoke report or deployed synthetic checks; the 20-trial gate remains pending.
+
+### CP-02A local feature checkpoint
+
+Implement the [benchmark evidence contract](docs/benchmarks/CP-02A-CONTRACT.md): normalize actual
+Python/browser observations with explicit metadata/physical attestation, preserve failures in CSV,
+validate frozen run identity and compute labeled per-cell summaries. This supports collection of
+physical evidence within Stage 1; it does not replace the gate or start later product stages.
+Development owns source, testing owns adversarial regressions and both must agree on the same final
+revision. The user explicitly approved this reviewed feature on 2026-10-05; delivery is in progress.
+
+Implementation: `python/src/lumenlink/benchmark.py` and the existing CLI's `benchmark record` /
+`benchmark summarize` subcommands. Regressions: `python/tests/test_benchmark.py`. CSV keeps the
+original columns then adds `run_id,phase,physical_attested,timeout_seconds`; metadata and raw evidence
+are documented in the benchmark guide. Camera/UI, both codecs, wire vectors and dependencies are
+unchanged. No Pages redeployment is required for this CLI-only feature.
+
+Final source/test snapshot SHA-256:
+`e1b284d84dc6468fd121a763c88941dc7caab6b26b8a718fb2caf932b7d01383`.
+Same sorted-path/LF-normalized algorithm as CP-01, now over `benchmark.py`, `cli.py` and
+`test_benchmark.py` at their paths above. Both agents independently confirmed this revision.
+
+Actual checks on 2026-10-05: **293 Python tests** passed, including **196 benchmark regressions**;
+protocol coverage remains 100% with CLI/optical/simulator/benchmark excluded from that threshold.
+Full Ruff lint/format (16 files), mypy (11 sources), original vector regeneration and diff checks
+passed. Wheel/sdist built; an isolated Python 3.12 wheel installation successfully ran the new
+summary command on the header-only template with empty runs and manual-review status. The incomplete
+metadata example was rejected without creating a CSV. New browser tests/audits were not rerun:
+browser code and dependency locks are unchanged.
+
+Initial adversarial tests exposed Windows lock cleanup, overflow-to-infinity JSON, malformed
+statistics and inconsistent success counters. Their regressions now pass. Final review added
+successful symbol-count checks while retaining unexpected-stream failures with explicit warnings.
+The original raw timeout remains byte-identical (SHA-256
+`ebc4c11d2afb45ac13b0e35960a997f3d25c7d96e5f58cb6f47fadf8fe87b080`).
+
+Both [development](docs/reviews/CP-02A-development.md) and
+[testing](docs/reviews/CP-02A-testing.md) explicitly agree **PASS** on this frozen revision, with
+no known unresolved blocking issues within scope. User response on **2026-10-05 (IST)**:
+**"approved"**. This approves CP-02A commit/push of the evidence tool, schemas/docs/reviews and the
+non-sensitive raw timeout report. It does not approve G2, later product stages or Pages deployment.
+Record actual Git/CI results here and in UPDATE.md after completion.
 
 ## Approval packet template
 

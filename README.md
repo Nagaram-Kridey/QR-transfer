@@ -57,6 +57,12 @@ uv run --project python lumenlink receive --frames ./frames.json --out ./receive
 
 The browser also imports/exports this frame JSON format. These are codec tests, not optical trials.
 
+The CLI also provides `lumenlink benchmark record` and `lumenlink benchmark summarize`
+for observation JSON, explicit cell metadata and per-run CSV summaries. See the
+[benchmark guide](docs/benchmarks/README.md) for commands, schema and operator attestation.
+The tool reports numerical candidates for manual review; physical qualification still requires
+the real 20-trial acceptance runs. Check [CHECKPOINTS.md](CHECKPOINTS.md) for approval/delivery status.
+
 ## Implementation
 
 - Python and TypeScript independent wire-v2 encoders/decoders with shared conformance vectors.

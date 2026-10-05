@@ -1,1 +1,1 @@
-trial_id,commit,source,sender_device,receiver_device,sender_os,receiver_os,sender_app,receiver_app,direction,payload_bytes,payload_sha256,symbol_size,fps,ecc,distance_cm,lighting,outcome,elapsed_seconds,frames_seen,duplicates,rejected,error
+trial_id,commit,source,sender_device,receiver_device,sender_os,receiver_os,sender_app,receiver_app,direction,payload_bytes,payload_sha256,symbol_size,fps,ecc,distance_cm,lighting,outcome,elapsed_seconds,frames_seen,duplicates,rejected,error,run_id,phase,physical_attested,timeout_seconds

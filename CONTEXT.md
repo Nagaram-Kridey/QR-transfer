@@ -22,7 +22,12 @@ The original owner-context narrative is preserved in the archived draft.
 
 ## Current state
 
-Stage 1 software exists; physical feasibility remains unmeasured. Current modes are plaintext,
+Stage 1 software exists; physical feasibility remains unqualified. The user reports both-direction
+physical smoke success; one supplied browser export records a timeout, with successful exports and
+frozen acceptance cells still missing. CP-02A observation/summary tooling passed separate
+development/testing review and was explicitly approved on 2026-10-05; delivery is in progress.
+See CHECKPOINTS.md and the latest UPDATE.md entry for actual Git/CI results.
+Current modes are plaintext,
 uncompressed repeat-mode. The browser is a test harness, not a completed installable PWA.
 No security, mobile support, field throughput or v1 release claims have been earned yet.
 
