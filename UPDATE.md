@@ -4,8 +4,32 @@ Update this file after every meaningful project change. Each entry records **don
 **next**, and **blockers**. Do not call a planned step complete or replace physical data with simulation.
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
-**Current handoff:** code pushed to main; hosted CI and Pages deployment passed; live harness at
-https://nagaram-kridey.github.io/QR-transfer/. Next required evidence is physical Android/iPhone trials.
+**Current handoff — 2026-10-05 (IST):** [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the next-model
+continuation guide. Application implementation remains paused; the latest request is documentation
+only. Stage 1 software is implemented; the next required evidence, when resumed, is physical
+Android/iPhone trials and the G2 decision. Implementation `8eb1d1c` passed hosted CI and Pages
+deployment on 2026-10-04; live harness: https://nagaram-kridey.github.io/QR-transfer/.
+
+Entries below are chronological. Read the latest entry for current verification/blockers; earlier
+temporary failures and delivery tasks describe the state at their date, not unresolved issues forever.
+
+## Entry format for future updates
+
+Append a dated entry after every meaningful code, documentation, measurement or release update.
+Keep this summary and the implementation checklist consistent with the latest evidence.
+
+```markdown
+## YYYY-MM-DD — Short description (Asia/Kolkata)
+
+**Done:** Actual changes, affected components and relevant commit/deployment references.
+
+**Verified:** Commands/checks run and observed results. Identify historical results, failed checks
+and checks not run; distinguish automated/synthetic evidence from physical trials.
+
+**Next:** Concrete next action and its dependency or acceptance condition.
+
+**Blockers:** Outstanding inputs, hardware or failures; write "None" only when true.
+```
 
 ## 2026-10-04 — Repository connection and persistent log
 
@@ -81,3 +105,25 @@ Future meaningful changes must update this log and the implementation checklist 
 **Blockers:** The physical gate needs the user's phone hardware and observations. Automated videos
 cannot satisfy it. Encryption, compression, installed/offline cold-start, LT, Link Lab and PyPI remain
 unimplemented future milestones; no secure-v1 or physical-performance claim has been made.
+
+## 2026-10-05 — Next-model context and continuation handoff
+
+**Done:** Created MODEL_HANDOFF.md covering accepted scope/budgets, stage status, repository history,
+component/API map, wire invariants, dated verification evidence, reproducible commands, physical
+gate procedure, later implementation order and logging/push/deployment workflow. Expanded CONTEXT.md
+with the current stop point and delivery plan. Linked the handoff from README.md and AGENTS.md,
+and added this reusable update format. Preserved the user's application-work pause and archived inputs.
+
+**Verified:** Read the current plans, spec, benchmark procedure, October 4 evidence, workflows and
+relevant source interfaces. Confirmed a clean main tracking origin/main at `c26957e` before editing.
+Validated all 65 local Markdown links across the five changed handoff documents; all targets exist.
+`git diff --check` passed. Reviewed the documentation against current interfaces/workflows and the
+recorded evidence; no application source, wire vectors, lockfiles or archived inputs changed.
+Application tests and physical trials have not been rerun locally for this documentation-only update.
+
+**Next:** Commit/push the validated handoff to the authorized repository and record delivery status.
+When the user resumes implementation, follow MODEL_HANDOFF.md: collect physical Android/iPhone
+camera trials, retain all outcomes, and record G2 before further product stages.
+
+**Blockers:** Physical hardware/observations are still required to clear feasibility. PWA, security,
+compression, LT, Link Lab and PyPI remain future work; this documentation update does not clear a gate.

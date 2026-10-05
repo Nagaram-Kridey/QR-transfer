@@ -1,5 +1,15 @@
 # LumenLink context
 
+## Start here for a new model
+
+Read [MODEL_HANDOFF.md](MODEL_HANDOFF.md) for the complete continuation guide: repository snapshot,
+implemented components, protocol cautions, commands, evidence, gates and ordered next steps.
+Then read the current [UPDATE.md](UPDATE.md) summary/latest entries and
+[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). This file contains durable context; the handoff
+is a dated snapshot, the implementation plan is the execution checklist, and UPDATE.md is the log.
+The normative wire contract remains [SPEC-v2.md](docs/spec/SPEC-v2.md) plus
+[shared vectors](vectors/repeat-v2.json).
+
 ## Purpose and audience
 
 Small offline transfers through a display and camera, with a Python reference/CLI and interoperable
@@ -15,6 +25,31 @@ The original owner-context narrative is preserved in the archived draft.
 Stage 1 software exists; physical feasibility remains unmeasured. Current modes are plaintext,
 uncompressed repeat-mode. The browser is a test harness, not a completed installable PWA.
 No security, mobile support, field throughput or v1 release claims have been earned yet.
+
+As of **2026-10-05 (IST)**, application implementation remains paused at the user's request;
+the follow-up task creates documentation for the next model. Resume only when the user directs it.
+On resumption, the next required work is physical camera evidence and the G2 decision, before
+production PWA/security/fountain work. Hardware and observations are needed from the real devices.
+
+The authorized remote is `https://github.com/Nagaram-Kridey/QR-transfer.git`; preserve its history.
+Implementation commit `8eb1d1c` was tested and deployed on 2026-10-04. The
+[live feasibility harness](https://nagaram-kridey.github.io/QR-transfer/) and hosted checks are
+documented in the [verification record](docs/verification/2026-10-04.md). These historical checks
+do not establish real-phone support. Consult Git and the latest log for subsequent commits.
+
+## Accepted delivery plan
+
+Solo effort is 15–20 hours/week. The early 4–5-week checkpoint budgets 60–80 hours and may deliver
+browser sender + Python receiver, measured on real cameras. Full v1 budgets 150–210 hours total
+(approximately 8–14 weeks) and includes bidirectional browser transfer, offline installation,
+encryption by default, compression, two device pairs, Link Lab and Python package publication.
+GitHub Pages is the hosting target; Windows–Android and Windows–iPhone are the physical test pairs.
+No backend, accounts, telemetry, native apps, receiver-key exchange, color codes or YOLO in v1.
+
+Sequence: foundation → baseline/physical feasibility → measured portfolio checkpoint → production
+browser/PWA → complete security/compression → bounded fountain experiment → release. A failed gate
+preserves the library and measurements; it does not authorize an automatic product pivot. See
+PROJECT_PLAN.md for numeric gates and IMPLEMENTATION_PLAN.md for stage dependencies and checks.
 
 ## Invariants
 

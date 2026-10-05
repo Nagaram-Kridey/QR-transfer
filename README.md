@@ -96,6 +96,7 @@ the SHA-256 integrity check succeeds.
 
 | Document | Purpose |
 |---|---|
+| [MODEL_HANDOFF](MODEL_HANDOFF.md) | Start here: completed work, evidence, setup and next-model continuation guide |
 | [PROJECT_PLAN](PROJECT_PLAN.md) | Scope, schedule, milestones and gates |
 | [IMPLEMENTATION_PLAN](IMPLEMENTATION_PLAN.md) | Execution status, dependencies and checks |
 | [UPDATE](UPDATE.md) | Dated work log, verification and next steps |
