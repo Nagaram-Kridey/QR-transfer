@@ -32,16 +32,20 @@ development/testing agreement, then stop for explicit user approval before commi
 or starting the next checkpoint. This replaces the earlier automatic-push authorization.
 
 CP-01 fixes existing trial readiness and establishes this workflow; the user approved delivery on
-2026-10-05. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI/deployment status. Physical camera evidence
+2026-10-05. Code `be174e1` passed hosted CI, Pages deployment and both agents' live software checks.
+Consult CHECKPOINTS.md and UPDATE.md for delivery evidence. Physical camera evidence
 and the G2 decision remain the next phase dependency before production PWA/security/fountain work.
-The user reports **Windows 10 + Samsung A17 5G / Android 16** available; record the actual Chrome
-version and laptop/webcam details before acceptance. iPhone qualification remains a v1 requirement.
+The user reports **Windows 10 + Samsung A17 5G / Android 16** available. The local workspace host
+reports Windows 11 build 26200 / Lenovo 83K1; whether this or a separate Windows 10 computer is the
+physical sender/receiver is awaiting clarification. Record actual Chrome/camera details before
+acceptance. iPhone qualification remains a v1 requirement.
 
 The authorized remote is `https://github.com/Nagaram-Kridey/QR-transfer.git`; preserve its history.
-Implementation commit `8eb1d1c` was tested and deployed on 2026-10-04. The
-[live feasibility harness](https://nagaram-kridey.github.io/QR-transfer/) and hosted checks are
-documented in the [verification record](docs/verification/2026-10-04.md). These historical checks
-do not establish real-phone support. Consult Git and the latest log for subsequent commits.
+Baseline `8eb1d1c` was tested/deployed on 2026-10-04; approved CP-01 corrections are now deployed
+from `be174e1` on October 5. The [live feasibility harness](https://nagaram-kridey.github.io/QR-transfer/)
+and fresh hosted/live results are recorded in CHECKPOINTS.md and UPDATE.md; the earlier baseline
+record is in [verification](docs/verification/2026-10-04.md). Software checks do not establish
+real-phone support. Consult Git and the latest log for subsequent documentation commits.
 
 ## Accepted delivery plan
 

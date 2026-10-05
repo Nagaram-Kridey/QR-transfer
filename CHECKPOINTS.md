@@ -51,8 +51,8 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 
 | ID | Reviewable part | Required evidence / dependency | State |
 |---|---|---|---|
-| CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved/pushed; CI test-format repair in review, deployment held |
-| CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | Pending CP-01 approval/delivery and physical observations |
+| CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved and delivered as be174e1; CI, Pages and both live reviews passed |
+| CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | In progress: awaiting computer identity and real smoke observations |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -66,9 +66,9 @@ units. Each phase exit still gets an explicit decision even when its features ha
 Do not skip missing phone evidence to fill the queue. If G2 fails, the checkpoint documents the stop
 decision and preservation of the engineering work; it does not authorize later product expansion.
 
-## Current review packet: CP-01
+## Completed review packet and delivery: CP-01
 
-Base: `d40966e` on `main`. The user approved this reviewed part on 2026-10-05; delivery is in progress.
+Base: `d40966e` on `main`. The user approved this reviewed part on 2026-10-05; delivery is verified.
 Scope is existing camera/import cancellation, interruption and outcome-recording correctness plus
 the requested approval/agent workflow. The wire contract, security/PWA status and physical gates
 remain governed by the existing plans.
@@ -114,8 +114,8 @@ application changes and regressions; this packet, logs and verdicts separately r
 Independent verdicts: [development](docs/reviews/CP-01-development.md) **PASS** and
 [testing](docs/reviews/CP-01-testing.md) **PASS** on the identical snapshot above. Both agents agree
 all confirmed in-scope defects are resolved and no known blocking issues remain. Application/test
-changes match the approved snapshot. Physical G2, commit/push, fresh hosted CI and deployment
-remain pending at the start of delivery; actual results will be recorded below and in UPDATE.md.
+changes match the revised, independently agreed delivery snapshot. Commit/push, hosted CI, Pages
+and both independent live checks are complete below. Physical G2 remains pending.
 
 ### Approval and delivery: CP-01
 
@@ -136,6 +136,30 @@ required jobs pass; application behavior and the wire contract remain unchanged 
 Fresh full Python checks passed on the repaired layout: Ruff lint/format, mypy and 97 tests with
 100% protocol coverage. Development independently verified identical parsed test behavior and the
 same revised snapshot; both agents recorded explicit renewed repair agreement before the retry push.
+The repair was pushed as `be174e1` and
+[CI retry](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37277641419) passed all jobs.
+The approved [Pages redeployment](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37277880679)
+completed successfully for `be174e181f1b00d7188016c575b88526efada465`. The original failed run remains
+historical evidence. The development agent independently passed a live exact-byte export/import/save
+smoke. The testing agent independently passed seven deployed checks: exact Unicode save, abandoned
+import isolation, reset cancellation reports, background failure, canvas failure, timeout/no payload,
+and project-base local worker/WASM URLs. HTTP 200, zero page errors/external requests and zero asset
+errors were observed. Both agents agree the approved delivery passed its software checks.
+
+## Current checkpoint: CP-02 physical evidence
+
+The corrected [live harness](https://nagaram-kridey.github.io/QR-transfer/) is ready for physical trials.
+Public fixtures were generated locally with `tools/make_trial_payloads.py`; binaries remain ignored.
+Start with computer Python sender → Android Chrome receiver at 10 KiB, then reuse the phone's
+verified saved fixture for Android Chrome sender → computer Python receiver. Preserve/export each
+actual outcome. Smoke/exploration precedes the frozen 20-trial acceptance cells in the benchmark spec.
+
+The user reported Windows 10 and Samsung A17 5G / Android 16. Local read-only inventory instead
+identified this workspace host as Windows 11 build 26200, Lenovo 83K1, with Integrated Camera and
+Integrated IR Camera (plus an unavailable Smart Connect virtual camera). The physical computer is
+awaiting clarification; do not silently combine these identities. Chrome version and camera index
+remain to record before acceptance. No physical transfer result has been reported yet. CP-02 cannot
+be signed off or its phase exit approved from the deployed synthetic checks.
 
 ## Approval packet template
 

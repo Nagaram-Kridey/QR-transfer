@@ -14,9 +14,12 @@ The user has now resumed application work and requested explicit approval checkp
 development and adversarial-testing agents. Follow [CHECKPOINTS.md](CHECKPOINTS.md): build locally,
 resolve confirmed issues with both agents' agreement on the same revision, then wait for user approval
 before commit/push or starting the next checkpoint. CP-01 corrects existing trial-readiness defects;
-physical G2 evidence remains the next phase dependency. Reported hardware is Windows 10 + Samsung
-A17 5G / Android 16; Chrome/camera details remain to record. No iPhone availability or real trial
-results have been recorded. Full v1 still needs both device pairs.
+physical G2 evidence remains the next phase dependency. CP-01 code `be174e1` is pushed/deployed and
+passed hosted CI plus independent development/testing live checks. CP-02 awaits real observations.
+Reported hardware is Windows 10 + Samsung A17 5G / Android 16; this workspace instead reports
+Windows 11 build 26200 / Lenovo 83K1, so the selected computer needs clarification. Chrome/camera
+details remain to record. No iPhone availability or real trial results have been recorded.
+Full v1 still needs both device pairs.
 
 | Item | Snapshot |
 |---|---|
@@ -25,7 +28,8 @@ results have been recorded. Full v1 still needs both device pairs.
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
 | Branch at handoff start | `main`, clean and tracking `origin/main` |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
-| Base commit for the current approval checkpoint | `d40966e` — complete handoff and delivery log |
+| CP-01 review base | `d40966e` — complete handoff and delivery log |
+| Latest delivered application code | `be174e1` — approved trial-readiness corrections and test-format repair |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |
@@ -35,8 +39,9 @@ results have been recorded. Full v1 still needs both device pairs.
 Commit IDs above are historical anchors, not instructions to reset the repository. Inspect Git on
 arrival. The baseline was deployed and checked on **2026-10-04**. Fresh October 5 CP-01 local
 acceptance results are recorded in [CHECKPOINTS.md](CHECKPOINTS.md) and the independent review
-reports. The user approved CP-01 on October 5; delivery/hosted verification is in progress. Consult
-CHECKPOINTS.md and the latest UPDATE.md entry for the actual commit/deployment status.
+reports. The user approved CP-01 on October 5; code `be174e1` passed hosted CI, Pages and both
+independent live reviews. Consult CHECKPOINTS.md and the latest UPDATE.md entry for links/status.
+Those synthetic software checks did not clear physical G2.
 
 ## 2. Read order and source of truth
 

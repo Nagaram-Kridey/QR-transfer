@@ -8,9 +8,10 @@ Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_
 [CHECKPOINTS.md](CHECKPOINTS.md): separate development/adversarial-testing agents, agreement on each
 reviewed revision, then explicit user approval before commit/push or starting the next checkpoint.
 CP-01 local acceptance and both independent reviews passed; user approved commit/push/deployment on
-2026-10-05; commit `91d76e6` is pushed but CI found a final regression-test formatting error,
-which is being corrected within the approved scope before deployment. Stage 1 physical
-G2 is still pending; the reported pair is Windows 10 + Samsung A17 5G / Android 16, and iPhone qualification remains required
+2026-10-05; repair commit `be174e1` is pushed/deployed and hosted CI/Pages plus both agents' live
+reviews passed. CP-02 is awaiting physical smoke observations and computer identity clarification.
+G2 remains pending; the reported pair is Windows 10 + Samsung A17 5G / Android 16, while this
+workspace reports Windows 11 build 26200 / Lenovo 83K1. iPhone qualification remains required
 for v1. [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the continuation guide. Implementation `8eb1d1c`
 passed hosted checks/deployment on October 4; live harness: https://nagaram-kridey.github.io/QR-transfer/.
 
@@ -215,3 +216,50 @@ formatting repair, inspect passing hosted CI and then deploy. Keep the original 
 
 **Blockers:** Current code commit has not passed all hosted jobs; deployment remains held. Physical
 Windows–Android trial evidence, Chrome/webcam details and iPhone qualification remain pending.
+
+## 2026-10-05 — CP-01 repair pushed; hosted CI passed
+
+**Done:** Pushed the formatting-only repair and renewed review records as `be174e1`. Retained
+original implementation `91d76e6` and its failed CI run in the audit history. Dispatched the approved
+Pages redeployment of `be174e1` after all required CI jobs passed; no later product feature added.
+
+**Verified:** Both agents explicitly agree on revised snapshot
+`702603a47b09b605066d60d2b74af0059147bac1d3e13410c104448778d368b8`, with identical test semantics.
+[Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37277641419) completed successfully
+for `be174e181f1b00d7188016c575b88526efada465`: Windows/Linux Python, web/interoperability and
+dependency-audit jobs all passed. Git push succeeded; Pages dispatch returned HTTP 204. Deployment
+and deployed smoke results remain pending.
+
+**Next:** Inspect the completed Pages run, independently test the deployed corrected harness,
+record actual delivery, then guide the first physical Windows–Android transfers and retain observations.
+
+**Blockers:** No physical trials yet. The user reported Windows 10, while this workspace computer
+reports Windows 11 build 26200 / Lenovo 83K1 with Integrated Camera and Integrated IR Camera;
+the selected physical computer needs confirmation. Samsung A17 5G / Android 16 is user-reported;
+Chrome version remains unspecified. No iPhone availability reported.
+
+## 2026-10-05 — CP-01 delivered and independently verified; CP-02 opened
+
+**Done:** Published the approved corrected harness from `be174e1`; both agents independently checked
+the live app. Updated checkpoint/context/handoff status and opened CP-02 physical evidence collection.
+Generated public 10/100 KiB fixtures locally and provided the first computer→Android smoke command;
+the phone can reuse its verified saved file for the opposite direction. Generated binaries, reports,
+screenshots and operator drafts remain ignored; no physical benchmark rows were invented.
+
+**Verified:** [CI retry](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37277641419) passed
+all jobs; [Pages run](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37277880679) succeeded
+for `be174e181f1b00d7188016c575b88526efada465`. Development's live exact-byte export/import/download
+smoke passed. Testing's seven deployed checks passed: exact Unicode download, abandoned import,
+reset report/resource release, background failure, canvas failure, timeout/no payload and project-base
+assets. Local worker/WASM returned HTTP 200; zero page errors, external requests or asset HTTP errors.
+Both agents rechecked the same delivered source/test identity. These are automated deployed checks,
+not physical Android/iPhone results. All 79 current/review local documentation links and diff checks
+passed before final delivery logging. Original failed CI and its formatting repair remain documented.
+
+**Next:** Record the approved delivery log to GitHub, then receive real CP-02 smoke outcomes and
+metadata. Run frozen 20-trial acceptance cells only after smoke/exploration, evaluate G2 honestly,
+and stop for user approval at the completed physical checkpoint before further product expansion.
+
+**Blockers:** No physical outcome reported yet. User's Windows 10 report versus observed workspace
+Windows 11/Lenovo host needs clarification; Android Chrome version/camera selection remain to record.
+No iPhone availability. PWA/security/fountain/release work remains gated.
