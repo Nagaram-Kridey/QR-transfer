@@ -56,6 +56,12 @@ are outside v1. No automatic pivot to another unspecified product.
 
 ## Governance
 
+The user resumed implementation on 2026-10-05 with explicit phase/feature approval checkpoints.
+Follow [CHECKPOINTS.md](CHECKPOINTS.md): development and adversarial-testing agents must agree on
+the reviewed revision, then wait for user approval before committing/pushing it or starting the next
+checkpoint. Earlier standing permission to push is superseded. Windows + Android is available for
+initial physical trials; iPhone qualification remains required for complete v1.
+
 Small conventional commits/PRs; green checks before merge; ADR for costly reversals. Every Friday
 record actual progress and evidence, including failed experiments. No fabricated throughput,
 success rates, installed-PWA support or security claims. Original input documents are preserved

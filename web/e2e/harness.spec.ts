@@ -69,3 +69,38 @@ test('fits a narrow mobile viewport', async ({ page }) => {
   await expect(page.getByLabel('Transfer QR code')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('reset abandons a pending frame import before it can expose a file', async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = File.prototype.text;
+    let workersCreated = 0;
+    Object.defineProperty(window, 'importWorkersCreated', { get: () => workersCreated });
+    window.Worker = new Proxy(Worker, { construct(target, args) {
+      workersCreated++;
+      return Reflect.construct(target, args);
+    } });
+    Object.defineProperty(File.prototype, 'text', { configurable: true, value: async function (this: File) {
+      await new Promise(resolve => {
+        Object.defineProperty(window, 'releaseImportRead', { configurable: true, value: resolve });
+      });
+      const text = await original.call(this);
+      Object.defineProperty(window, 'importReadSettled', { configurable: true, value: true });
+      return text;
+    } });
+  });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Prepare QR', exact: true }).click();
+  const exported = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export frames' }).click();
+  const exportPath = await (await exported).path();
+  await page.getByText('Conformance testing without a camera').click();
+  await page.getByLabel('Frame JSON').setInputFiles(exportPath!);
+  await expect(page.locator('.state')).toHaveText('IMPORTING');
+  await page.getByRole('button', { name: 'Reset session' }).click();
+  await page.evaluate(() => (window as unknown as { releaseImportRead: () => void }).releaseImportRead());
+  await page.waitForFunction(() => (window as unknown as { importReadSettled: boolean }).importReadSettled);
+  expect(await page.evaluate(() => (window as unknown as { importWorkersCreated: number }).importWorkersCreated)).toBe(0);
+  await expect(page.locator('.state')).toHaveText('IDLE');
+  await expect(page.getByRole('button', { name: 'Save verified file' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Enable camera' })).toBeEnabled();
+});

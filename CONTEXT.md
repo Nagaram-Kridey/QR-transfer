@@ -26,10 +26,15 @@ Stage 1 software exists; physical feasibility remains unmeasured. Current modes 
 uncompressed repeat-mode. The browser is a test harness, not a completed installable PWA.
 No security, mobile support, field throughput or v1 release claims have been earned yet.
 
-As of **2026-10-05 (IST)**, application implementation remains paused at the user's request;
-the follow-up task creates documentation for the next model. Resume only when the user directs it.
-On resumption, the next required work is physical camera evidence and the G2 decision, before
-production PWA/security/fountain work. Hardware and observations are needed from the real devices.
+As of **2026-10-05 (IST)**, the user has resumed implementation under
+[CHECKPOINTS.md](CHECKPOINTS.md). Build/review each phase or distinct feature locally, obtain separate
+development/testing agreement, then stop for explicit user approval before committing/pushing it
+or starting the next checkpoint. This replaces the earlier automatic-push authorization.
+
+CP-01 fixes existing trial readiness and establishes this workflow; the user approved delivery on
+2026-10-05. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI/deployment status. Physical camera evidence
+and the G2 decision remain the next phase dependency before production PWA/security/fountain work.
+The user reports **Windows + Android** available; iPhone qualification remains a v1 requirement.
 
 The authorized remote is `https://github.com/Nagaram-Kridey/QR-transfer.git`; preserve its history.
 Implementation commit `8eb1d1c` was tested and deployed on 2026-10-04. The
@@ -84,5 +89,5 @@ authenticated frames, bounded decompression, published threat model, cross-langu
 observed qualifying results for both directions on two pairs, Link Lab export, package/live URL,
 tagged release and demonstrable claims. Payload/rate claims follow the measured tier.
 
-Make small conventional commits/PRs and keep CI green. Use ADRs for costly reversals. Keep job
-applications in parallel; the early 4–5-week demo is a checkpoint, not completed v1.
+After checkpoint approval, make small conventional commits/PRs and keep CI green. Use ADRs for costly
+reversals. Keep job applications in parallel; the early 4–5-week demo is a checkpoint, not completed v1.

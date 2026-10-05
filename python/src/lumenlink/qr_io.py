@@ -61,9 +61,10 @@ def capture(
 ) -> tuple[ReceivedFile | None, dict[str, Any]]:
     if camera < 0 or timeout <= 0:
         raise ValueError("Camera index and timeout must be positive/nonnegative")
-    video = cv2.VideoCapture(camera)
+    video = None
     receiver = Receiver()
     started: float | None = None
+    cleanup_errors: list[str] = []
 
     def observation(
         outcome: str, result: ReceivedFile | None = None, reason: str = ""
@@ -79,9 +80,11 @@ def capture(
             "payload_bytes": len(result.data) if result else None,
             "payload_sha256": result.sha256 if result else None,
             "session_id": receiver.metadata[1].hex() if receiver.metadata else "",
+            "cleanup_errors": cleanup_errors,
         }
 
     try:
+        video = cv2.VideoCapture(camera)
         if not video.isOpened():
             return None, observation(
                 "failed", reason="Cannot open camera; check camera permissions"
@@ -94,6 +97,13 @@ def capture(
             key = cv2.waitKey(1) & 0xFF
             if key == 27:
                 return None, observation("cancelled", reason="User cancelled")
+            if (
+                cv2.getWindowProperty(
+                    "LumenLink receive - Space: begin trial | Esc: cancel", cv2.WND_PROP_VISIBLE
+                )
+                < 1
+            ):
+                return None, observation("cancelled", reason="Receiver window closed")
             if started is None:
                 if key != ord(" "):
                     continue
@@ -115,6 +125,17 @@ def capture(
         return None, observation(
             "timeout", reason=f"No complete transfer within {timeout:g} seconds"
         )
+    except KeyboardInterrupt:
+        return None, observation("cancelled", reason="User interrupted receiver")
+    except (cv2.error, RuntimeError) as exc:
+        return None, observation("failed", reason=f"Camera adapter failed: {exc}")
     finally:
-        video.release()
-        cv2.destroyAllWindows()
+        if video is not None:
+            try:
+                video.release()
+            except (cv2.error, RuntimeError) as exc:
+                cleanup_errors.append(f"Camera release failed: {exc}")
+        try:
+            cv2.destroyAllWindows()
+        except (cv2.error, RuntimeError) as exc:
+            cleanup_errors.append(f"Window cleanup failed: {exc}")

@@ -4,11 +4,14 @@ Update this file after every meaningful project change. Each entry records **don
 **next**, and **blockers**. Do not call a planned step complete or replace physical data with simulation.
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
-**Current handoff — 2026-10-05 (IST):** [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the next-model
-continuation guide. Application implementation remains paused; the latest request is documentation
-only. Stage 1 software is implemented; the next required evidence, when resumed, is physical
-Android/iPhone trials and the G2 decision. Implementation `8eb1d1c` passed hosted CI and Pages
-deployment on 2026-10-04; live harness: https://nagaram-kridey.github.io/QR-transfer/.
+**Current handoff — 2026-10-05 (IST):** Implementation resumed with
+[CHECKPOINTS.md](CHECKPOINTS.md): separate development/adversarial-testing agents, agreement on each
+reviewed revision, then explicit user approval before commit/push or starting the next checkpoint.
+CP-01 local acceptance and both independent reviews passed; user approved commit/push/deployment on
+2026-10-05 and delivery is in progress. Stage 1 physical G2 is
+still pending; available hardware is Windows + Android, and iPhone qualification remains required
+for v1. [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the continuation guide. Implementation `8eb1d1c`
+passed hosted checks/deployment on October 4; live harness: https://nagaram-kridey.github.io/QR-transfer/.
 
 Entries below are chronological. Read the latest entry for current verification/blockers; earlier
 temporary failures and delivery tasks describe the state at their date, not unresolved issues forever.
@@ -130,3 +133,57 @@ camera trials, retain all outcomes, and record G2 before further product stages.
 
 **Blockers:** Physical hardware/observations are still required to clear feasibility. PWA, security,
 compression, LT, Link Lab and PyPI remain future work; this documentation update does not clear a gate.
+
+## 2026-10-05 — Resumed build with approval and independent review checkpoints
+
+**Done:** Recorded the user's new approval-before-push workflow in CHECKPOINTS.md and reconciled
+AGENTS.md, CONTEXT.md, plans, README.md and MODEL_HANDOFF.md. Started separate development and
+adversarial-testing agents for CP-01 trial readiness. User confirmed Windows + Android availability.
+The testing agent reproduced four browser lifecycle failures against the old built app and three
+Python adapter failures against the old source. Corrected cancelled-import revival, lost reset
+observations, background/canvas failures and Python interruption/window/adapter reporting. Additional
+regressions cover constructor/cleanup errors and verification timeouts. Cleanup errors remain visible
+without discarding verified bytes or the original observation. No wire/vector or dependency changes.
+
+**Verified:** Arrival Git state was clean `main` at `d40966e`, tracking the authorized remote.
+Local toolchains are Node 24.21.0, Python 3.12.13 and uv 0.11.19. Current Python fixture regeneration
+matches the wire contract; all four independently emitted TypeScript transfers reconstruct in
+Python. Ruff/format/mypy, ESLint/TypeScript and the production build passed. The testing agent's final
+run passed 97 Python tests (100% protocol coverage), 30 TS tests (100% codec coverage) and 30 Playwright
+tests across three browser engines and clean/degraded fake-camera fixtures. Root built sdist/wheel and
+passed isolated Python 3.12 wheel installation/CLI smoke. Final validation passed all 79 local links,
+Markdown whitespace/newlines across ten changed documents and `git diff --check`. Testing signed off on snapshot
+`a35ba8645d9cb206a8f9b30cda0eb558c87f79c28ac524aabf0ee23b2b86c1b1`; development independently
+confirmed the same snapshot and agreed after reviewing peer regressions/results. Both review reports
+are in docs/reviews/; testing also reviewed the development report and recorded explicit mutual
+agreement. The final source/test fingerprint still matches both verdicts. Git remains at `d40966e`
+with the reviewed changes uncommitted locally. These are fresh local automated results, not physical
+trials or hosted-candidate checks.
+
+**Next:** Wait for explicit CP-01 user approval. The approval request covers commit/push and
+redeployment of the existing Pages feasibility harness after hosted checks. After approved delivery,
+CP-02 will collect physical
+Windows–Android trial evidence and evaluate G2.
+
+**Blockers:** CP-01 user approval is pending; there are no known unresolved blocking software issues
+within the reviewed checkpoint scope. G2 needs actual hardware observations; no real trials are
+recorded. No iPhone availability reported. No new commit/push/deployment has been made; the live
+harness still serves the previous implementation.
+
+## 2026-10-05 — CP-01 approved; GitHub delivery started
+
+**Done:** The user explicitly approved the presented checkpoint: "Approved, push the changes and
+continue". Recorded CP-01 approval for commit/push and redeployment of the existing Pages harness
+after hosted checks. The next checkpoint remains physical Windows–Android feasibility.
+
+**Verified:** Recomputed the approved source/test snapshot before delivery; it exactly matches both
+agent verdicts (`a35ba8645d9cb206a8f9b30cda0eb558c87f79c28ac524aabf0ee23b2b86c1b1`). The testing
+agent independently confirmed unchanged scope. `git diff --check` passed; only reviewed source,
+tests, current workflow documents and review reports are selected for the commit.
+
+**Next:** Commit/push CP-01, inspect hosted CI, redeploy the approved harness, verify deployed asset
+paths and lifecycle fixes, then assist the Windows–Android physical trials. Git/CI/Pages outcomes
+will be recorded after they actually complete.
+
+**Blockers:** Physical observations and hardware/browser metadata are still needed for CP-02/G2.
+No iPhone availability reported. Delivery is authorized but not yet recorded as complete.

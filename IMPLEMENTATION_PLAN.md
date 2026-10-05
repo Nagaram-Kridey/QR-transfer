@@ -4,6 +4,14 @@ The normative protocol is `docs/spec/SPEC-v2.md`. Shared vectors define byte-lev
 Public application versions and wire versions are separate. Work is staged; unchecked gates
 must not be inferred from passing unit tests.
 
+## Approval and review workflow
+
+Follow [CHECKPOINTS.md](CHECKPOINTS.md). The user resumed work on 2026-10-05 and now requires a
+reviewable phase/feature checkpoint, independent development/testing agreement, and explicit user
+approval before commit/push and before the next checkpoint. CP-01 is trial-readiness correction;
+CP-02 collects the physical Windows–Android evidence with the available devices. iPhone testing
+remains pending for full v1. Feature approval cannot substitute for a physical or security exit.
+
 ## Stage 0 — Foundation
 
 - [x] Initialize Git, preserve supplied documents, reconcile current planning documents.

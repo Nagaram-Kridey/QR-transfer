@@ -10,9 +10,12 @@ protocol specification or the execution checklist. Refresh it after meaningful p
 contains an independent Python/TypeScript plaintext repeat-mode implementation, a CLI, a minimal
 browser sender/receiver harness, automated tests and a deployed GitHub Pages experiment.
 
-The user paused application implementation, then requested this documentation handoff. This update
-does not resume feature development. When the user resumes, start with physical testing and its
-evidence, not the next unimplemented feature. No real Android/iPhone trials have been recorded.
+The user has now resumed application work and requested explicit approval checkpoints plus separate
+development and adversarial-testing agents. Follow [CHECKPOINTS.md](CHECKPOINTS.md): build locally,
+resolve confirmed issues with both agents' agreement on the same revision, then wait for user approval
+before commit/push or starting the next checkpoint. CP-01 corrects existing trial-readiness defects;
+physical G2 evidence remains the next phase dependency. Available hardware is Windows + Android;
+no iPhone availability or real trial results have been recorded. Full v1 still needs both device pairs.
 
 | Item | Snapshot |
 |---|---|
@@ -21,7 +24,7 @@ evidence, not the next unimplemented feature. No real Android/iPhone trials have
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
 | Branch at handoff start | `main`, clean and tracking `origin/main` |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
-| Last commit before this documentation update | `c26957e` — hosted verification and physical-trial handoff |
+| Base commit for the current approval checkpoint | `d40966e` — complete handoff and delivery log |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |
@@ -29,12 +32,15 @@ evidence, not the next unimplemented feature. No real Android/iPhone trials have
 | Release status | No v1 release, PyPI publication or physical support qualification |
 
 Commit IDs above are historical anchors, not instructions to reset the repository. Inspect Git on
-arrival. The implementation was deployed and checked on **2026-10-04**; this handoff does not claim
-a new live-site or application-test run on October 5.
+arrival. The baseline was deployed and checked on **2026-10-04**. Fresh October 5 CP-01 local
+acceptance results are recorded in [CHECKPOINTS.md](CHECKPOINTS.md) and the independent review
+reports. The user approved CP-01 on October 5; delivery/hosted verification is in progress. Consult
+CHECKPOINTS.md and the latest UPDATE.md entry for the actual commit/deployment status.
 
 ## 2. Read order and source of truth
 
 1. [AGENTS.md](AGENTS.md): working rules, authorized remote and logging obligations.
+   Read [CHECKPOINTS.md](CHECKPOINTS.md) for the current approval requirement and review queue.
 2. [CONTEXT.md](CONTEXT.md): purpose, constraints and durable implementation invariants.
 3. [UPDATE.md](UPDATE.md): current summary and latest dated entries. Earlier entries are historical;
    their temporary blockers may have been resolved by later entries.
@@ -138,8 +144,9 @@ installation was tested on October 4, but measured résumé/demo evidence is sti
 
 ## 5. Evidence already recorded
 
-The [2026-10-04 verification record](docs/verification/2026-10-04.md) is the detailed source.
-These are **historical results for the implementation**, not tests rerun for this documentation edit:
+The [2026-10-04 verification record](docs/verification/2026-10-04.md) is the detailed baseline source.
+These are **historical October 4 results**. Read [CHECKPOINTS.md](CHECKPOINTS.md) and its linked
+reviews for the fresh CP-01 acceptance results; local checks do not establish hosted or physical support:
 
 - 87 Python tests and 30 TypeScript tests passed; protocol coverage was 100% in both languages.
   The Python protocol threshold excludes CLI, QR I/O and simulation; do not call this whole-project
@@ -239,7 +246,10 @@ the isolated wheel-install check from CI, `uv run --project python pip-audit` an
 that reference when intentionally changing the version. Documentation-only edits need accurate
 links, status and diff checks, not an invented fresh application-test result.
 
-## 7. Exact next work when the user resumes
+## 7. Exact next physical checkpoint work (CP-02)
+
+Begin this checkpoint after CP-01 agreement, user approval and delivery. Physical observations need
+the user's devices; the camera tests below cannot be completed remotely without those observations.
 
 1. Confirm available Windows/Android/iPhone hardware and versions. Review the latest repo/log state
    and the physical benchmark procedure before collecting evidence. Hardware/observations are the
@@ -307,10 +317,12 @@ dated in Asia/Kolkata. State commands/results actually observed, distinguishing 
 untested assumptions and failed checks. Update the implementation checklist only when its exit is
 satisfied; refresh this handoff when the stop point or setup changes.
 
-The user authorized storing/pushing changes to the existing GitHub remote and asked for this log
-after every update. Preserve history and inspect the staged diff; never force-push as routine cleanup.
+The user requires explicit approval of each phase/feature checkpoint before it is committed/pushed.
+This supersedes the earlier standing push permission. The user also requires the update log after
+every meaningful change. Preserve history and inspect the staged diff; never force-push as routine cleanup.
 Do not stage credentials, received files, virtual environments, `node_modules`, build products,
-generated videos or `artifacts/`. Commit the selected source/docs/evidence, push the intended branch
+generated videos or `artifacts/`. After both agents' signoff and explicit user approval, commit the
+reviewed source/docs/evidence and push the intended branch
 and report actual push/CI status. If a check or authentication fails, record it rather than claiming
 delivery. Do not reset to the historical commits in this document.
 
@@ -324,9 +336,11 @@ HTML CSP and its documented GitHub Pages header limitations explicit; do not int
 
 > Read AGENTS.md, CONTEXT.md, MODEL_HANDOFF.md, the latest UPDATE.md entries and
 > IMPLEMENTATION_PLAN.md. Inspect Git status/history before editing. The software is a plaintext
-> Stage 1 feasibility build; physical G2 trials are pending and application work was paused before
-> this handoff. Follow the user's current instruction about resuming. Use SPEC-v2.md and shared
+> Stage 1 feasibility build; physical G2 trials are pending. Work is resumed with approval checkpoints
+> in CHECKPOINTS.md: develop and test independently, agree on the final revision, then stop for user
+> approval before committing/pushing or starting the next checkpoint. Use SPEC-v2.md and shared
 > vectors as the wire contract, keep Python/TypeScript independent, and do not substitute simulation
-> for phone evidence. When resumed, begin with the physical benchmark procedure and document actual
-> results. Update UPDATE.md after each meaningful change, preserve repository history, and push
-> authorized changes to Nagaram-Kridey/QR-transfer without committing private/generated artifacts.
+> for phone evidence. After CP-01 approval/delivery, follow the physical benchmark procedure and
+> document actual results. Windows + Android is available; v1 still needs iPhone evidence. Update UPDATE.md after
+> each meaningful change, preserve repository history, and push only the explicitly approved part
+> to Nagaram-Kridey/QR-transfer without committing private/generated artifacts.

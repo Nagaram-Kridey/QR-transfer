@@ -135,6 +135,16 @@ function CameraReceiver(): React.JSX.Element {
     live.started = 0; stopHardware(); setStatus(outcome.toUpperCase());
   }
   useEffect(() => () => stopHardware(), []);
+  useEffect(() => {
+    const failWhenHidden = (): void => {
+      if (document.hidden && runtime.current.started) {
+        const reason = 'Receiver was backgrounded during the trial.';
+        setError(reason); finish('failed', undefined, reason);
+      }
+    };
+    document.addEventListener('visibilitychange', failWhenHidden);
+    return () => document.removeEventListener('visibilitychange', failWhenHidden);
+  }, [expectedKiB]);
 
   function createWorker(onReady: () => void): Worker {
     const live = runtime.current;
@@ -150,18 +160,26 @@ function CameraReceiver(): React.JSX.Element {
       if (response.type === 'progress') setWarning(response.warning ?? '');
       if (response.type === 'complete') {
         if (live.started && performance.now() - live.started >= Math.max(60, 3 * expectedKiB) * 1000) {
-          setError('Verification exceeded the trial timeout.'); finish('timeout');
+          const reason = 'Verification exceeded the trial timeout.';
+          setError(reason); finish('timeout', undefined, reason);
         } else { setResult(response.file); finish('success', response.file); }
       }
       if (response.type === 'error') { setError(response.message); finish('failed', undefined, response.message); }
     };
-    worker.onerror = (): void => { setError('The decoder could not start. Reload and check that local WASM assets are available.'); finish('failed', undefined, 'worker error'); };
+    worker.onerror = (): void => {
+      if (generation !== runtime.current.generation) return;
+      setError('The decoder could not start. Reload and check that local WASM assets are available.'); finish('failed', undefined, 'worker error');
+    };
     worker.postMessage({ type: 'start' } satisfies WorkerInput);
     return worker;
   }
   function reset(): void {
-    stopHardware(); runtime.current.started = 0; runtime.current.latest = emptyStats();
-    setStats(emptyStats()); setResult(null); setReport(null); setError(''); setWarning(''); setStatus('IDLE');
+    const interruptedTrial = Boolean(runtime.current.started);
+    if (interruptedTrial) finish('cancelled', undefined, 'Session reset during trial.');
+    else stopHardware();
+    runtime.current.started = 0; runtime.current.latest = emptyStats();
+    setStats(emptyStats()); setResult(null); if (!interruptedTrial) setReport(null);
+    setError(''); setWarning(''); setStatus('IDLE');
   }
   async function enableCamera(): Promise<void> {
     reset(); setStatus('OPENING');
@@ -172,7 +190,10 @@ function CameraReceiver(): React.JSX.Element {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
       if (generation !== runtime.current.generation) { stream.getTracks().forEach(track => track.stop()); return; }
       runtime.current.stream = stream;
-      stream.getVideoTracks()[0].onended = () => { setError('Camera disconnected or permission was revoked.'); finish('failed', undefined, 'camera ended'); };
+      stream.getVideoTracks()[0].onended = () => {
+        if (generation !== runtime.current.generation) return;
+        setError('Camera disconnected or permission was revoked.'); finish('failed', undefined, 'camera ended');
+      };
       if (video.current) { video.current.srcObject = stream; await video.current.play(); }
       if (generation !== runtime.current.generation) return;
       createWorker(() => setStatus('ARMED'));
@@ -184,20 +205,31 @@ function CameraReceiver(): React.JSX.Element {
   function startReceiving(): void {
     const live = runtime.current;
     live.started = performance.now(); live.scanning = true; setStatus('RECEIVING');
-    const scratch = document.createElement('canvas');
-    const context = scratch.getContext('2d', { willReadFrequently: true })!;
+    let scratch: HTMLCanvasElement;
+    let context: CanvasRenderingContext2D;
+    try {
+      scratch = document.createElement('canvas');
+      const created = scratch.getContext('2d', { willReadFrequently: true });
+      if (!created) throw new Error('Camera pixel capture is unavailable in this browser.');
+      context = created;
+    } catch (reason) { setError(message(reason)); finish('failed', undefined, message(reason)); return; }
     const timeout = Math.max(60, 3 * expectedKiB) * 1000;
     function pump(): void {
       if (!live.scanning) return;
-      if (performance.now() - live.started >= timeout) { setError('Trial timed out. The failed observation can be exported.'); finish('timeout'); return; }
+      if (performance.now() - live.started >= timeout) {
+        const reason = 'Trial timed out. The failed observation can be exported.';
+        setError(reason); finish('timeout', undefined, reason); return;
+      }
       const source = video.current;
       if (!live.busy && live.worker && source && source.readyState >= 2 && source.videoWidth) {
-        const scale = Math.min(1, 960 / source.videoWidth);
-        scratch.width = Math.round(source.videoWidth * scale); scratch.height = Math.round(source.videoHeight * scale);
-        context.drawImage(source, 0, 0, scratch.width, scratch.height);
-        const pixels = context.getImageData(0, 0, scratch.width, scratch.height).data;
-        live.busy = true;
-        live.worker.postMessage({ type: 'image', pixels, width: scratch.width, height: scratch.height } satisfies WorkerInput, [pixels.buffer]);
+        try {
+          const scale = Math.min(1, 960 / source.videoWidth);
+          scratch.width = Math.round(source.videoWidth * scale); scratch.height = Math.round(source.videoHeight * scale);
+          context.drawImage(source, 0, 0, scratch.width, scratch.height);
+          const pixels = context.getImageData(0, 0, scratch.width, scratch.height).data;
+          live.busy = true;
+          live.worker.postMessage({ type: 'image', pixels, width: scratch.width, height: scratch.height } satisfies WorkerInput, [pixels.buffer]);
+        } catch (reason) { setError(message(reason)); finish('failed', undefined, message(reason)); return; }
       }
       live.timer = window.setTimeout(pump, 33);
     }
@@ -206,9 +238,11 @@ function CameraReceiver(): React.JSX.Element {
   async function importFrames(file: File | undefined): Promise<void> {
     if (!file) return;
     reset(); setStatus('IMPORTING');
+    const generation = runtime.current.generation;
     try {
       if (file.size > 4_000_000) throw new Error('Frame export exceeds 4 MB.');
       const exported: unknown = JSON.parse(await file.text());
+      if (generation !== runtime.current.generation) return;
       if (!exported || typeof exported !== 'object' || !('format' in exported) || exported.format !== 'lumenlink-frames-v2' || !('frames' in exported) || !Array.isArray(exported.frames) || exported.frames.length > 2048) throw new Error('Invalid frame export.');
       const texts = exported.frames;
       if (texts.some(text => typeof text !== 'string' || text.length > LIMITS.text)) throw new Error('Invalid frame in export.');
@@ -216,14 +250,17 @@ function CameraReceiver(): React.JSX.Element {
         runtime.current.busy = true;
         runtime.current.worker?.postMessage({ type: 'texts', texts } satisfies WorkerInput);
       });
-    } catch (reason) { setError(message(reason)); finish('failed', undefined, message(reason)); }
+    } catch (reason) {
+      if (generation !== runtime.current.generation) return;
+      setError(message(reason)); finish('failed', undefined, message(reason));
+    }
   }
   const active = ['OPENING', 'ARMED', 'RECEIVING', 'IMPORTING'].includes(status);
   return <section className="panel" aria-labelledby="receive-title">
     <div className="section-heading"><span className="step">02</span><div><h2 id="receive-title">Receive & verify</h2><p>Enable the camera, align the QR, then start receiving.</p></div></div>
     <div className="camera-stage"><video ref={video} muted playsInline aria-label="Camera preview" />{!active && <span>Camera is off</span>}</div>
     <div className="settings"><label>Expected test payload <select value={expectedKiB} disabled={active} onChange={event => setExpectedKiB(Number(event.target.value))}><option value={10}>10 KiB · 60 s timeout</option><option value={100}>100 KiB · 300 s timeout</option><option value={1024}>1 MiB · 3,072 s timeout</option></select></label><div className="state" aria-live="polite">{status}</div></div>
-    <div className="actions"><button disabled={active} onClick={() => { void enableCamera(); }}>Enable camera</button><button disabled={status !== 'ARMED'} onClick={startReceiving}>Start receiving</button><button className="secondary" disabled={!active} onClick={() => finish('cancelled')}>Stop</button><button className="secondary" onClick={reset}>Reset session</button></div>
+    <div className="actions"><button disabled={active} onClick={() => { void enableCamera(); }}>Enable camera</button><button disabled={status !== 'ARMED'} onClick={startReceiving}>Start receiving</button><button className="secondary" disabled={!active} onClick={() => finish('cancelled', undefined, 'User stopped receiving.')}>Stop</button><button className="secondary" onClick={reset}>Reset session</button></div>
     <progress value={stats.recovered} max={Math.max(stats.total, 1)} aria-label="Symbols recovered" />
     <p className="mono" aria-live="polite">{stats.recovered}/{stats.total} symbols · {stats.duplicates} duplicates · {stats.rejected} rejected</p>
     {warning && <p className="hint">{warning}</p>}
