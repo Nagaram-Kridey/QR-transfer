@@ -1,6 +1,7 @@
 # CP-02A: benchmark evidence tooling contract
 
-Status: both independent reviews passed; **user approved on 2026-10-05**, delivery in progress.
+Status: both independent reviews passed; **user approved on 2026-10-05**; delivered as `d6b0a7b`
+with all hosted CI jobs passing. See CHECKPOINTS.md/UPDATE.md for delivery links and remaining gates.
 Date: 2026-10-05, Asia/Kolkata. This supports the existing physical feasibility gate; it does not
 authorize production PWA/security work or turn generated inputs into physical evidence.
 

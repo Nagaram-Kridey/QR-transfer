@@ -18,8 +18,9 @@ physical G2 evidence remains the next phase dependency. CP-01 code `be174e1` is 
 passed hosted CI plus independent development/testing live checks. The user now reports both-direction
 physical smoke success and supplied one browser timeout report (60.0165 seconds, 434/506 symbols).
 Successful measured exports and 20-trial acceptance cells are still missing. CP-02A observation
-recording/per-cell summaries passed both agent reviews and were explicitly approved on 2026-10-05;
-delivery is in progress. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI outcomes.
+recording/per-cell summaries passed both agent reviews, were explicitly approved on 2026-10-05 and
+are delivered as `d6b0a7b` with all hosted CI jobs passing. Pages stays at browser build `be174e1`;
+no browser code changed. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI outcomes.
 Reported hardware is Windows 10 + Samsung A17 5G / Android 16; this workspace instead reports
 Windows 11 build 26200 / Lenovo 83K1, so the selected computer needs clarification. Chrome/camera
 details remain to record. No iPhone availability or qualifying acceptance results have been recorded.
@@ -33,7 +34,8 @@ Full v1 still needs both device pairs.
 | Branch at handoff start | `main`, clean and tracking `origin/main` |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
-| Latest delivered application code | `be174e1` — approved trial-readiness corrections and test-format repair |
+| Latest delivered Python code | `d6b0a7b` — approved benchmark recording/summary tooling |
+| Deployed browser code | `be174e1` — approved trial-readiness corrections; CP-02A is CLI-only |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |

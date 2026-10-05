@@ -53,7 +53,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 |---|---|---|---|
 | CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved and delivered as be174e1; CI, Pages and both live reviews passed |
 | CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | In progress: awaiting computer identity and real smoke observations |
-| CP-02A | Observation recorder and per-cell benchmark summaries | Independent dev/test agreement, strict metadata/provenance boundaries, retained failures | User approved 2026-10-05; commit/push and hosted checks in progress |
+| CP-02A | Observation recorder and per-cell benchmark summaries | Independent dev/test agreement, strict metadata/provenance boundaries, retained failures | Approved/delivered as d6b0a7b; all hosted CI jobs passed |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -204,6 +204,12 @@ no known unresolved blocking issues within scope. User response on **2026-10-05 
 **"approved"**. This approves CP-02A commit/push of the evidence tool, schemas/docs/reviews and the
 non-sensitive raw timeout report. It does not approve G2, later product stages or Pages deployment.
 Record actual Git/CI results here and in UPDATE.md after completion.
+
+Delivery: committed/pushed as `d6b0a7b`; local HEAD and authorized remote main matched
+`d6b0a7b92930d36c1f154fa69756ad408570cd9f`. [Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37354625219)
+completed successfully: Windows/Linux Python, browser/interoperability and dependency-audit jobs
+passed. No Pages workflow was dispatched because this is a CLI-only feature. CP-02A delivery is
+complete; CP-02 physical qualification still requires actual measured acceptance data.
 
 ## Approval packet template
 

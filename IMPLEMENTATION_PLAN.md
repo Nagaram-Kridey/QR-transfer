@@ -34,7 +34,8 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] Minimal browser harness: file/text, static/animated QR, camera, worker, verified download.
 - [x] Permission errors, cancellation, first-send acknowledgement, ≤10 fps and 2 fps option.
 - [x] Synthetic clean/degraded video regression through the actual WASM worker path.
-- [ ] CP-02A bounded observation recorder/per-cell summaries, independent review and approval.
+- [x] CP-02A bounded observation recorder/per-cell summaries, independent review, approval and
+  GitHub delivery (`d6b0a7b`; hosted Windows/Linux/browser/audit checks passed).
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.
 - [ ] Android Chrome and iPhone Safari physical camera smoke tests.
 - [ ] Frozen 20-trial cells at 10 KiB and 100 KiB; record all outcomes.

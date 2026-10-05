@@ -25,8 +25,9 @@ The original owner-context narrative is preserved in the archived draft.
 Stage 1 software exists; physical feasibility remains unqualified. The user reports both-direction
 physical smoke success; one supplied browser export records a timeout, with successful exports and
 frozen acceptance cells still missing. CP-02A observation/summary tooling passed separate
-development/testing review and was explicitly approved on 2026-10-05; delivery is in progress.
-See CHECKPOINTS.md and the latest UPDATE.md entry for actual Git/CI results.
+development/testing review, was explicitly approved on 2026-10-05 and is delivered as `d6b0a7b`
+with all hosted CI jobs passing. See CHECKPOINTS.md and UPDATE.md for evidence. Pages still serves
+the corrected CP-01 browser build because this feature changes only Python tooling and documents.
 Current modes are plaintext,
 uncompressed repeat-mode. The browser is a test harness, not a completed installable PWA.
 No security, mobile support, field throughput or v1 release claims have been earned yet.

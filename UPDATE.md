@@ -12,7 +12,8 @@ CP-01 local acceptance and both independent reviews passed; user approved commit
 reviews passed. The user reports both-direction physical smoke success, but supplied one timeout
 report; measured successes and acceptance runs remain missing. CP-02A evidence tooling is being
 built/reviewed; both final agent reviews passed and the user approved CP-02A on 2026-10-05.
-Commit/push/CI delivery is in progress. Computer identity needs clarification.
+Commit `d6b0a7b` is pushed; all hosted CI jobs passed and CP-02A delivery is complete.
+Computer identity needs clarification.
 G2 remains pending; the reported pair is Windows 10 + Samsung A17 5G / Android 16, while this
 workspace reports Windows 11 build 26200 / Lenovo 83K1. iPhone qualification remains required
 for v1. [MODEL_HANDOFF.md](MODEL_HANDOFF.md) is the continuation guide. Implementation `8eb1d1c`
@@ -309,16 +310,24 @@ Computer identity and complete versions/settings remain unresolved. No CP-02A ap
 **Done:** Recorded the user's explicit "approved" response for the presented CP-02A tool,
 documentation/reviews/schema and non-sensitive raw timeout report. Reconciled current approval
 status across the plan/context/handoff/benchmark documents. No new feature or Pages deployment
-is part of this delivery.
+is part of this delivery. Committed and pushed the approved part as `d6b0a7b` without rewriting history.
 
 **Verified:** The three-file source/test snapshot still matches both agent signoffs:
 `e1b284d84dc6468fd121a763c88941dc7caab6b26b8a718fb2caf932b7d01383`. Raw timeout evidence remains
 byte-identical, and the 27-column template/metadata example still match the module's contract.
 `git diff --check` passed. Previous final checks were 293 Python tests, Ruff/format/mypy and package
 installation; no new test run or hosted pass is assumed before inspecting delivery.
+Both agents independently rechecked unchanged scope and identity before push. Local HEAD and remote
+main matched `d6b0a7b92930d36c1f154fa69756ad408570cd9f`; working tree was clean after the push.
+Hosted [CI run 37354625219](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37354625219)
+completed successfully for that commit: Windows/Linux Python, browser/interoperability and
+dependency-audit jobs all passed. Both agents' read-only delivery audits confirmed unchanged scope.
+Current/review Markdown validation passed 90 local links and whitespace checks. Updated the
+implementation checklist to mark the delivered helper complete; physical gate items remain open.
 
-**Next:** Commit/push only the approved files, inspect hosted CI, record actual results, then collect
-successful physical exports and complete frozen acceptance cells for the manual G2 decision.
+**Next:** Collect successful physical exports and actual file/device/settings metadata, use the
+delivered recorder to preserve exploratory observations, then freeze and complete the 20-trial
+acceptance cells for the manual G2 decision. Further feature/phase delivery still requires approval.
 
-**Blockers:** CI delivery not yet verified. Only one timeout export is available; successful
+**Blockers:** Only one timeout export is available; successful
 exports/actual file metadata, full 20-trial cells and device/settings confirmation remain missing.
