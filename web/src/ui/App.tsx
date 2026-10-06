@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 import { LIMITS, Transfer, prepareContainer } from '../codec/core';
 import type { ReceivedFile, ReceiveStats } from '../codec/core';
+import { CameraDiagnostics, buildDiagnosticsExport } from '../diagnostics/camera';
+import type { DiagnosticSnapshot } from '../diagnostics/camera';
 import type { WorkerInput, WorkerOutput } from '../workers/messages';
 
 const emptyStats = (): ReceiveStats => ({ state: 'IDLE', recovered: 0, total: 0, seen: 0, duplicates: 0, rejected: 0, session: '' });
@@ -112,9 +114,22 @@ function CameraReceiver(): React.JSX.Element {
   const [warning, setWarning] = useState('');
   const [result, setResult] = useState<ReceivedFile | null>(null);
   const [expectedKiB, setExpectedKiB] = useState(10);
-  const [report, setReport] = useState<Record<string, unknown> | null>(null);
+  const [reportText, setReportText] = useState<string | null>(null);
+  const [diagnosticsText, setDiagnosticsText] = useState<string | null>(null);
+  const [diagnosticsStatus, setDiagnosticsStatus] = useState('');
   const video = useRef<HTMLVideoElement>(null);
-  const runtime = useRef({ worker: null as Worker | null, stream: null as MediaStream | null, timer: 0, busy: false, scanning: false, started: 0, generation: 0, latest: emptyStats() });
+  const runtime = useRef({ worker: null as Worker | null, stream: null as MediaStream | null, timer: 0, busy: false, scanning: false, started: 0, generation: 0, latest: emptyStats(), diagnostics: null as CameraDiagnostics | null, attemptId: 0 });
+
+  function recordDiagnostics(action: (diagnostics: CameraDiagnostics) => void): void {
+    const live = runtime.current;
+    if (!live.diagnostics) return;
+    try { action(live.diagnostics); }
+    catch {
+      live.diagnostics = null;
+      setDiagnosticsText(null);
+      setDiagnosticsStatus('Diagnostics unavailable. The trial observation remains exportable.');
+    }
+  }
 
   function stopHardware(): void {
     const live = runtime.current; live.generation++; live.scanning = false;
@@ -124,15 +139,35 @@ function CameraReceiver(): React.JSX.Element {
   }
   function finish(outcome: string, file?: ReceivedFile, reason?: string): void {
     const live = runtime.current;
-    if (live.started) setReport({
+    const now = performance.now();
+    const observationText = live.started ? JSON.stringify({
       format: 'lumenlink-camera-observation-v1', outcome, reason: reason ?? '',
-      elapsed_seconds: (performance.now() - live.started) / 1000,
+      elapsed_seconds: (now - live.started) / 1000,
       expected_payload_kib: expectedKiB, payload_bytes: file?.data.length ?? null,
       payload_sha256: file?.sha256 ?? null, stats: live.latest,
       browser: navigator.userAgent, recorded_at: new Date().toISOString(),
       note: 'Observation only: add device, commit, optical settings and trial metadata to the benchmark CSV.',
-    });
+    }, null, 2) : null;
+    let diagnosticSnapshot: DiagnosticSnapshot | undefined;
+    recordDiagnostics(diagnostics => { diagnostics.finish(now); diagnosticSnapshot = diagnostics.snapshot(); });
     live.started = 0; stopHardware(); setStatus(outcome.toUpperCase());
+    if (observationText) {
+      // Download and hash these exact frozen UTF-8 bytes; diagnostics never
+      // changes the strict v1 observation profile.
+      setReportText(observationText); setDiagnosticsText(null);
+      if (diagnosticSnapshot) {
+        setDiagnosticsStatus('Preparing local diagnostics…');
+        const generation = live.generation;
+        void buildDiagnosticsExport(observationText, diagnosticSnapshot).then(exported => {
+          if (generation !== runtime.current.generation) return;
+          setDiagnosticsText(JSON.stringify(exported, null, 2));
+          setDiagnosticsStatus('Local timing diagnostics ready. These are proxies, not physical qualification.');
+        }).catch(() => {
+          if (generation !== runtime.current.generation) return;
+          setDiagnosticsStatus('Diagnostics unavailable. The trial observation remains exportable.');
+        });
+      }
+    }
   }
   useEffect(() => () => stopHardware(), []);
   useEffect(() => {
@@ -156,6 +191,10 @@ function CameraReceiver(): React.JSX.Element {
       const response = event.data;
       if (response.type === 'ready') { live.busy = false; onReady(); }
       if (response.type === 'idle') live.busy = false;
+      if (response.type === 'scan') {
+        recordDiagnostics(diagnostics => diagnostics.completed(response.metrics, performance.now()));
+        live.latest = response.stats; setStats(response.stats);
+      }
       if (response.type === 'progress' || response.type === 'complete') { live.latest = response.stats; setStats(response.stats); }
       if (response.type === 'progress') setWarning(response.warning ?? '');
       if (response.type === 'complete') {
@@ -177,8 +216,9 @@ function CameraReceiver(): React.JSX.Element {
     const interruptedTrial = Boolean(runtime.current.started);
     if (interruptedTrial) finish('cancelled', undefined, 'Session reset during trial.');
     else stopHardware();
-    runtime.current.started = 0; runtime.current.latest = emptyStats();
-    setStats(emptyStats()); setResult(null); if (!interruptedTrial) setReport(null);
+    runtime.current.started = 0; runtime.current.latest = emptyStats(); runtime.current.diagnostics = null;
+    setStats(emptyStats()); setResult(null);
+    if (!interruptedTrial) { setReportText(null); setDiagnosticsText(null); setDiagnosticsStatus(''); }
     setError(''); setWarning(''); setStatus('IDLE');
   }
   async function enableCamera(): Promise<void> {
@@ -205,6 +245,7 @@ function CameraReceiver(): React.JSX.Element {
   function startReceiving(): void {
     const live = runtime.current;
     live.started = performance.now(); live.scanning = true; setStatus('RECEIVING');
+    live.diagnostics = new CameraDiagnostics(live.started); live.attemptId = 0;
     let scratch: HTMLCanvasElement;
     let context: CanvasRenderingContext2D;
     try {
@@ -212,7 +253,7 @@ function CameraReceiver(): React.JSX.Element {
       const created = scratch.getContext('2d', { willReadFrequently: true });
       if (!created) throw new Error('Camera pixel capture is unavailable in this browser.');
       context = created;
-    } catch (reason) { setError(message(reason)); finish('failed', undefined, message(reason)); return; }
+    } catch (reason) { recordDiagnostics(diagnostics => diagnostics.initializationFailed()); setError(message(reason)); finish('failed', undefined, message(reason)); return; }
     const timeout = Math.max(60, 3 * expectedKiB) * 1000;
     function pump(): void {
       if (!live.scanning) return;
@@ -221,15 +262,38 @@ function CameraReceiver(): React.JSX.Element {
         setError(reason); finish('timeout', undefined, reason); return;
       }
       const source = video.current;
+      if (live.busy) recordDiagnostics(diagnostics => diagnostics.busySkip());
       if (!live.busy && live.worker && source && source.readyState >= 2 && source.videoWidth) {
+        let attempt: number | undefined;
+        let stage: 'capture' | 'readback' | 'submit' = 'capture';
+        let stageStarted = performance.now();
         try {
           const scale = Math.min(1, 960 / source.videoWidth);
-          scratch.width = Math.round(source.videoWidth * scale); scratch.height = Math.round(source.videoHeight * scale);
+          const width = Math.round(source.videoWidth * scale), height = Math.round(source.videoHeight * scale);
+          attempt = ++live.attemptId;
+          recordDiagnostics(diagnostics => { diagnostics.begin(stageStarted, source.videoWidth, source.videoHeight, width, height); });
+          scratch.width = width; scratch.height = height;
           context.drawImage(source, 0, 0, scratch.width, scratch.height);
+          recordDiagnostics(diagnostics => diagnostics.stage(attempt!, 'capture', performance.now() - stageStarted));
+          stage = 'readback'; stageStarted = performance.now();
           const pixels = context.getImageData(0, 0, scratch.width, scratch.height).data;
+          recordDiagnostics(diagnostics => diagnostics.stage(attempt!, 'readback', performance.now() - stageStarted));
+          stage = 'submit';
           live.busy = true;
-          live.worker.postMessage({ type: 'image', pixels, width: scratch.width, height: scratch.height } satisfies WorkerInput, [pixels.buffer]);
-        } catch (reason) { setError(message(reason)); finish('failed', undefined, message(reason)); return; }
+          const submittedAt = performance.now();
+          live.worker.postMessage({ type: 'image', attempt_id: attempt, pixels, width: scratch.width, height: scratch.height } satisfies WorkerInput, [pixels.buffer]);
+          // Only a successful dispatch is submitted. Dimensions were counted
+          // before pixels.buffer became detached by transfer.
+          recordDiagnostics(diagnostics => diagnostics.submitted(attempt!, submittedAt));
+        } catch (reason) {
+          if (attempt !== undefined) {
+            recordDiagnostics(diagnostics => {
+              if (stage !== 'submit') diagnostics.stage(attempt!, stage, performance.now() - stageStarted);
+              diagnostics.captureFailed(attempt!, performance.now(), stage);
+            });
+          }
+          setError(message(reason)); finish('failed', undefined, message(reason)); return;
+        }
       }
       live.timer = window.setTimeout(pump, 33);
     }
@@ -266,7 +330,9 @@ function CameraReceiver(): React.JSX.Element {
     {warning && <p className="hint">{warning}</p>}
     {error && <p className="error" role="alert">{error}</p>}
     {result && <div className="result"><strong>File verified</strong><p>{result.name} · {result.data.length.toLocaleString()} bytes</p><p className="hash">SHA-256 {result.sha256}</p><button onClick={() => download(result.name, result.data)}>Save verified file</button></div>}
-    {report && <button className="secondary" onClick={() => download('camera-observation.json', JSON.stringify(report, null, 2), 'application/json')}>Export trial observation</button>}
+    {reportText && <button className="secondary" onClick={() => download('camera-observation.json', reportText, 'application/json')}>Export trial observation</button>}
+    {diagnosticsText && <button className="secondary" onClick={() => download('camera-diagnostics.json', diagnosticsText, 'application/json')}>Export camera diagnostics</button>}
+    {diagnosticsStatus && <p className="hint" role="status">{diagnosticsStatus}</p>}
     <details><summary>Conformance testing without a camera</summary><p>Import an exported frame cycle. This checks the codec, not the optical channel.</p><label>Frame JSON <input type="file" accept="application/json,.json" disabled={active} onChange={event => { void importFrames(event.target.files?.[0]); event.target.value = ''; }} /></label></details>
   </section>;
 }

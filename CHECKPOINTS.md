@@ -54,6 +54,9 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved and delivered as be174e1; CI, Pages and both live reviews passed |
 | CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | In progress: awaiting computer identity and real smoke observations |
 | CP-02A | Observation recorder and per-cell benchmark summaries | Independent dev/test agreement, strict metadata/provenance boundaries, retained failures | Approved/delivered as d6b0a7b; all hosted CI jobs passed |
+| CP-02B.1 | Browser full-frame diagnostics | Bounded exports, exact observation linkage, lifecycle regressions, both reviews | User approved; commit/push/CI/Pages delivery in progress |
+| CP-02B.2 | Experimental browser autoframing | CP-02B.1 approval; bounded ROI and adversarial replay | Not started; full-frame remains default |
+| CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -210,6 +213,66 @@ Delivery: committed/pushed as `d6b0a7b`; local HEAD and authorized remote main m
 completed successfully: Windows/Linux Python, browser/interoperability and dependency-audit jobs
 passed. No Pages workflow was dispatched because this is a CLI-only feature. CP-02A delivery is
 complete; CP-02 physical qualification still requires actual measured acceptance data.
+
+## CP-02B.1: browser diagnostics review packet
+
+The user requested staged implementation of the accepted
+[autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) on 2026-10-06 (IST). Base:
+`5ee35618ea339a4a6d4ad7e7c667656977b6d00c`. CP-02B.1 is limited to instrumenting the existing
+full-frame camera pipeline and separate bounded diagnostic exports linked to unchanged observation-v1
+bytes. The sampler, decoder options, codecs, wire contract and benchmark CSV remain unchanged.
+Development and testing own separate source/test work and will review the same final revision.
+
+Budget: two hours of the eight-hour experiment cap; physical trials and approval waits are separate.
+No ROI behavior or selection UI belongs to this checkpoint. CP-02B.2 must not start before approval.
+The user approved commit/push plus Pages deployment of diagnostics for physical testing on October 7,
+after hosted CI passes. Actual delivery results are recorded below once completed.
+
+Implemented locally: bounded full-frame scan accounting, immutable recent-256 records plus aggregate
+metrics, separate exact-observation-linked JSON export, final scan metrics before terminal messages,
+and nonfatal diagnostic/hash failure handling. Frame imports and pre-trial setup create no sidecar.
+Native worker crashes retain interrupted/unknown worker metrics; no fabricated timing is recorded.
+
+Source/test freeze SHA-256:
+`91675844c1ca3f90f87779288a92ec1376bd4284d704916519df49a644287374`.
+Same sorted-path/LF-normalized `path:sha256` algorithm used by earlier checkpoints, over these files:
+
+- `web/src/diagnostics/camera.ts`, `web/src/diagnostics/camera.test.ts`
+- `web/src/workers/messages.ts`, `web/src/workers/receiver.worker.ts`,
+  `web/src/workers/receiver.worker.test.ts`
+- `web/src/ui/App.tsx`, `web/e2e/camera.spec.ts`, `web/e2e/harness.spec.ts`
+
+Actual local checks on **2026-10-07 (IST)**:
+
+| Check | Result |
+|---|---|
+| Browser lint and strict TypeScript | Passed after the final source/test edit |
+| Vitest | 69 passed: 32 diagnostics, 7 worker, 30 codec |
+| Configured codec coverage | 100%; does not measure new diagnostics/UI coverage |
+| Playwright | 46 passed across harness browser engines and clean/degraded virtual-camera paths |
+| Production build | Passed for default base and GitHub Pages `/QR-transfer/` base |
+| Interoperability | Checked-in Python vectors match; Python verified four independent TS transfers |
+| Strict Python observation compatibility | Exact-byte synthetic cancelled observation accepted; physical attestation false, manual review required |
+| Project-base optical software smoke | Exact 320-byte synthetic save, matching sidecar digest, final scan included, local WASM HTTP 200, no page errors/external requests |
+
+Independent [development](docs/reviews/CP-02B.1-development.md) and
+[testing](docs/reviews/CP-02B.1-testing.md) verdicts are **PASS** on the identical snapshot above.
+Both explicitly agree all confirmed in-scope issues are resolved and no known blocking issue remains.
+The reports preserve actual findings/verification and limitations; this is not a global bug-free
+guarantee. User response on **2026-10-07 (IST)**: **"approved"** for CP-02B.1 commit/push and Pages
+deployment after CI. Application/tests remain frozen at the reviewed revision. Delivery is in progress;
+no candidate commit/push/hosted CI/Pages deployment or physical trial is claimed yet. Current Pages
+still serves `be174e1`. Full-frame scanning remains the only mode; speed benefit and G2 are unproven.
+
+Requested approval scope: **CP-02B.1 commit/push and Pages deployment after hosted CI passes**,
+including the eight source/test files, experiment/diagnostics docs, current plans/handoff/log and
+independent review reports. Generated smoke artifacts stay ignored. On approval, deliver this frozen
+part, verify actual hosted/deployed outcomes and log them before starting CP-02B.2. The adoption
+thresholds and physical decision remain future checkpoints.
+
+Approval permits delivery of CP-02B.1 and then continuation to CP-02B.2 after actual delivery checks.
+It is not approval to push the future ROI prototype or declare adoption/G2. Its independently
+reviewed local candidate still requires another explicit user decision before push/deployment.
 
 ## Approval packet template
 

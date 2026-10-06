@@ -1,10 +1,29 @@
 # LumenLink: next-model handoff
 
-Snapshot: **2026-10-05, Asia/Kolkata (IST)**. Read this before continuing the project.
+Snapshot: **2026-10-07, Asia/Kolkata (IST)**. Read this before continuing the project.
 This document explains the existing implementation and the next steps; it does not replace the
 protocol specification or the execution checklist. Refresh it after meaningful progress.
 
 ## 1. Where work stopped
+
+**Current local work: CP-02B.1 browser diagnostics**, following the user-accepted
+[autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md). Software checks passed for the frozen
+eight-file snapshot `91675844c1ca3f90f87779288a92ec1376bd4284d704916519df49a644287374`,
+based on `5ee3561`. Both independent reports explicitly agree PASS with no known unresolved
+in-scope blocker. The user approved CP-02B.1 commit/push/Pages deployment on October 7;
+delivery is in progress. Complete actual CI/Pages/live checks before CP-02B.2. No ROI code or physical
+performance claim belongs to CP-02B.1. Its two-hour cap is part of the eight-hour total experiment
+budget; physical trials are separate. See the latest UPDATE.md entries for elapsed time/results.
+Local checks: 69 Vitest tests, 46 Playwright tests, lint/types, Pages-base production build and
+independent interoperability pass. The Python recorder accepts the unchanged synthetic cancelled
+v1 export and its sidecar digest matches exact bytes. These are software checks, not physical trials.
+No candidate has been committed/pushed/deployed; live browser code remains `be174e1`.
+The approval packet requests CP-02B.1 commit/push plus Pages deployment after hosted CI passes.
+Its [development](docs/reviews/CP-02B.1-development.md) and
+[testing](docs/reviews/CP-02B.1-testing.md) reports define the eight-file fingerprint and scoped checks.
+The latest **"approved"** response authorizes this packet; earlier "continue" during construction
+was a resume instruction. Push only the reviewed part, verify CI, deploy/verify/log the
+candidate, then begin CP-02B.2 within the remaining experiment budget. Do not skip physical evidence.
 
 **Stage 1 software is implemented. The physical feasibility gate is still pending.** The repository
 contains an independent Python/TypeScript plaintext repeat-mode implementation, a CLI, a minimal
@@ -19,8 +38,9 @@ passed hosted CI plus independent development/testing live checks. The user now 
 physical smoke success and supplied one browser timeout report (60.0165 seconds, 434/506 symbols).
 Successful measured exports and 20-trial acceptance cells are still missing. CP-02A observation
 recording/per-cell summaries passed both agent reviews, were explicitly approved on 2026-10-05 and
-are delivered as `d6b0a7b` with all hosted CI jobs passing. Pages stays at browser build `be174e1`;
-no browser code changed. Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI outcomes.
+are delivered as `d6b0a7b` with all hosted CI jobs passing. CP-02A changed no browser code.
+Pages stays at browser build `be174e1`; the local CP-02B.1 browser candidate is not deployed.
+Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI outcomes.
 Reported hardware is Windows 10 + Samsung A17 5G / Android 16; this workspace instead reports
 Windows 11 build 26200 / Lenovo 83K1, so the selected computer needs clarification. Chrome/camera
 details remain to record. No iPhone availability or qualifying acceptance results have been recorded.
@@ -31,7 +51,7 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at handoff start | `main`, clean and tracking `origin/main` |
+| Branch at current handoff | `main`, uncommitted CP-02B.1 candidate; remote remains delivered code |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
 | Latest delivered Python code | `d6b0a7b` — approved benchmark recording/summary tooling |
@@ -108,7 +128,7 @@ transfer uploads, native mobile apps, receiver-key exchange, color codes or YOLO
 | Browser harness | [App.tsx](web/src/ui/App.tsx), [style.css](web/src/ui/style.css) | File/text preparation, QR playback/pause/settings, camera alignment/start/cancel, verified explicit download and local observation export |
 | Shared conformance | [repeat-v2.json](vectors/repeat-v2.json), [generate_vectors.py](tools/generate_vectors.py), [emit-vectors.ts](web/scripts/emit-vectors.ts), [verify_ts_vectors.py](tools/verify_ts_vectors.py) | Python fixture reproduction plus independent TS-to-Python transfers |
 | Automated tests | [Python tests](python/tests/), [codec tests](web/src/codec/core.test.ts), [browser tests](web/e2e/) | Properties, malformed inputs, boundaries, session conflicts, camera errors and synthetic video decoding |
-| Experiment preparation | [make_trial_payloads.py](tools/make_trial_payloads.py), [benchmark procedure](docs/benchmarks/README.md), [CSV header](docs/benchmarks/trial-template.csv), [CP-02A contract](docs/benchmarks/CP-02A-CONTRACT.md) | Public fixtures, one raw timeout, operator metadata/summary tooling in local review; no qualifying physical results |
+| Experiment preparation | [make_trial_payloads.py](tools/make_trial_payloads.py), [benchmark procedure](docs/benchmarks/README.md), [CSV header](docs/benchmarks/trial-template.csv), [CP-02A contract](docs/benchmarks/CP-02A-CONTRACT.md) | Public fixtures, one raw timeout, approved/delivered CP-02A evidence tooling; no qualifying physical results |
 | Delivery | [CI workflow](.github/workflows/ci.yml), [Pages workflow](.github/workflows/pages.yml) | Windows/Linux Python, browser/interoperability/audit checks; manual Pages publication |
 
 Maintain separation between protocol, optical adapters and UI. Keep the two codecs independent;

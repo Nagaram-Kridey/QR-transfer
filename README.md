@@ -63,6 +63,11 @@ for observation JSON, explicit cell metadata and per-run CSV summaries. See the
 The tool reports numerical candidates for manual review; physical qualification still requires
 the real 20-trial acceptance runs. Check [CHECKPOINTS.md](CHECKPOINTS.md) for approval/delivery status.
 
+The [browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) begins with a local
+diagnostics checkpoint. Its [collection guide](docs/benchmarks/BROWSER_DIAGNOSTICS.md) explains
+separate bounded camera timing exports and their limits. Consult CHECKPOINTS.md before assuming
+this candidate is deployed; ROI tracking and measured speed gains remain pending.
+
 ## Implementation
 
 - Python and TypeScript independent wire-v2 encoders/decoders with shared conformance vectors.

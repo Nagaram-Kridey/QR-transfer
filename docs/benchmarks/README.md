@@ -6,6 +6,12 @@ at 60.0165 seconds, with 434/506 symbols recovered; actual file size/settings an
 are still missing. Keep that failure. Generated videos, synthetic QR images, browser tests and
 simulator runs are software verification, not evidence of camera throughput on Android or iPhone.
 
+CP-02B.1 adds browser diagnostics under the accepted
+[autoframing experiment](../planning/AUTOFRAMING_PLAN.md). Read the
+[diagnostics guide](BROWSER_DIAGNOSTICS.md) and current CHECKPOINTS.md status before collecting
+candidate measurements. The original observation-v1 and CSV contracts remain the benchmark inputs;
+separate timing exports do not establish provenance, qualify G2 or prove a performance gain.
+
 ## Before acceptance trials
 
 1. Commit the tested code and record its commit ID. Use non-sensitive 10 KiB and 100 KiB fixtures

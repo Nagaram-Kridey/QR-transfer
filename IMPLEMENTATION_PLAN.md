@@ -36,6 +36,10 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] Synthetic clean/degraded video regression through the actual WASM worker path.
 - [x] CP-02A bounded observation recorder/per-cell summaries, independent review, approval and
   GitHub delivery (`d6b0a7b`; hosted Windows/Linux/browser/audit checks passed).
+- [ ] CP-02B.1 full-frame browser diagnostics and bounded sidecar export (local checks passed;
+  both final peer reviews PASS; user approved, delivery checks in progress).
+- [ ] CP-02B.2 optional ROI prototype, only after CP-02B.1 approval.
+- [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.
 - [ ] Android Chrome and iPhone Safari physical camera smoke tests.
 - [ ] Frozen 20-trial cells at 10 KiB and 100 KiB; record all outcomes.
@@ -43,6 +47,11 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 
 Exit: a physical feasibility decision. **Current handoff is at this gate.** Browser harness
 controls exist to run the experiment; they do not establish a supported mobile product.
+
+The user accepted the [autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) on October 6.
+It has an eight-hour engineering cap (2 diagnostics, 3 tracking, 3 tests/docs), excludes physical
+trial time, and preserves approval stops between CP-02B.1, CP-02B.2 and CP-02B.3. It does not bypass
+G2 or grant a second eight-hour investigation if used as the existing G2 tuning allowance.
 
 ## Stage 2 — Early portfolio checkpoint
 

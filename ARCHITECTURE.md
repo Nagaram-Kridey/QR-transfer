@@ -32,6 +32,11 @@ completion percentage. Wire layout and canonicalization are specified in `docs/s
 - Browser codec/core is independent TypeScript. The receiver worker owns scanning and collection;
   the UI handles explicit controls, video capture, download and local observation exports.
 - One camera image is transferred to the worker at a time; busy workers cause frames to be dropped.
+- CP-02B.1 locally instruments that full-frame pipeline with bounded timing/count diagnostics,
+  exported separately and linked to the exact observation bytes. No crop tracking or codec change
+  belongs to that checkpoint. Its current review status is in CHECKPOINTS.md; see the
+  [diagnostics guide](docs/benchmarks/BROWSER_DIAGNOSTICS.md) and
+  [experiment plan](docs/planning/AUTOFRAMING_PLAN.md).
 - zxing-wasm uses a Vite-managed local WASM URL. No decoder CDN fallback is allowed.
 - Shared fixtures exercise both encoders/decoders. Additional TS-generated transfers are checked
   independently in Python. QR pixels need not match; decoded bytes must.

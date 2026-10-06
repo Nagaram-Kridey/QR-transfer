@@ -22,12 +22,21 @@ The original owner-context narrative is preserved in the archived draft.
 
 ## Current state
 
+On **2026-10-06 (IST)** the user requested implementation of the accepted
+[browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md). Only CP-02B.1 diagnostics is
+locally implemented with 69 Vitest/46 browser checks passing and both independent reviews PASS
+on the same final revision. The user approved CP-02B.1 commit/push/Pages deployment on October 7;
+delivery checks are in progress. Complete delivery before starting CP-02B.2, then stop at that
+prototype's own approval checkpoint. The eight-hour cap includes tests/docs, with two hours for diagnostics.
+Full-frame mode, plaintext status and physical gates remain in force. Cropping is not yet implemented.
+
 Stage 1 software exists; physical feasibility remains unqualified. The user reports both-direction
 physical smoke success; one supplied browser export records a timeout, with successful exports and
 frozen acceptance cells still missing. CP-02A observation/summary tooling passed separate
 development/testing review, was explicitly approved on 2026-10-05 and is delivered as `d6b0a7b`
-with all hosted CI jobs passing. See CHECKPOINTS.md and UPDATE.md for evidence. Pages still serves
-the corrected CP-01 browser build because this feature changes only Python tooling and documents.
+with all hosted CI jobs passing. See CHECKPOINTS.md and UPDATE.md for evidence. CP-02A changed only
+Python tooling and documents. Pages still serves the corrected CP-01 browser build; the local
+CP-02B.1 browser candidate awaits approval and has not been deployed.
 Current modes are plaintext,
 uncompressed repeat-mode. The browser is a test harness, not a completed installable PWA.
 No security, mobile support, field throughput or v1 release claims have been earned yet.

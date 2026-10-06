@@ -25,6 +25,8 @@ test('prepares, exports, verifies and saves the exact message', async ({ page })
   expect(await readFile((await result.path())!, 'utf8')).toBe('A cross-browser transfer 🌍\n');
   expect(external).toEqual([]);
   expect(errors).toEqual([]);
+  await expect(page.getByRole('button', { name: 'Export trial observation' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Export camera diagnostics' })).toHaveCount(0);
 });
 
 test('starts and pauses playback only after the flashing acknowledgement', async ({ page }) => {
@@ -48,6 +50,8 @@ test('handles camera denial without leaving an active session', async ({ page })
   await expect(page.getByRole('alert')).toContainText('Camera permission denied');
   await expect(page.getByRole('button', { name: 'Enable camera' })).toBeEnabled();
   await expect(page.getByRole('button', { name: 'Start receiving' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Export trial observation' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Export camera diagnostics' })).toHaveCount(0);
 });
 
 test('rejects incomplete frame imports without leaving the receiver busy', async ({ page }) => {
