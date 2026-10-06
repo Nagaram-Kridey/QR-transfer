@@ -54,7 +54,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-01 | Stage 1 trial-readiness fixes and this approval workflow | Reproduced lifecycle/reporting fixes, regressions, both agent signoffs; no wire change | Approved and delivered as be174e1; CI, Pages and both live reviews passed |
 | CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | In progress: awaiting computer identity and real smoke observations |
 | CP-02A | Observation recorder and per-cell benchmark summaries | Independent dev/test agreement, strict metadata/provenance boundaries, retained failures | Approved/delivered as d6b0a7b; all hosted CI jobs passed |
-| CP-02B.1 | Browser full-frame diagnostics | Bounded exports, exact observation linkage, lifecycle regressions, both reviews | User approved; commit/push/CI/Pages delivery in progress |
+| CP-02B.1 | Browser full-frame diagnostics | Bounded exports, exact observation linkage, lifecycle regressions, both reviews | Approved/delivered as 6fb59f3; CI, Pages and both live reviews passed |
 | CP-02B.2 | Experimental browser autoframing | CP-02B.1 approval; bounded ROI and adversarial replay | Not started; full-frame remains default |
 | CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
@@ -273,6 +273,25 @@ thresholds and physical decision remain future checkpoints.
 Approval permits delivery of CP-02B.1 and then continuation to CP-02B.2 after actual delivery checks.
 It is not approval to push the future ROI prototype or declare adoption/G2. Its independently
 reviewed local candidate still requires another explicit user decision before push/deployment.
+
+Approved source/docs were committed/pushed as `6fb59f3`; local HEAD and remote main matched
+`6fb59f3a4393222f39cd7510d3ea2c8ab514979f` with a clean working tree after push.
+[Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516304612) completed successfully.
+All required jobs passed. The approved Pages workflow was dispatched afterward (API HTTP 204);
+workflow completed successfully for `6fb59f3`:
+[Pages run 37516701077](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516701077).
+Root observed HTTP 200 and the expected `/QR-transfer/assets/index-DX_hoMNl.js` bundle.
+That initial availability check preceded the completed independent live reviews below; no physical
+result is inferred.
+
+Delivery is verified: both independent live reviews passed at the exact hosted URL. Development
+used the actual synthetic camera/worker/WASM path to verify the exact 320-byte file, unchanged v1
+observation and its diagnostic digest/final scan. Testing passed seven live cases covering actual
+synthetic transfer/save, reset/late events, background interruption, dispatch failure, hash failure,
+late hash reset and setup denial. Both observed expected local project-base assets, HTTP 200 and
+no page/asset errors or external requests. Committed source/test fingerprint remains identical to
+the approved freeze. Generated reports remain ignored. These are software delivery checks, not G2.
+CP-02B.1 is complete; continue to local CP-02B.2, which requires a new review/approval before delivery.
 
 ## Approval packet template
 

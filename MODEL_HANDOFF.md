@@ -6,18 +6,22 @@ protocol specification or the execution checklist. Refresh it after meaningful p
 
 ## 1. Where work stopped
 
-**Current local work: CP-02B.1 browser diagnostics**, following the user-accepted
+**CP-02B.1 browser diagnostics is delivered; CP-02B.2 is next**, following the user-accepted
 [autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md). Software checks passed for the frozen
 eight-file snapshot `91675844c1ca3f90f87779288a92ec1376bd4284d704916519df49a644287374`,
 based on `5ee3561`. Both independent reports explicitly agree PASS with no known unresolved
 in-scope blocker. The user approved CP-02B.1 commit/push/Pages deployment on October 7;
-delivery is in progress. Complete actual CI/Pages/live checks before CP-02B.2. No ROI code or physical
+delivery passed CI/Pages and both independent live reviews for `6fb59f3`. Continue to CP-02B.2
+locally, then stop for its own review/approval before push or deployment. No ROI code or physical
 performance claim belongs to CP-02B.1. Its two-hour cap is part of the eight-hour total experiment
 budget; physical trials are separate. See the latest UPDATE.md entries for elapsed time/results.
 Local checks: 69 Vitest tests, 46 Playwright tests, lint/types, Pages-base production build and
 independent interoperability pass. The Python recorder accepts the unchanged synthetic cancelled
 v1 export and its sidecar digest matches exact bytes. These are software checks, not physical trials.
-No candidate has been committed/pushed/deployed; live browser code remains `be174e1`.
+The approved candidate is committed/pushed/deployed as `6fb59f3`; hosted CI and Pages completed
+successfully, and both independent live checks passed. Pages now includes separate camera diagnostic
+exports. Testing passed seven lifecycle/delivery cases; development independently verified the actual
+synthetic camera/worker/WASM transfer and exact save. Physical G2 remains pending.
 The approval packet requests CP-02B.1 commit/push plus Pages deployment after hosted CI passes.
 Its [development](docs/reviews/CP-02B.1-development.md) and
 [testing](docs/reviews/CP-02B.1-testing.md) reports define the eight-file fingerprint and scoped checks.
@@ -39,7 +43,7 @@ physical smoke success and supplied one browser timeout report (60.0165 seconds,
 Successful measured exports and 20-trial acceptance cells are still missing. CP-02A observation
 recording/per-cell summaries passed both agent reviews, were explicitly approved on 2026-10-05 and
 are delivered as `d6b0a7b` with all hosted CI jobs passing. CP-02A changed no browser code.
-Pages stays at browser build `be174e1`; the local CP-02B.1 browser candidate is not deployed.
+CP-02B.1 browser diagnostics `6fb59f3` is pushed/deployed with CI/Pages/live verification passing.
 Consult CHECKPOINTS.md and UPDATE.md for actual Git/CI outcomes.
 Reported hardware is Windows 10 + Samsung A17 5G / Android 16; this workspace instead reports
 Windows 11 build 26200 / Lenovo 83K1, so the selected computer needs clarification. Chrome/camera
@@ -51,11 +55,11 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at current handoff | `main`, uncommitted CP-02B.1 candidate; remote remains delivered code |
+| Branch at current handoff | `main` at `6fb59f3`; local delivery notes pending, no new application edits |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
 | Latest delivered Python code | `d6b0a7b` — approved benchmark recording/summary tooling |
-| Deployed browser code | `be174e1` — approved trial-readiness corrections; CP-02A is CLI-only |
+| Deployed browser code | `6fb59f3` — approved full-frame diagnostics; no ROI implementation yet |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |

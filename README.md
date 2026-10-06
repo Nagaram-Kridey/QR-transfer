@@ -63,10 +63,10 @@ for observation JSON, explicit cell metadata and per-run CSV summaries. See the
 The tool reports numerical candidates for manual review; physical qualification still requires
 the real 20-trial acceptance runs. Check [CHECKPOINTS.md](CHECKPOINTS.md) for approval/delivery status.
 
-The [browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) begins with a local
-diagnostics checkpoint. Its [collection guide](docs/benchmarks/BROWSER_DIAGNOSTICS.md) explains
-separate bounded camera timing exports and their limits. Consult CHECKPOINTS.md before assuming
-this candidate is deployed; ROI tracking and measured speed gains remain pending.
+The [browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) starts with delivered
+full-frame diagnostics. After a timed camera trial, export the observation and separate camera
+diagnostics; the [collection guide](docs/benchmarks/BROWSER_DIAGNOSTICS.md) explains their bounds
+and checksum linkage. ROI tracking and measured speed gains remain pending; see CHECKPOINTS.md.
 
 ## Implementation
 

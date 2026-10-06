@@ -36,8 +36,8 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] Synthetic clean/degraded video regression through the actual WASM worker path.
 - [x] CP-02A bounded observation recorder/per-cell summaries, independent review, approval and
   GitHub delivery (`d6b0a7b`; hosted Windows/Linux/browser/audit checks passed).
-- [ ] CP-02B.1 full-frame browser diagnostics and bounded sidecar export (local checks passed;
-  both final peer reviews PASS; user approved, delivery checks in progress).
+- [x] CP-02B.1 full-frame browser diagnostics and bounded sidecar export: approved/delivered as
+  `6fb59f3`, hosted CI/Pages and both independent live checks passed.
 - [ ] CP-02B.2 optional ROI prototype, only after CP-02B.1 approval.
 - [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.

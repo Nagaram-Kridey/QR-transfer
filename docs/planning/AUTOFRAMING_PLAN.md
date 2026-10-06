@@ -6,7 +6,8 @@ Full-frame scanning remains the default. Physical G2 is still pending.
 
 Current status **2026-10-07 (IST)**: CP-02B.1 diagnostics is locally implemented; 69 unit and
 46 browser checks pass, and development/testing explicitly agree PASS on the same frozen revision.
-The user approved its commit/push/Pages deployment on October 7; delivery is in progress.
+The user approved its commit/push/Pages deployment on October 7; `6fb59f3` is delivered with
+hosted CI, Pages and both independent live reviews passing.
 CP-02B.2 and CP-02B.3 have not started.
 See CHECKPOINTS.md and the latest UPDATE.md for the precise packet and measured work interval.
 

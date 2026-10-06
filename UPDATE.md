@@ -11,7 +11,8 @@ verified and frozen for approved delivery, following the accepted
 69 unit tests and 46 browser tests pass; exact observation/export linkage and the GitHub Pages base
 were checked locally. No ROI behavior is being implemented until this checkpoint is explicitly
 approved and delivered. The user now approved CP-02B.1 commit/push/Pages deployment; delivery checks
-are in progress. No candidate commit/push/deployment is claimed yet. Existing delivery:
+are complete. Candidate `6fb59f3` is pushed/deployed; hosted CI, Pages and both live reviews passed.
+Existing delivery:
 implementation resumed with
 [CHECKPOINTS.md](CHECKPOINTS.md): separate development/adversarial-testing agents, agreement on each
 reviewed revision, then explicit user approval before commit/push or starting the next checkpoint.
@@ -479,3 +480,80 @@ Only after those checks begin the opt-in ROI prototype under its separate approv
 
 **Blockers:** Delivery/CI/Pages verification is pending. Physical settings/exports/G2 remain missing.
 CP-02B.2 and measured speed/reliability adoption are not part of this approved push.
+
+## 2026-10-07 — CP-02B.1 pushed; hosted checks pending (Asia/Kolkata)
+
+**Done:** Committed exactly the 20 approved source/test/documentation files as `6fb59f3` and pushed
+to the authorized remote main. Preserved repository history; generated/private artifacts remain
+ignored. Recorded delivery status without claiming hosted or live verification before it occurs.
+
+**Verified:** Both independent pre-push audits and root matched the approved source/test fingerprint.
+Staged scope and whitespace checks passed. Local HEAD and remote main both equal
+`6fb59f3a4393222f39cd7510d3ea2c8ab514979f`; the working tree was clean after push.
+[CI run 37516304612](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516304612)
+is in progress at the first inspection, not yet recorded as passing.
+
+**Next:** Inspect required CI jobs, dispatch the authorized Pages deployment only after they pass,
+then independently test live diagnostics/export/save behavior and record actual delivery results.
+Start CP-02B.2 after this delivery is verified; stop at its own final approval checkpoint.
+
+**Blockers:** CI/Pages/live checks remain pending. No new physical evidence or adoption decision
+exists; camera metadata/success exports/G2 remain missing. Full-frame is still the only receiver mode.
+
+## 2026-10-07 — CP-02B.1 hosted CI passed; Pages dispatched (Asia/Kolkata)
+
+**Done:** Inspected the completed CI run and dispatched the approved Pages workflow for main only
+after all required CI jobs passed. API returned HTTP 204; this accepts the request but does not yet
+prove the deployment finished. No new code or future checkpoint is included.
+
+**Verified:** [CI run 37516304612](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516304612)
+completed **success** for `6fb59f3a4393222f39cd7510d3ea2c8ab514979f`. Windows/Linux Python,
+browser/interoperability and dependency-audit jobs passed. The source/test snapshot is unchanged.
+No candidate deployed-camera result or physical result is claimed yet.
+
+**Next:** Inspect Pages build/deploy for the exact approved source, run independent live diagnostics
+and save/export/lifecycle checks, record actual results, then begin CP-02B.2 locally.
+
+**Blockers:** Pages workflow/live verification remains pending. Physical G2 and performance evidence
+remain missing; the ROI prototype has not started and needs its own approval before delivery.
+
+## 2026-10-07 — CP-02B.1 Pages deployed; live reviews started (Asia/Kolkata)
+
+**Done:** The authorized [Pages workflow](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516701077)
+completed successfully for exact source `6fb59f3a4393222f39cd7510d3ea2c8ab514979f`. Started separate
+development and testing live reviews; their operational scripts/results remain ignored by Git.
+
+**Verified:** Root fetched the live HTTPS page: HTTP 200 with the expected approved project-base
+`index-DX_hoMNl.js` bundle. This establishes deployment availability, not camera behavior or physical
+support. Hosted CI passed previously; independent live outcomes have not yet been assumed.
+
+**Next:** Finish both live diagnostics/save/lifecycle checks and log their actual results, then begin
+CP-02B.2 within the accepted experiment budget. Its candidate will stop for separate user approval.
+
+**Blockers:** Final live reviews are pending. Physical metadata/exports/G2 and ROI adoption evidence
+remain missing. No ROI implementation has started during diagnostics delivery.
+
+## 2026-10-07 — CP-02B.1 delivery verified; prototype is next (Asia/Kolkata)
+
+**Done:** Completed the approved diagnostics delivery and reconciled current plans/context/handoff
+with the actual hosted result. Code `6fb59f3` is pushed/deployed; all Git history is preserved and
+generated operational scripts/results remain ignored. Both agents independently signed off delivery.
+
+**Verified:** [CI 37516304612](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516304612)
+and [Pages 37516701077](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37516701077)
+completed successfully for `6fb59f3a4393222f39cd7510d3ea2c8ab514979f`.
+Development independently transferred/saved the exact 320-byte synthetic fixture through live
+worker/WASM, verified unchanged v1 keys, exact diagnostic checksum and final scan. Testing passed
+seven independent live transfer/save/reset/background/dispatch/hash/setup cases. Both observed
+expected project-base browser/worker/WASM assets, HTTP 200, zero page/asset errors and zero external
+requests. The tester independently reproduced the approved source/test freeze from the committed
+revision. These checks establish software delivery only; no physical qualification or speed gain.
+
+**Next:** Push these administrative delivery notes, then begin CP-02B.2 locally with development
+owning bounded native-coordinate tracking and testing owning adversarial geometry/lifecycle/replay
+checks. Full-frame remains default. Stop on their same-revision agreement for new user approval
+before committing/pushing/deploying that prototype. Keep the accepted timebox and record actual work.
+
+**Blockers:** No known CP-02B.1 delivery blocker remains. Physical settings/successful exports/frozen
+cells/G2 are still missing. ROI and its adoption evidence remain future work; deployment of diagnostics
+does not certify real Samsung/iPhone camera support or measured throughput.
