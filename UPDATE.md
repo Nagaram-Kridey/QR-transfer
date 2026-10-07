@@ -63,6 +63,24 @@ separate physical comparison decision.
 **Blockers:** None for this authorized software delivery. Physical trials, device metadata and
 the adoption threshold remain outstanding by design.
 
+## 2026-10-07 — Pages workflow fixture correction (Asia/Kolkata)
+
+**Done:** The first Pages run for commit `19b5ca3` reached its E2E step but failed because the
+deployment workflow did not generate the new replay manifest before `web/e2e/reentry.spec.ts`.
+The CI workflow already had this generation step, which is why the hosted CI run passed.
+Added the same `tools/generate_reentry_fixtures.py` step to `.github/workflows/pages.yml` and
+ran the generator locally successfully.
+
+**Verified:** Failure evidence is retained in the ignored local Pages log artifact; no product
+source or protocol behavior was changed. `git diff --check` passes.
+
+**Next:** Commit and push this workflow-only correction, wait for its hosted CI run, dispatch
+Pages again, and verify the live manual-test URL. Keep the first failed Pages run linked in the
+delivery record rather than treating it as a product failure.
+
+**Blockers:** Pages publication is temporarily blocked by the workflow correction. Physical
+autoframing benefit and G2 remain outside this delivery.
+
 ## Entry format for future updates
 
 Append a dated entry after every meaningful code, documentation, measurement or release update.

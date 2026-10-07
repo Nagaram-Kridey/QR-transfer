@@ -33,6 +33,7 @@ jobs:
         working-directory: web
       - run: uv run --project python python tools/verify_ts_vectors.py
       - run: uv run --project python python tools/generate_camera_fixtures.py
+      - run: uv run --project python python tools/generate_reentry_fixtures.py
       - run: npx playwright install --with-deps chromium firefox webkit
         working-directory: web
       - run: npm run e2e
