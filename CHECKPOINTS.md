@@ -57,7 +57,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-02B.1 | Browser full-frame diagnostics | Bounded exports, exact observation linkage, lifecycle regressions, both reviews | Approved/delivered as 6fb59f3; CI, Pages and both live reviews passed |
 | CP-02B.2 | Experimental browser autoframing and requested exploratory sender rates | CP-02B.1 delivery; bounded ROI/replay plus combined dev/test agreement | Reviewed, pushed and Pages-deployed for manual testing; full-frame default |
 | CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
-| CP-02C | Bounded larger-file capacity | Consistent Python/browser limits, oversized-input rejection, independent conformance and both reviews | User approved October 7; commit/push/CI/Pages delivery in progress |
+| CP-02C | Bounded larger-file capacity | Consistent Python/browser limits, oversized-input rejection, independent conformance and both reviews | Approved/delivered as c451a1a; CI, Pages and both independent live reviews passed |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -358,8 +358,19 @@ vectors; lint/types/style/package/install and default/project-base builds passed
 Requested approval: **commit/push CP-02C and deploy it to GitHub Pages after hosted CI passes**.
 The user explicitly responded **"Approved" on October 7** for this packet, including commit/push
 and Pages deployment after hosted CI passes. The 22-path source fingerprint remains unchanged.
-Delivery is in progress; actual commit, hosted checks and deployment results will be recorded here.
-The current live site retains the prior 1 MiB capacity until deployment is verified.
+Approved implementation was committed/pushed as `c451a1a5dc7509eb5f84eb590a81357af46c2044`.
+[Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37662957793) passed all required
+jobs; [Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37664035403) was dispatched
+afterward and completed successfully for that exact commit. The live site serves the expected
+`index-BpzRN7xr.js`, `receiver.worker-DYrXf6hs.js` and self-hosted WASM assets with HTTP 200.
+
+Both independent live reviews PASS. Testing verified public 2 MiB and 5 MiB artifact workflows,
+automatic 512/1024-byte symbol selection, exact verified saving, plus-one rejection and malformed
+trailing-frame rejection. Development independently verified a different 5 MiB fixture and a
+320-byte synthetic optical Auto-region transfer, including final scan and observation digest
+linkage. Both observed no page errors/external runtime requests. Generated data remains ignored.
+This verifies software delivery; physical 5 MiB performance, ROI adoption and G2 remain unmeasured.
+CP-02C delivery is complete; later features still require their own checkpoint approval.
 
 CP-02C begins on October 7 at the user's request to increase transferable file size and inspect
 the supplied reports. Scope: 5 MiB original bytes, 8192 repeat source symbols, consistent bounded

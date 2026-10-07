@@ -107,3 +107,37 @@ user-agent does not establish the phone's actual Android version. Larger capacit
 evidence, not faster optical transfer or a physical 5 MiB success. Plaintext labeling, full-frame
 default, original feasibility gates and the approval-before-commit/push/deployment workflow remain
 in force. This reviewer has not committed, pushed or deployed anything.
+
+## Approved delivery verification — 2026-10-07, Asia/Kolkata
+
+After the user's explicit CP-02C approval, the coordinator delivered implementation commit
+`c451a1a5dc7509eb5f84eb590a81357af46c2044`. I independently verified its 22 changed reviewed paths
+retain fingerprint `9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d`; the
+worktree matches those committed paths. Hosted CI run `37662957793` and Pages run `37664035403`
+were reported successful by the coordinator before live testing began.
+
+My independent Chromium smoke against `https://nagaram-kridey.github.io/QR-transfer/` passed:
+
+- Live index, `assets/index-BpzRN7xr.js`, `assets/receiver.worker-DYrXf6hs.js` and self-hosted
+  `assets/zxing_reader-Bb9Mx2Pu.wasm` returned HTTP 200 at the project base.
+- The live UI retains plaintext labeling, displays the 5 MiB limit and offers the 5120 KiB
+  expected-payload timeout setting.
+- A public synthetic 2,097,152-byte file automatically selected 512-byte symbols, exported
+  4097 frames and was imported through the actual hosted worker, verified and saved byte-exact.
+  SHA-256: `cd1be18af8b9fc838c704f9fcfd3cced066f33709fd38281bc0b043007c882fc`.
+- A public synthetic 5,242,880-byte file automatically selected 1024-byte symbols, exported
+  5121 frames and was imported, verified and saved byte-exact.
+  SHA-256: `c260ba62b4181ce4fe7f44cc9bb1eafac3a8f8f10a9e386bdb5ca432e866687e`.
+- Appending malformed text after the complete 5 MiB cycle rejected the import without exposing
+  a save. A 5 MiB-plus-one file was rejected and playback stayed disabled.
+- No page errors or external runtime requests were observed.
+
+The full artifact workflows took 4913 ms and 5386 ms respectively on this local Chromium runner.
+These include preparation/export/import/save and are **not camera transfer timings**. The test
+loaded the hosted WASM asset but frame-file imports use protocol parsing, not optical decoding.
+No camera, physical device, autoframing performance comparison, actual playback FPS or G2
+qualification was tested. Generated public fixtures, downloads and result JSON remain under
+ignored `artifacts/cp02c-live-testing`; no original user file was uploaded or committed.
+
+**Delivery smoke PASS on the approved source revision.** This reviewer made only this review
+record update; the coordinator owns commits, pushes, deployment and delivery logs.

@@ -1,6 +1,6 @@
 # ADR 004: bounded experimental repeat capacity
 
-Date: 2026-10-07 (Asia/Kolkata). Status: CP-02C locally verified and reviewed, awaiting user approval.
+Date: 2026-10-07 (Asia/Kolkata). Status: approved and delivered as `c451a1a`; CI/Pages/live reviews passed.
 
 The user requested a larger transferable file size after supplying one successful observation for
 879,942 bytes. The implementation previously limited original bytes to 1 MiB and repeat symbols to

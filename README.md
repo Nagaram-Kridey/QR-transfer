@@ -8,9 +8,9 @@ checks the reconstructed file and offers an explicit save.
 Anyone who sees the stream can read it. Use non-sensitive test data. Encryption, compression,
 fountain coding, offline installation and production mobile support are not implemented or claimed.
 No frozen 20-trial device-pair benchmark is recorded. The user supplied one internally consistent
-[859 KiB full-frame success](docs/benchmarks/2026-10-07-observation-review.md). The local CP-02C
-candidate supports up to 5 MiB experimentally; this is software capacity, with physical reliability
-and transfer speed still to measure. The larger-file build awaits approval and deployment.
+[859 KiB full-frame success](docs/benchmarks/2026-10-07-observation-review.md). The approved CP-02C
+build supports up to 5 MiB experimentally and is deployed for manual testing. This is software
+capacity; physical larger-file reliability and transfer speed still need measurements.
 
 ## Run locally
 

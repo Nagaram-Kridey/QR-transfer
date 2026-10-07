@@ -4,12 +4,13 @@ Update this file after every meaningful project change. Each entry records **don
 **next**, and **blockers**. Do not call a planned step complete or replace physical data with simulation.
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
-**Latest task — October 7:** CP-02C larger-file capacity is approved; delivery is in progress.
+**Latest task — October 7:** CP-02C larger-file capacity is approved and delivered as `c451a1a`.
 The supplied observation and diagnostics match by exact bytes/hash and record one full-frame
 859.318 KiB success in 864.4303 seconds. See the retained analysis under `docs/benchmarks`.
 The candidate raises capacity to a bounded 5 MiB with 8192 repeat symbols; final checks passed and
 development/testing agree on the same final revision. The user explicitly approved commit/push
-and Pages deployment; source is frozen while actual delivery results are verified.
+and Pages deployment. Hosted CI, Pages and both independent live reviews passed; the site is ready
+for manual larger-file testing. Physical performance/adoption remains unqualified.
 
 **Current handoff — 2026-10-07 (IST):** CP-02B.1 browser diagnostics is approved and delivered,
 following the accepted [autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md).
@@ -853,3 +854,80 @@ trials/adoption and later features need their own evidence and decisions.
 
 **Blockers:** No known blocker for approved delivery. Physical larger-file performance, ROI
 adoption and G2 remain unqualified; no such result is inferred from software checks.
+
+## 2026-10-07 — CP-02C pushed; hosted CI running (Asia/Kolkata)
+
+**Done:** Committed/pushed the approved packet as
+`c451a1a5dc7509eb5f84eb590a81357af46c2044` to `origin/main`. Received observations and generated
+payloads/exports remain excluded. Assigned the existing independent agents to verify the committed
+fingerprint and, after deployment, inspect the hosted software transfer workflow.
+
+**Verified:** Git push succeeded and the application working tree was clean immediately after
+push. Hosted CI started for this exact commit:
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37662957793. CI is running, not yet
+claimed successful. The testing agent independently verified the committed 22-path fingerprint
+matches the approved freeze. Current Pages still serves the prior build.
+
+**Next:** Wait for CI, dispatch Pages only after success, verify actual deployment and hosted
+assets/transfer checks, then record delivery in current plans/logs/handoff.
+
+**Blockers:** Hosted checks/deployment/live verification are pending. No physical gate is cleared.
+
+## 2026-10-07 — CP-02C hosted CI passed; Pages dispatched (Asia/Kolkata)
+
+**Done:** Hosted CI completed successfully for approved implementation commit
+`c451a1a5dc7509eb5f84eb590a81357af46c2044`. Dispatched the approved Pages workflow afterward
+(HTTP 204). The Pages run is tied to the same source commit.
+
+**Verified:** CI run https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37662957793
+reports completed/success. Windows/Linux Python, dependency audit and browser/interop passed.
+Pages run https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37664035403 is in progress;
+deployment and live checks have not yet been claimed successful.
+
+**Next:** Wait for Pages, verify its exact source commit and expected project-base assets, then
+complete both independent hosted software checks and record delivery.
+
+**Blockers:** Pages/live verification pending. Physical 5 MiB throughput and adoption remain unmeasured.
+
+## 2026-10-07 — CP-02C Pages published; live reviews running (Asia/Kolkata)
+
+**Done:** Pages completed successfully for
+`c451a1a5dc7509eb5f84eb590a81357af46c2044`:
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37664035403. Both agents started their
+independent checks against the newly published build using public synthetic fixtures.
+
+**Verified:** Root fetched https://nagaram-kridey.github.io/QR-transfer/ with HTTP 200 and the
+expected `/QR-transfer/assets/index-BpzRN7xr.js` bundle. The JavaScript, receiver worker
+`receiver.worker-DYrXf6hs.js` and local `zxing_reader-Bb9Mx2Pu.wasm` all returned HTTP 200.
+The bundle includes the 5 MiB limit, 15,360-second preset and Auto region option. This verifies
+published availability; independent hosted transfer checks are still running.
+
+**Next:** Retain actual outcomes of the hosted preparation/export/import/save and optical
+software smoke checks, update current delivery records, then push the documentation notes.
+
+**Blockers:** Final independent live-check results pending. No physical larger-file result is claimed.
+
+## 2026-10-07 — CP-02C delivery verified (Asia/Kolkata)
+
+**Done:** Approved implementation `c451a1a5dc7509eb5f84eb590a81357af46c2044` is pushed and live at
+https://nagaram-kridey.github.io/QR-transfer/. Updated current plans, README, ADR, checkpoints and
+handoff to the actual delivered state. Both agents appended their independent hosted results to
+their CP-02C review records. No application changes followed the approved freeze.
+
+**Verified:** [CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37662957793) and
+[Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37664035403) passed for that exact
+source commit. The live page and expected project-base JS/worker/WASM assets returned HTTP 200.
+Testing independently passed public 2/5 MiB adaptive preparation, frame export/import and exact
+verified saving, plus-one rejection and malformed trailing-frame rejection. Development passed
+an independent 5 MiB fixture (5121 frames, 8,152,675 JSON bytes) and an actual synthetic 320-byte
+Auto-region optical save (3 ROI scans, 1 full scan), with observation/diagnostic digest linkage.
+Both observed no page errors or external runtime requests. Original user reports and all generated
+fixtures/downloads remain ignored. These are hosted software checks, not physical transfer results.
+
+**Next:** Push the documentation delivery notes and inspect their hosted CI. Then hand the live
+build to the user: refresh both devices and choose a suitable expected-payload timeout for larger
+manual tests. Retain observations, diagnostics and complete device/settings metadata. Stop new
+feature work at this completed checkpoint; physical comparisons/G2 remain their own decisions.
+
+**Blockers:** None for the approved application delivery. Physical 5 MiB reliability/throughput,
+measured autoframing adoption, iPhone qualification and G2 remain outstanding.

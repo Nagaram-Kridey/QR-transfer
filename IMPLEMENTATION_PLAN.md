@@ -41,9 +41,9 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] CP-02B.1 full-frame browser diagnostics and bounded sidecar export: approved/delivered as
   `6fb59f3`, hosted CI/Pages and both independent live checks passed.
 - [x] CP-02B.2 optional ROI prototype: delivered for manual testing October 7; full-frame default.
-- [ ] CP-02C 5 MiB experimental repeat capacity: update both codecs/resource bounds, bounded
-  imports, adaptive symbol selection, larger-file cross-decoding and adversarial tests; final
-  checks and both same-revision reviews PASS. Explicit commit/push/Pages approval is pending.
+- [x] CP-02C 5 MiB experimental repeat capacity: approved/delivered as `c451a1a`; bounded imports,
+  adaptive symbol selection, larger-file conformance and adversarial checks passed. Hosted CI,
+  Pages and both independent live software checks passed. Physical larger-file results pending.
 - [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.
 - [ ] Android Chrome and iPhone Safari physical camera smoke tests.

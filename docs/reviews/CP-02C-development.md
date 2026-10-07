@@ -73,7 +73,7 @@ Python cases, final-source sdist/wheel creation and an isolated Python 3.12 whee
 smoke. Production builds passed for the GitHub Pages `/QR-transfer/` base and the restored default
 base, with local worker/WASM asset paths. The
 reviewed workflows now exercise the large cross-language cases as well. These are local verification
-results; no new hosted CI or Pages deployment is claimed for CP-02C.
+results at local review; subsequent delivery verification is recorded below.
 
 ## Limits and decision
 
@@ -84,6 +84,40 @@ endpoints for this profile. Large JSON imports can take appreciable time on some
 
 No larger-file physical reliability, autoframing benefit, security, offline installation or G2
 qualification is established. Plaintext labeling remains in place. Existing physical gates and the
-future fountain experiment's original bounds are retained. Commit/push and Pages deployment require
-the user's explicit CP-02C approval. See [testing review](CP-02C-testing.md) for the adversarial
+future fountain experiment's original bounds are retained. Commit/push and Pages deployment required
+the user's explicit CP-02C approval, subsequently recorded in the delivery section. See
+[testing review](CP-02C-testing.md) for the adversarial
 findings and matching final verdict.
+
+## Delivery verification — 2026-10-07 (Asia/Kolkata)
+
+The user explicitly approved CP-02C commit/push and Pages deployment after hosted CI. The reviewed
+source was delivered as `c451a1a5dc7509eb5f84eb590a81357af46c2044`. The development agent independently
+confirmed the committed 22-path fingerprint remained
+`9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d`. The coordinator verified that
+[hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37662957793) and
+[Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37664035403) passed for that commit
+before authorizing the independent live smoke.
+
+The development agent then exercised the deployed
+[project-base site](https://nagaram-kridey.github.io/QR-transfer/) with headless Chromium and public
+synthetic fixtures. Actual results:
+
+- HTTP 200 with expected approved `index-BpzRN7xr.js`; default 8 fps and Full frame preserved.
+- Both experimental expected-payload presets present: 2 MiB/6144 seconds and 5 MiB/15360 seconds.
+- Exact 5,242,880-byte public file prepared from the default density, visibly promoted to 1024-byte
+  symbols and exported as 5121 frames (8,152,675 JSON bytes). Frame import verified and explicitly
+  saved the byte-identical 5 MiB file. SHA-256:
+  `38d3b1d32cdc2f4e84637fd017fe40bc09e794c106fe395e586f776171f7d4ed`.
+- A separate public synthetic camera stream completed in Auto region through the actual deployed
+  worker/WASM path and saved the exact 320-byte fixture. The final scan completed, with three ROI
+  scans and one full-frame scan, no pending attempt and zero interruptions. Observation-v1 and
+  diagnostic-v2 formats and the exact observation digest linkage passed.
+- Local project-base `receiver.worker-DYrXf6hs.js` and `zxing_reader-Bb9Mx2Pu.wasm` returned HTTP 200.
+  Zero page errors, HTTP failures, failed requests, external requests or upload requests observed.
+
+The ignored smoke report is `artifacts/CP-02C-live-development-smoke.json`; generated frame exports,
+verified fixture files and observation/diagnostic sidecars remain ignored. This confirms software
+delivery. The 5 MiB transfer above used frame JSON, and the optical path used a synthetic 320-byte
+stream. These checks establish no 5 MiB physical camera transfer, phone qualification, throughput
+improvement or physical gate result.

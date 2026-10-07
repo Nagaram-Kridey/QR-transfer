@@ -6,7 +6,7 @@ protocol specification or the execution checklist. Refresh it after meaningful p
 
 ## 1. Where work stopped
 
-Latest task on October 7: **CP-02C larger-file capacity is approved; delivery is in progress.** Base
+Latest task on October 7: **CP-02C larger-file capacity is approved and delivered for manual testing.** Base
 `6cd5d925adc1251cffbc90099010f1ec525f802b`. Requested scope is a bounded 5 MiB original-file maximum,
 8192 repeat symbols and consistent bounded frame imports/usable encoding controls. Read ADR 004
 and the current spec. Separate development/testing agents own source and regressions; final
@@ -16,8 +16,14 @@ or qualified 20-trial cell. Exact original inputs remain local/ignored.
 Both reviews agree PASS on the 22-path fingerprint
 `9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d`. The checkpoint packet lists
 actual checks and records the user's explicit **"Approved"** on October 7 for commit/push and
-Pages deployment after hosted CI. Deliver the frozen part, verify actual outcomes and update this
-handoff. No source/test changes are pending, and no new physical qualification is claimed.
+Pages deployment after hosted CI. Implementation `c451a1a5dc7509eb5f84eb590a81357af46c2044` is
+pushed; [CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37662957793) and
+[Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37664035403) passed. Both independent
+live reviews passed byte-exact 5 MiB artifact saving, asset loading and negative cases; development
+also verified a synthetic optical Auto-region save. Live URL:
+https://nagaram-kridey.github.io/QR-transfer/. Refresh/update both endpoints before larger-file
+manual trials; collect physical observations/settings for CP-02B.3/G2. No source/test changes or
+later feature work are pending in this delivery, and no new physical qualification is claimed.
 
 **CP-02B.2 has passed combined same-revision review and is deployed for manual testing.** Base
 `8fad984`. Reviewed implementation commit `19b5ca3` and workflow correction `e637cdf` are on
@@ -85,11 +91,11 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at current handoff | `main` at `6cd5d92`; CP-02C local work, CP-02B.2 deployed |
+| Branch at current handoff | `main` contains CP-02C implementation `c451a1a` plus delivery notes |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
-| Latest delivered Python code | `19b5ca3` — exploratory rate recording; CP-02C capacity still local |
-| Deployed browser code | `e637cdf` — autoframing/manual-test build and Pages fixture correction |
+| Latest delivered Python code | `c451a1a` — 5 MiB capacity, adaptive density, bounded imports |
+| Deployed browser code | `c451a1a` — 5 MiB capacity with autoframing and exploratory FPS |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |

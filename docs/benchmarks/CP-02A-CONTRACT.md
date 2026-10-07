@@ -111,7 +111,7 @@ was 10 KiB. A byte-for-byte copy is retained in [raw evidence](raw/2026-10-05-br
 
 ## October 7 exploratory rate extension
 
-The CP-02C larger-file candidate permits exploratory payloads up to 5 MiB with up to 8192 repeat
+The approved/delivered CP-02C larger-file profile permits exploratory payloads up to 5 MiB with up to 8192 repeat
 symbols. Acceptance remains the original profile: file bytes at most 1 MiB and minimum source-symbol
 count at most 2048, with unchanged 10/100 KiB numeric gates. Reject attempts to promote larger-file
 observations through recording, external CSV parsing or raw-row summaries. Schemas stay unchanged.
