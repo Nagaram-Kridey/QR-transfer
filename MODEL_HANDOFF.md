@@ -6,6 +6,19 @@ protocol specification or the execution checklist. Refresh it after meaningful p
 
 ## 1. Where work stopped
 
+Latest task on October 7: **CP-02C larger-file capacity is approved; delivery is in progress.** Base
+`6cd5d925adc1251cffbc90099010f1ec525f802b`. Requested scope is a bounded 5 MiB original-file maximum,
+8192 repeat symbols and consistent bounded frame imports/usable encoding controls. Read ADR 004
+and the current spec. Separate development/testing agents own source and regressions; final
+same-revision agreement and explicit user approval must precede commit/push/Pages. Supplied camera
+exports match by SHA-256 and record one 859.318 KiB full-frame success; they provide no ROI comparison
+or qualified 20-trial cell. Exact original inputs remain local/ignored.
+Both reviews agree PASS on the 22-path fingerprint
+`9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d`. The checkpoint packet lists
+actual checks and records the user's explicit **"Approved"** on October 7 for commit/push and
+Pages deployment after hosted CI. Deliver the frozen part, verify actual outcomes and update this
+handoff. No source/test changes are pending, and no new physical qualification is claimed.
+
 **CP-02B.2 has passed combined same-revision review and is deployed for manual testing.** Base
 `8fad984`. Reviewed implementation commit `19b5ca3` and workflow correction `e637cdf` are on
 `main`; hosted CI and Pages passed. Live URL: https://nagaram-kridey.github.io/QR-transfer/.
@@ -72,11 +85,11 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at current handoff | `main` at `4153c27`; CP-02B.2 deployed for manual testing |
+| Branch at current handoff | `main` at `6cd5d92`; CP-02C local work, CP-02B.2 deployed |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
-| Latest delivered Python code | `d6b0a7b` — approved benchmark recording/summary tooling |
-| Deployed browser code | `6fb59f3` — approved full-frame diagnostics; no ROI implementation yet |
+| Latest delivered Python code | `19b5ca3` — exploratory rate recording; CP-02C capacity still local |
+| Deployed browser code | `e637cdf` — autoframing/manual-test build and Pages fixture correction |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |
@@ -171,7 +184,8 @@ message types above describe the existing harness, not completion of the later p
 - The plaintext container is `u16 manifest_length | canonical UTF-8 JSON | file bytes`. Manifest
   order is `name,mime,size,sha256,created,v`; compact JSON, integer Unix seconds and schema `v=1`.
   Reject duplicate/extra/missing keys, noncanonical serialization, truncation and trailing bytes.
-- File maximum is 1 MiB, manifest 4 KiB, symbol 1,024 bytes, source symbols 2,048, QR text 1,589
+- CP-02C experimental file maximum is 5 MiB, manifest 4 KiB, symbol 1,024 bytes, repeat source
+  symbols 8,192 and QR text 1,589
   characters. Validate overhead and `k` before transmission; the default 256-byte symbol cannot
   carry a maximum-size file within that source-symbol cap. Use the spec's exact container bounds.
 - Verify original size and SHA-256 before exposing a result. Normalize/sanitize received filenames,

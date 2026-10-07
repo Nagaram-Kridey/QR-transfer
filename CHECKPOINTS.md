@@ -57,6 +57,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-02B.1 | Browser full-frame diagnostics | Bounded exports, exact observation linkage, lifecycle regressions, both reviews | Approved/delivered as 6fb59f3; CI, Pages and both live reviews passed |
 | CP-02B.2 | Experimental browser autoframing and requested exploratory sender rates | CP-02B.1 delivery; bounded ROI/replay plus combined dev/test agreement | Reviewed, pushed and Pages-deployed for manual testing; full-frame default |
 | CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
+| CP-02C | Bounded larger-file capacity | Consistent Python/browser limits, oversized-input rejection, independent conformance and both reviews | User approved October 7; commit/push/CI/Pages delivery in progress |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -332,6 +333,41 @@ https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37575923334, and Page
 https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37576176736. The live project-base URL
 is https://nagaram-kridey.github.io/QR-transfer/ and returned HTTP 200 with the Auto region and
 15/20/30 fps UI assets. This is ready for manual testing; physical adoption remains CP-02B.3.
+
+## CP-02C final approval packet — October 7
+
+Base `6cd5d925adc1251cffbc90099010f1ec525f802b`; implementation/specification freeze:
+`9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d` (22 paths).
+The [development](docs/reviews/CP-02C-development.md) and
+[testing](docs/reviews/CP-02C-testing.md) reviews agree PASS with all confirmed in-scope issues
+resolved. No source changes follow this freeze. Scope includes the Python/browser capacity changes,
+regressions, interoperability tooling, workflows, spec/ADR, plans/logs and sanitized observation
+analysis. Original supplied JSON and generated payloads/exports/build products remain ignored.
+
+User-visible result: experimental 5 MiB file limit, 8192 symbols, automatic fitting symbol-size
+selection, 16 MB bounded frame imports and 2/5 MiB camera timeout choices. Imports reject malformed
+or conflicting trailing frames and excessive CLI JSON nesting before save. Older receivers can
+reject longer cycles even below 1 MiB; update both endpoints. Larger payloads remain exploratory.
+
+Verification: 147 Vitest; 337 Python coverage-suite tests plus two final CLI regressions; 36 browser
+harness cases across Chromium/Firefox/WebKit with byte-exact 5 MiB saving; seven Chromium camera
+lifecycle cases; independent 2049-symbol cross-decoding in both directions; unchanged original
+vectors; lint/types/style/package/install and default/project-base builds passed. Coverage exceeds
+99% on configured protocol modules. Physical performance, ROI adoption and G2 remain separate.
+
+Requested approval: **commit/push CP-02C and deploy it to GitHub Pages after hosted CI passes**.
+The user explicitly responded **"Approved" on October 7** for this packet, including commit/push
+and Pages deployment after hosted CI passes. The 22-path source fingerprint remains unchanged.
+Delivery is in progress; actual commit, hosted checks and deployment results will be recorded here.
+The current live site retains the prior 1 MiB capacity until deployment is verified.
+
+CP-02C begins on October 7 at the user's request to increase transferable file size and inspect
+the supplied reports. Scope: 5 MiB original bytes, 8192 repeat source symbols, consistent bounded
+imports, usable symbol-size selection and matching timeout controls. This expands resource policy
+without changing the v2 layout or existing vectors. Large transfers remain exploratory. Both final
+reviews and explicit approval for commit/push/Pages are required. The supplied reports are reviewed
+in [the observation analysis](docs/benchmarks/2026-10-07-observation-review.md); they show a single
+full-frame success and do not clear adoption or G2.
 
 ## Approval packet template
 

@@ -7,10 +7,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .constants import MAX_FILE_BYTES
+from .constants import MAX_FILE_BYTES, MAX_FRAME_EXPORT_BYTES, MAX_QR_CHARS, MAX_SYMBOLS
 from .container import prepare_container
 from .errors import ProtocolError
-from .repeat import Receiver, Transfer
+from .frame import decode_frame
+from .repeat import Receiver, Transfer, choose_symbol_size
 from .sim import simulate
 
 
@@ -18,7 +19,7 @@ def _read_payload(path: Path) -> bytes:
     with path.open("rb") as source:
         data = source.read(MAX_FILE_BYTES + 1)
     if len(data) > MAX_FILE_BYTES:
-        raise ProtocolError("FILE_SIZE", "Input exceeds the 1 MiB file limit")
+        raise ProtocolError("FILE_SIZE", "Input exceeds the 5 MiB file limit")
     return data
 
 
@@ -34,7 +35,12 @@ def parser() -> argparse.ArgumentParser:
     commands = root.add_subparsers(dest="command", required=True)
     send = commands.add_parser("send", help="Display a local file as animated QR codes")
     send.add_argument("file", type=Path)
-    send.add_argument("--symbol-size", type=int, choices=[256, 512, 1024], default=256)
+    send.add_argument(
+        "--symbol-size",
+        type=int,
+        choices=[256, 512, 1024],
+        help="Use an explicit density; default automatically selects 256, 512 or 1024 bytes",
+    )
     send.add_argument("--fps", type=float, default=8)
     send.add_argument("--pixels", type=int, default=720)
     send.add_argument("--ecc", choices=["L", "M", "Q", "H"], default="M")
@@ -59,7 +65,7 @@ def parser() -> argparse.ArgumentParser:
     simulation.add_argument("--burst-every", type=int, default=0)
     simulation.add_argument("--burst-length", type=int, default=0)
     simulation.add_argument("--max-cycles", type=int, default=20)
-    simulation.add_argument("--symbol-size", type=int, choices=[256, 512, 1024], default=256)
+    simulation.add_argument("--symbol-size", type=int, choices=[256, 512, 1024])
     benchmark = commands.add_parser(
         "benchmark", help="Record local operator-supplied trials; never automatically certify G2"
     )
@@ -105,14 +111,23 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "send":
             data = _read_payload(args.file)
-            transfer = Transfer(
-                prepare_container(
-                    data,
-                    args.file.name,
-                    mimetypes.guess_type(args.file.name)[0] or "application/octet-stream",
-                ),
-                args.symbol_size,
+            container = prepare_container(
+                data,
+                args.file.name,
+                mimetypes.guess_type(args.file.name)[0] or "application/octet-stream",
             )
+            size = (
+                args.symbol_size
+                if args.symbol_size is not None
+                else choose_symbol_size(len(container))
+            )
+            transfer = Transfer(container, size)
+            if args.symbol_size is None and size != 256:
+                print(
+                    f"Selected {size}-byte symbols to fit the file; "
+                    "denser QR codes need camera testing.",
+                    file=sys.stderr,
+                )
             print(
                 "PLAINTEXT demo: anyone who sees these QR codes can read the file.", file=sys.stderr
             )
@@ -138,18 +153,36 @@ def main(argv: list[str] | None = None) -> int:
             if args.frames:
                 # Bounded JSON intake even though optical frames are separately bounded.
                 with args.frames.open("rb") as source:
-                    raw = source.read(4_000_001)
-                if len(raw) > 4_000_000:
-                    raise ValueError("Frame export exceeds 4 MB")
-                exported = json.loads(raw)
+                    raw = source.read(MAX_FRAME_EXPORT_BYTES + 1)
+                if len(raw) > MAX_FRAME_EXPORT_BYTES:
+                    raise ValueError("Frame export exceeds 16 MB")
+                try:
+                    exported = json.loads(raw)
+                except RecursionError as exc:
+                    raise ValueError("Frame export JSON nesting exceeds parser limits") from exc
                 if (
                     not isinstance(exported, dict)
                     or exported.get("format") != "lumenlink-frames-v2"
                 ):
                     raise ValueError("Invalid frame export format")
                 frames = exported.get("frames")
-                if not isinstance(frames, list) or len(frames) > 2048:
+                if not isinstance(frames, list) or len(frames) > MAX_SYMBOLS:
                     raise ValueError("Invalid frame list")
+                if any(not isinstance(text, str) or len(text) > MAX_QR_CHARS for text in frames):
+                    raise ValueError("Frame must be bounded text")
+                metadata = None
+                checked_symbols: dict[int, bytes] = {}
+                for text in frames:
+                    frame = decode_frame(text)
+                    if metadata is not None and frame.metadata != metadata:
+                        raise ValueError("Frame export contains different sessions")
+                    metadata = frame.metadata
+                    index = frame.seq % frame.k
+                    previous = checked_symbols.get(index)
+                    if previous is not None and previous != frame.symbol:
+                        raise ValueError("Frame export contains conflicting symbols")
+                    checked_symbols[index] = frame.symbol
+                checked_symbols.clear()
                 receiver = Receiver()
                 result = None
                 for text in frames:
@@ -202,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
         else:
             if not 0 <= args.bytes <= MAX_FILE_BYTES:
-                raise ValueError("Payload size must be between 0 and 1 MiB")
+                raise ValueError("Payload size must be between 0 and 5 MiB")
             data = bytes(index % 251 for index in range(args.bytes))
             result_sim = simulate(
                 data,

@@ -8,9 +8,10 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from lumenlink import ProtocolError, Receiver, Transfer, base45, prepare_container
-from lumenlink.constants import MAX_CONTAINER_BYTES, MAX_FILE_BYTES
+from lumenlink.constants import MAX_CONTAINER_BYTES, MAX_FILE_BYTES, MAX_SYMBOLS
 from lumenlink.container import ReceivedFile, open_container, sanitize_filename
 from lumenlink.frame import decode_frame, pack_frame, unpack_frame
+from lumenlink.repeat import choose_symbol_size
 
 VECTORS = json.loads((Path(__file__).parents[2] / "vectors/repeat-v2.json").read_text("utf-8"))
 
@@ -89,7 +90,7 @@ def test_parser_fuzz_is_controlled(raw):
         ({"container_len": MAX_CONTAINER_BYTES + 1}, "LENGTH"),
         ({"symbol_size": 0}, "SYMBOL_SIZE"),
         ({"symbol_size": 1025}, "SYMBOL_SIZE"),
-        ({"symbol_size": 1, "container_len": 2049}, "SYMBOL_COUNT"),
+        ({"symbol_size": 1, "container_len": MAX_SYMBOLS + 1}, "SYMBOL_COUNT"),
         ({"seq": -1}, "SEQUENCE"),
         ({"seq": 2**32}, "SEQUENCE"),
         ({"symbol": b""}, "LENGTH"),
@@ -245,12 +246,73 @@ def test_save_does_not_overwrite_or_follow_symlink(tmp_path):
         ReceivedFile("a", "x", b"", "", 0).save(tmp_path)
 
 
-def test_one_mib_supported_only_at_suitable_density():
+def test_maximum_file_supported_only_at_suitable_density():
     raw = prepare_container(b"a" * MAX_FILE_BYTES, "max.bin", created=0)
-    with pytest.raises(ProtocolError, match="larger"):
-        Transfer(raw, 512)
+    with pytest.raises(ProtocolError, match="at least"):
+        Transfer(raw, 256)
     transfer = Transfer(raw, 1024)
     receiver = Receiver()
     for seq in range(transfer.k):
         receiver.ingest(transfer.text(seq))
     assert receiver.result.data == b"a" * MAX_FILE_BYTES
+
+
+def test_expanded_symbol_policy_and_manifest_overhead():
+    # The old 2048-symbol cap is expanded; the new cap includes container overhead.
+    assert Transfer(b"x" * 2049, 1).k == 2049
+    assert Transfer(b"x" * MAX_SYMBOLS, 1).k == MAX_SYMBOLS
+    with pytest.raises(ProtocolError) as error:
+        Transfer(b"x" * (MAX_SYMBOLS + 1), 1)
+    assert error.value.code == "SYMBOL_COUNT"
+
+
+def test_maximum_manifest_overhead_with_expanded_file_limit():
+    data = b"x" * MAX_FILE_BYTES
+    plain = prepare_container(data, "a", created=0)
+    name_length = 1 + 4096 - int.from_bytes(plain[:2], "big")
+    largest = prepare_container(data, "a" * name_length, created=0)
+    assert int.from_bytes(largest[:2], "big") == 4096
+    assert len(largest) == MAX_FILE_BYTES + 4098
+    assert Transfer(largest, 1024).k <= MAX_SYMBOLS
+    with pytest.raises(ProtocolError) as error:
+        Transfer(largest, 640)
+    assert error.value.code == "SYMBOL_COUNT"
+
+
+@pytest.mark.parametrize(
+    "length,preferred,expected",
+    [
+        (1, 256, 256),
+        (8192 * 256, 256, 256),
+        (8192 * 256 + 1, 256, 512),
+        (8192 * 512 + 1, 256, 1024),
+        (1, 512, 512),
+        (1, 1024, 1024),
+    ],
+)
+def test_adaptive_density_preserves_preference_and_checks_container_overhead(
+    length, preferred, expected
+):
+    assert choose_symbol_size(length, preferred) == expected
+
+
+@pytest.mark.parametrize(
+    "length,preferred", [(0, 256), (-1, 256), (MAX_CONTAINER_BYTES + 1, 256), (1, 0), (1, 640)]
+)
+def test_adaptive_density_rejects_invalid_input(length, preferred):
+    with pytest.raises(ProtocolError):
+        choose_symbol_size(length, preferred)
+
+
+@pytest.mark.parametrize("length,size", [(MAX_CONTAINER_BYTES + 1, 1024), (8193, 1), (1, 1025)])
+def test_hostile_metadata_does_not_allocate_or_lock_session(length, size):
+    # Construct a checksum-valid hostile frame without going through the validated encoder.
+    body = bytes([0x24]) + bytes(16) + length.to_bytes(4, "big")
+    body += size.to_bytes(2, "big") + bytes(4) + bytes(size)
+    text = base45.encode(body + hashlib.sha256(body).digest()[:8])
+    receiver = Receiver()
+    with pytest.raises(ProtocolError):
+        receiver.ingest(text)
+    assert receiver.state == "IDLE"
+    assert receiver.symbols == {}
+    assert receiver.recovered == 0

@@ -22,6 +22,14 @@ The original owner-context narrative is preserved in the archived draft.
 
 ## Current state
 
+October 7 continuation: CP-02B.2 is deployed for manual testing (implementation `19b5ca3`,
+workflow fix `e637cdf`). The user supplied a full-frame success observation and linked diagnostics,
+then requested larger-file capacity. CP-02C is being built locally with a bounded 5 MiB / 8192
+repeat-symbol policy. This changes resource limits, not the v2 byte layout. Existing small vectors
+remain stable; old receivers reject larger streams. See ADR 004 and the latest checkpoint/log.
+The original report files stay local; retained analysis documents their limits. New delivery
+approval is required after final developer/tester agreement. The following dated entries are history.
+
 **Pause/resume:** The user paused work at 00:57:56 IST October 7 and requested continuation from
 02:00 IST. All agents were interrupted and partial edits preserved. The user explicitly resumed
 with "Continue" at 07:52:41 IST October 7; development/testing resumed from `8fad984`. Exclude the

@@ -4,7 +4,7 @@ import random
 from dataclasses import asdict, dataclass
 
 from .container import prepare_container
-from .repeat import Receiver, Transfer
+from .repeat import Receiver, Transfer, choose_symbol_size
 
 
 @dataclass(frozen=True)
@@ -35,7 +35,7 @@ def simulate(
     burst_every: int = 0,
     burst_length: int = 0,
     max_cycles: int = 20,
-    symbol_size: int = 256,
+    symbol_size: int | None = None,
 ) -> SimulationResult:
     if not 0 <= loss <= 1 or not 0 <= duplicates <= 1:
         raise ValueError("Loss and duplication probabilities must be in [0, 1]")
@@ -43,9 +43,9 @@ def simulate(
         raise ValueError("Invalid bounded simulation budget")
     if burst_every < 0 or burst_length < 0 or burst_length > burst_every:
         raise ValueError("Invalid burst settings")
-    transfer = Transfer(
-        prepare_container(data, "simulation.bin", created=0), symbol_size, bytes(16)
-    )
+    container = prepare_container(data, "simulation.bin", created=0)
+    size = symbol_size if symbol_size is not None else choose_symbol_size(len(container))
+    transfer = Transfer(container, size, bytes(16))
     receiver = Receiver()
     rng = random.Random(seed)
     pending: list[str] = []
@@ -75,7 +75,7 @@ def simulate(
         "simulation",
         seed,
         len(data),
-        symbol_size,
+        size,
         transfer.k,
         displayed,
         receiver.seen,

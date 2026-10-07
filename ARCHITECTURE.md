@@ -55,7 +55,8 @@ The UI adds OPENING/ARMED, cancellation and timeout states. Camera alignment pre
 Malformed frames are rejected/countable; mismatching sessions do not reset a valid transfer.
 On final verification failure, clear symbols and require reset. No file is exposed early.
 
-One file ≤1 MiB, manifest ≤4 KiB, source symbols ≤2048, symbol size ≤1024, QR text ≤1589 characters.
+CP-02C experimental capacity: one file ≤5 MiB, manifest ≤4 KiB, repeat source symbols ≤8192,
+symbol size ≤1024, QR text ≤1589 characters. JSON frame imports are bounded to 16,000,000 bytes.
 Actual encoded-container length determines k, including overhead. A maximum file requires a
 suitably large symbol size. Track repeat duplicates by source index, not an unbounded sequence set.
 

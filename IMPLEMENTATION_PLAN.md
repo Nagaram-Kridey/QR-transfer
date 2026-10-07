@@ -33,15 +33,17 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] Independent TypeScript codec and both-direction conformance checks.
 - [x] Minimal browser harness: file/text, static/animated QR, camera, worker, verified download.
 - [x] Permission errors, cancellation, first-send acknowledgement, ≤10 fps and 2 fps option.
-- [ ] User-requested browser-only exploratory 15/20/30 fps targets with additional acknowledgement
-  and evidence recording; included with CP-02B.2 manual-test delivery after combined review.
+- [x] Browser-only exploratory 15/20/30 fps targets with additional acknowledgement and evidence
+  recording; delivered with CP-02B.2, hosted CI and Pages passed.
 - [x] Synthetic clean/degraded video regression through the actual WASM worker path.
 - [x] CP-02A bounded observation recorder/per-cell summaries, independent review, approval and
   GitHub delivery (`d6b0a7b`; hosted Windows/Linux/browser/audit checks passed).
 - [x] CP-02B.1 full-frame browser diagnostics and bounded sidecar export: approved/delivered as
   `6fb59f3`, hosted CI/Pages and both independent live checks passed.
-- [ ] CP-02B.2 optional ROI prototype: local implementation/review in progress after CP-02B.1 delivery;
-  user requested GitHub/manual-test delivery October 7; final combined reviews/checks required first.
+- [x] CP-02B.2 optional ROI prototype: delivered for manual testing October 7; full-frame default.
+- [ ] CP-02C 5 MiB experimental repeat capacity: update both codecs/resource bounds, bounded
+  imports, adaptive symbol selection, larger-file cross-decoding and adversarial tests; final
+  checks and both same-revision reviews PASS. Explicit commit/push/Pages approval is pending.
 - [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.
 - [ ] Android Chrome and iPhone Safari physical camera smoke tests.

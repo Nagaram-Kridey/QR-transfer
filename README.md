@@ -7,8 +7,10 @@ checks the reconstructed file and offers an explicit save.
 **Current status: Stage 1 feasibility build, plaintext repeat-mode only.**
 Anyone who sees the stream can read it. Use non-sensitive test data. Encryption, compression,
 fountain coding, offline installation and production mobile support are not implemented or claimed.
-No physical device-pair benchmarks have been collected. The software limit of 1 MiB is not a
-camera throughput or reliability claim.
+No frozen 20-trial device-pair benchmark is recorded. The user supplied one internally consistent
+[859 KiB full-frame success](docs/benchmarks/2026-10-07-observation-review.md). The local CP-02C
+candidate supports up to 5 MiB experimentally; this is software capacity, with physical reliability
+and transfer speed still to measure. The larger-file build awaits approval and deployment.
 
 ## Run locally
 
@@ -66,11 +68,17 @@ the real 20-trial acceptance runs. Check [CHECKPOINTS.md](CHECKPOINTS.md) for ap
 The [browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) starts with delivered
 full-frame diagnostics. After a timed camera trial, export the observation and separate camera
 diagnostics; the [collection guide](docs/benchmarks/BROWSER_DIAGNOSTICS.md) explains their bounds
-and checksum linkage. An [opt-in ROI prototype](docs/benchmarks/BROWSER_AUTOFRAMING.md) is under local
-development/review and is not yet approved or deployed. Full-frame remains default; measured speed
+and checksum linkage. An [opt-in ROI prototype](docs/benchmarks/BROWSER_AUTOFRAMING.md) is deployed
+for manual testing with experimental 15/20/30 fps sender targets. Full-frame remains default; measured speed
 gains and physical adoption remain pending. See CHECKPOINTS.md.
 
 ## Implementation
+
+The [larger-file capacity decision](docs/adr/004-experimental-repeat-capacity.md) expands repeat
+mode to 5 MiB and 8192 source symbols. Default sender preparation chooses a supported symbol size
+that fits the container, including manifest overhead. Maximum-size files need 1024-byte symbols.
+Update both endpoints for larger transfers; older receivers reject streams outside their original
+limits. Large-file observations are exploratory and do not qualify the existing feasibility gate.
 
 - Python and TypeScript independent wire-v2 encoders/decoders with shared conformance vectors.
 - RFC 9285 Base45, canonical bounded manifest, SHA-256 file integrity and 8-byte frame checksum.

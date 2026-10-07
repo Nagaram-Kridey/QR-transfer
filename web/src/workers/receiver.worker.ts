@@ -1,6 +1,6 @@
 import { prepareZXingModule, readBarcodes } from 'zxing-wasm/reader';
 import wasmUrl from 'zxing-wasm/reader/zxing_reader.wasm?url';
-import { ProtocolError, Receiver } from '../codec/core';
+import { LIMITS, ProtocolError, Receiver, decodeFrame, hex } from '../codec/core';
 import type { ScanMetrics } from '../diagnostics/camera';
 import { decoderCorners } from '../camera/geometry';
 import type { Point } from '../camera/geometry';
@@ -75,7 +75,20 @@ self.onmessage = async (event: MessageEvent<WorkerInput>): Promise<void> => {
     } else if (message.type === 'image') {
       await scan(message);
     } else {
-      if (message.texts.length > 2048 || message.texts.some(text => typeof text !== 'string' || text.length > 1589)) throw new Error('Frame export exceeds limits');
+      if (message.texts.length > LIMITS.symbols || message.texts.some(text => typeof text !== 'string' || text.length > LIMITS.text)) throw new Error('Frame export exceeds limits');
+      let metadata: string | null = null;
+      const checkedSymbols = new Map<number, Uint8Array>();
+      for (const text of message.texts) {
+        const frame = await decodeFrame(text);
+        const current = `${frame.flags}:${hex(frame.sessionId)}:${frame.containerLen}:${frame.symbolSize}`;
+        if (metadata !== null && current !== metadata) throw new Error('Frame export contains different sessions');
+        metadata = current;
+        const index = frame.seq % Math.ceil(frame.containerLen / frame.symbolSize);
+        const previous = checkedSymbols.get(index);
+        if (previous && hex(previous) !== hex(frame.symbol)) throw new Error('Frame export contains conflicting symbols');
+        checkedSymbols.set(index, frame.symbol);
+      }
+      checkedSymbols.clear();
       send(await ingest(message.texts));
       if (receiver.stats.state !== 'DONE') throw new Error('Frame export is incomplete. No file was saved.');
     }

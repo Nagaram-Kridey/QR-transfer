@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { Transfer, prepareContainer } from '../codec/core';
+import { LIMITS, Transfer, encodeFrame, prepareContainer } from '../codec/core';
 import type { WorkerInput } from './messages';
 
 const reader = vi.hoisted(() => ({
@@ -123,6 +123,44 @@ describe('one camera attempt diagnostics without a second decoder/hash pass', ()
     await dispatch({ type: 'texts', texts: [await transfer.text(0)] });
     expect(output.map(message => message.type)).toEqual(['complete', 'idle']);
     expect(reader.readBarcodes).not.toHaveBeenCalled();
+  });
+
+  it('accepts an expanded source cycle above the old symbol cap', async () => {
+    const transfer = new Transfer(await prepareContainer(new Uint8Array(2100), 'expanded.bin', undefined, 0), 1);
+    const texts = await Promise.all(Array.from({ length: transfer.k }, (_, i) => transfer.text(i)));
+    expect(texts.length).toBeGreaterThan(2048);
+    await dispatch({ type: 'texts', texts });
+    expect(output.map(message => message.type)).toEqual(['complete', 'idle']);
+    expect(reader.readBarcodes).not.toHaveBeenCalled();
+  });
+
+  it.each([null, 'INVALID', 'A'.repeat(LIMITS.text + 1)])('rejects malformed import tail before exposing an otherwise complete file %j', async tail => {
+    const transfer = new Transfer(await prepareContainer(new Uint8Array(), 'empty.bin', undefined, 0));
+    await dispatch({ type: 'texts', texts: [await transfer.text(0), tail] as string[] });
+    expect(output.map(message => message.type)).toEqual(['error', 'idle']);
+    expect(output.find(message => message.type === 'complete')).toBeUndefined();
+  });
+
+  it('rejects oversized import lists before hashing or receiver admission', async () => {
+    const digest = vi.spyOn(crypto.subtle, 'digest');
+    await dispatch({ type: 'texts', texts: Array.from({ length: LIMITS.symbols + 1 }, () => '0') });
+    expect(output.map(message => message.type)).toEqual(['error', 'idle']);
+    expect(digest).not.toHaveBeenCalled();
+  });
+
+  it('rejects checksum-valid conflicting duplicates even after a complete source cycle', async () => {
+    const transfer = new Transfer(await prepareContainer(new Uint8Array(), 'empty.bin', undefined, 0));
+    const altered = transfer.frame(transfer.k); altered.symbol[0] ^= 1;
+    await dispatch({ type: 'texts', texts: [await transfer.text(0), await encodeFrame(altered)] });
+    expect(output.map(message => message.type)).toEqual(['error', 'idle']);
+  });
+
+  it('rejects valid unrelated sessions even after an otherwise complete cycle', async () => {
+    const container = await prepareContainer(new Uint8Array(), 'empty.bin', undefined, 0);
+    const first = new Transfer(container, 256, new Uint8Array(16).fill(1));
+    const other = new Transfer(container, 256, new Uint8Array(16).fill(2));
+    await dispatch({ type: 'texts', texts: [await first.text(0), await other.text(0)] });
+    expect(output.map(message => message.type)).toEqual(['error', 'idle']);
   });
 
   it('returns geometry only for unique or duplicate protocol-admitted frames', async () => {

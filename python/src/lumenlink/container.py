@@ -70,7 +70,7 @@ def validate_manifest(manifest: Any) -> None:
     if not manifest["name"] or not manifest["mime"]:
         raise ProtocolError("MANIFEST", "Filename and MIME type must not be empty")
     if type(manifest["size"]) is not int or not 0 <= manifest["size"] <= MAX_FILE_BYTES:
-        raise ProtocolError("FILE_SIZE", "File size exceeds the 1 MiB limit")
+        raise ProtocolError("FILE_SIZE", "File size exceeds the 5 MiB limit")
     if type(manifest["created"]) is not int or not 0 <= manifest["created"] <= MAX_SAFE_INT:
         raise ProtocolError("MANIFEST", "Creation time must be a safe nonnegative integer")
     if type(manifest["v"]) is not int or manifest["v"] != 1:

@@ -12,7 +12,13 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from .constants import MAX_FILE_BYTES, MAX_MANIFEST_BYTES, MAX_SYMBOLS
+from .constants import (
+    MAX_FILE_BYTES,
+    MAX_MANIFEST_BYTES,
+    MAX_SYMBOLS,
+    STANDARD_MAX_FILE_BYTES,
+    STANDARD_MAX_SYMBOLS,
+)
 
 CSV_FIELDS = (
     "trial_id",
@@ -215,14 +221,18 @@ def _trial_rules(row: Trial) -> None:
     timeout = float(row["timeout_seconds"])
     payload = int(row["payload_bytes"])
     if row["phase"] == "acceptance":
+        if payload > STANDARD_MAX_FILE_BYTES:
+            raise ValueError("Payloads above 1 MiB are exploratory only")
         if float(row["fps"]) > 10:
             raise ValueError("Experimental FPS targets are exploratory only")
         if elapsed is None or not _complete(row):
             raise ValueError("Acceptance requires a timed trial and complete known metadata")
         if timeout != max(60, 3 * payload / 1024):
             raise ValueError("Acceptance timeout must match max(60, 3 * original payload_KiB)")
-        if _symbol_bounds(payload, int(row["symbol_size"]))[0] > MAX_SYMBOLS:
-            raise ValueError("Acceptance payload/symbol size cannot fit 2048 source symbols")
+        if _symbol_bounds(payload, int(row["symbol_size"]))[0] > STANDARD_MAX_SYMBOLS:
+            raise ValueError(
+                f"Acceptance payload/symbol size cannot fit {STANDARD_MAX_SYMBOLS} source symbols"
+            )
     if elapsed is None and row["outcome"] in {"success", "timeout"}:
         raise ValueError("Success/timeout cannot be an untimed setup observation")
     if row["outcome"] == "success":

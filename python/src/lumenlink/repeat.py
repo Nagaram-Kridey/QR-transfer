@@ -3,9 +3,25 @@
 import secrets
 from dataclasses import dataclass, field
 
+from .constants import MAX_CONTAINER_BYTES, MAX_SYMBOLS
 from .container import ReceivedFile, open_container
 from .errors import ProtocolError
 from .frame import Frame, decode_frame, encode_frame
+
+
+def choose_symbol_size(container_length: int, preferred: int = 256) -> int:
+    """Select a supported sender density that fits the bounded repeat session."""
+    if (
+        type(container_length) is not int
+        or not 1 <= container_length <= MAX_CONTAINER_BYTES
+        or type(preferred) is not int
+        or preferred not in (256, 512, 1024)
+    ):
+        raise ProtocolError("SYMBOL_SIZE", "Invalid container length or preferred symbol size")
+    for size in (256, 512, 1024):
+        if size >= preferred and (container_length + size - 1) // size <= MAX_SYMBOLS:
+            return size
+    raise ProtocolError("SYMBOL_COUNT", "Container cannot fit the supported symbol sizes")
 
 
 @dataclass(frozen=True, slots=True)

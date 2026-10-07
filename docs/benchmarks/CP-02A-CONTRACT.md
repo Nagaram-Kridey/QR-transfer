@@ -111,6 +111,11 @@ was 10 KiB. A byte-for-byte copy is retained in [raw evidence](raw/2026-10-05-br
 
 ## October 7 exploratory rate extension
 
+The CP-02C larger-file candidate permits exploratory payloads up to 5 MiB with up to 8192 repeat
+symbols. Acceptance remains the original profile: file bytes at most 1 MiB and minimum source-symbol
+count at most 2048, with unchanged 10/100 KiB numeric gates. Reject attempts to promote larger-file
+observations through recording, external CSV parsing or raw-row summaries. Schemas stay unchanged.
+
 The CP-02B.2 manual-test request adds browser target rates 15/20/30 fps. The related recording
 candidate accepts exactly those rates above 10 only for exploratory rows; acceptance rows and
 unsupported higher rates remain rejected. CSV fields, raw observation-v1, physical attestation and

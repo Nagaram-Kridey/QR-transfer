@@ -1,7 +1,7 @@
 /** Wire v2, plaintext repeat mode. No DOM, camera, or network access. */
 export const LIMITS = {
-  file: 1_048_576, manifest: 4096, container: 1_052_702,
-  symbol: 1024, symbols: 2048, frame: 1059, text: 1589,
+  file: 5_242_880, manifest: 4096, container: 5_247_006,
+  symbol: 1024, symbols: 8192, frame: 1059, text: 1589, exportBytes: 16_000_000,
 } as const;
 export const FLAGS = 0x24;
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
@@ -79,7 +79,7 @@ function validateManifest(value: unknown): asserts value is Manifest {
     if (typeof m[field] !== 'string' || decoder.decode(encoder.encode(m[field])) !== m[field]) reject('MANIFEST', 'Invalid manifest string');
   }
   if (!m.name || !m.mime) reject('MANIFEST', 'Empty filename or MIME type');
-  if (!Number.isSafeInteger(m.size) || (m.size as number) < 0 || (m.size as number) > LIMITS.file) reject('FILE_SIZE', 'File exceeds 1 MiB');
+  if (!Number.isSafeInteger(m.size) || (m.size as number) < 0 || (m.size as number) > LIMITS.file) reject('FILE_SIZE', 'File exceeds 5 MiB');
   if (!Number.isSafeInteger(m.created) || (m.created as number) < 0) reject('MANIFEST', 'Invalid timestamp');
   if (m.v !== 1 || !/^[0-9a-f]{64}$/.test(m.sha256 as string)) reject('MANIFEST', 'Invalid version or hash');
 }
@@ -89,7 +89,7 @@ function serializeManifest(m: Manifest): string {
 export async function prepareContainer(
   data: Uint8Array, name: string, mime = 'application/octet-stream', created = Math.floor(Date.now() / 1000),
 ): Promise<Uint8Array<ArrayBuffer>> {
-  if (data.length > LIMITS.file) reject('FILE_SIZE', 'File exceeds 1 MiB');
+  if (data.length > LIMITS.file) reject('FILE_SIZE', 'File exceeds 5 MiB');
   const manifest = { name, mime, size: data.length, sha256: hex(await sha256(data)), created, v: 1 };
   validateManifest(manifest);
   const encoded = encoder.encode(serializeManifest(manifest));
@@ -127,7 +127,7 @@ export function validateFrame(frame: Frame): void {
   if (!Number.isInteger(frame.containerLen) || frame.containerLen < 1 || frame.containerLen > LIMITS.container) reject('LENGTH', 'Invalid container length');
   if (!Number.isInteger(frame.symbolSize) || frame.symbolSize < 1 || frame.symbolSize > LIMITS.symbol) reject('SYMBOL_SIZE', 'Invalid symbol size');
   const k = symbolCount(frame);
-  if (k > LIMITS.symbols) reject('SYMBOL_COUNT', 'Too many symbols; choose a larger symbol size');
+  if (k > LIMITS.symbols) reject('SYMBOL_COUNT', `Too many symbols; choose at least ${Math.ceil(frame.containerLen / LIMITS.symbols)} bytes per symbol`);
   if (!Number.isInteger(frame.seq) || frame.seq < 0 || frame.seq > 0xffffffff) reject('SEQUENCE', 'Sequence exhausted; prepare a new session');
   if (frame.symbol.length !== frame.symbolSize) reject('LENGTH', 'Incorrect symbol length');
   if (frame.seq % k === k - 1) {
@@ -163,6 +163,14 @@ export async function decodeFrame(text: string): Promise<Frame> {
   return unpackFrame(base45Decode(text));
 }
 export const encodeFrame = async (frame: Frame): Promise<string> => base45Encode(await packFrame(frame));
+
+export function chooseSymbolSize(containerLength: number, preferred = 256): number {
+  if (!Number.isInteger(containerLength) || containerLength < 1 || containerLength > LIMITS.container || ![256, 512, 1024].includes(preferred)) reject('SYMBOL_SIZE', 'Invalid container length or preferred symbol size');
+  for (const size of [256, 512, 1024]) {
+    if (size >= preferred && Math.ceil(containerLength / size) <= LIMITS.symbols) return size;
+  }
+  return reject('SYMBOL_COUNT', 'Container cannot fit the supported symbol sizes');
+}
 
 export class Transfer {
   readonly k: number;

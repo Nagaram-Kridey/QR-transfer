@@ -3,7 +3,7 @@ import fc from 'fast-check';
 import vectors from '../../../vectors/repeat-v2.json';
 import {
   FLAGS, LIMITS, Receiver, Transfer, base45Decode, base45Encode, concat,
-  decodeFrame, encodeFrame, hex, openContainer, packFrame, prepareContainer,
+  chooseSymbolSize, decodeFrame, encodeFrame, hex, openContainer, packFrame, prepareContainer,
   sanitizeFilename, sha256, unhex, unpackFrame, validateFrame,
 } from './core';
 
@@ -69,7 +69,7 @@ it('rejects malformed frame fields, padding and overflowing sequence', async () 
   for (const change of [
     { flags: 0x14 }, { flags: 0x2c }, { flags: 0x20 }, { sessionId: new Uint8Array(1) },
     { containerLen: 0 }, { containerLen: LIMITS.container + 1 }, { symbolSize: 0 },
-    { symbolSize: 1025 }, { containerLen: 2049, symbolSize: 1 }, { seq: -1 },
+    { symbolSize: 1025 }, { containerLen: LIMITS.symbols + 1, symbolSize: 1 }, { seq: -1 },
     { seq: 2 ** 32 }, { seq: 1.5 }, { symbol: new Uint8Array() },
   ]) expect(() => validateFrame({ ...frame, ...change })).toThrow();
   const last = transfer.frame(transfer.k - 1);
@@ -145,9 +145,42 @@ it('handles an exact symbol boundary and maximum supported file', async () => {
   expect(exact.k).toBe(2);
   expect((await decodeFrame(await exact.text(1))).flags).toBe(FLAGS);
   const container = await prepareContainer(new Uint8Array(LIMITS.file), 'max.bin', undefined, 0);
-  expect(() => new Transfer(container, 512)).toThrow('larger');
+  expect(() => new Transfer(container, 256)).toThrow('choose at least');
   const transfer = new Transfer(container, 1024);
   const receiver = new Receiver();
   for (let seq = 0; seq < transfer.k; seq++) await receiver.ingest(await transfer.text(seq));
   expect(receiver.result!.data.length).toBe(LIMITS.file);
+}, 30_000);
+
+it('expands the old count boundary and accounts for maximum manifest overhead', async () => {
+  expect(new Transfer(new Uint8Array(2049), 1).k).toBe(2049);
+  expect(new Transfer(new Uint8Array(LIMITS.symbols), 1).k).toBe(LIMITS.symbols);
+  expect(() => new Transfer(new Uint8Array(LIMITS.symbols + 1), 1)).toThrow('choose at least');
+  const data = new Uint8Array(LIMITS.file);
+  const plain = await prepareContainer(data, 'a', undefined, 0);
+  const manifestLength = plain[0] * 256 + plain[1];
+  const largest = await prepareContainer(data, 'a'.repeat(1 + LIMITS.manifest - manifestLength), undefined, 0);
+  expect(largest[0] * 256 + largest[1]).toBe(LIMITS.manifest);
+  expect(largest.length).toBe(LIMITS.file + LIMITS.manifest + 2);
+  expect(new Transfer(largest, 1024).k).toBeLessThanOrEqual(LIMITS.symbols);
+  expect(() => new Transfer(largest, 640)).toThrow('choose at least');
+});
+
+it.each([{ length: LIMITS.container + 1, size: 1024 }, { length: 8193, size: 1 }, { length: 1, size: 1025 }])('rejects hostile metadata before allocating or locking a session %j', async ({ length, size }) => {
+  const body = new Uint8Array(27 + size);
+  const view = new DataView(body.buffer);
+  body[0] = FLAGS; view.setUint32(17, length); view.setUint16(21, size);
+  const text = base45Encode(concat(body, (await sha256(body)).slice(0, 8)));
+  const receiver = new Receiver();
+  await expect(receiver.ingest(text)).rejects.toThrow();
+  expect(receiver.stats).toMatchObject({ state: 'IDLE', recovered: 0, total: 0, session: '' });
+  expect(receiver.result).toBeNull();
+});
+
+it.each([[1, 256, 256], [8192 * 256, 256, 256], [8192 * 256 + 1, 256, 512], [8192 * 512 + 1, 256, 1024], [1, 512, 512], [1, 1024, 1024]])('adapts density for native container count %i/preference %i', (length, preferred, expected) => {
+  expect(chooseSymbolSize(length, preferred)).toBe(expected);
+});
+
+it.each([[0, 256], [-1, 256], [LIMITS.container + 1, 256], [1, 0], [1, 640], [NaN, 256], [1.5, 256]])('rejects invalid density input %i/%i', (length, preferred) => {
+  expect(() => chooseSymbolSize(length, preferred)).toThrow();
 });

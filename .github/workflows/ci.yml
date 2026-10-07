@@ -46,6 +46,12 @@ jobs:
       - run: npm run vectors:emit
         working-directory: web
       - run: uv run --project python python tools/verify_ts_vectors.py
+      - run: uv run --project python python tools/large_capacity_interop.py emit-python
+      - run: npx tsx scripts/large-capacity-interop.ts
+        working-directory: web
+      - run: uv run --project python python tools/large_capacity_interop.py verify-typescript
+      - run: uv run --project python ruff check tools/large_capacity_interop.py
+      - run: uv run --project python ruff format --check tools/large_capacity_interop.py
       - run: uv run --project python python tools/generate_camera_fixtures.py
       - run: uv run --project python python tools/generate_reentry_fixtures.py
       - run: uv run --project python ruff check tools/generate_reentry_fixtures.py

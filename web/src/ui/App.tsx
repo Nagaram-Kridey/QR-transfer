@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
-import { LIMITS, Transfer, prepareContainer } from '../codec/core';
+import { LIMITS, Transfer, chooseSymbolSize, prepareContainer } from '../codec/core';
 import type { ReceivedFile, ReceiveStats } from '../codec/core';
 import { CameraDiagnostics, buildDiagnosticsExport } from '../diagnostics/camera';
 import type { DiagnosticSnapshot } from '../diagnostics/camera';
@@ -28,6 +28,7 @@ function Sender(): React.JSX.Element {
   const [playing, setPlaying] = useState(false);
   const [preparing, setPreparing] = useState(false);
   const [displayed, setDisplayed] = useState(0);
+  const [preparationNotice, setPreparationNotice] = useState('');
   const [error, setError] = useState('');
   const canvas = useRef<HTMLCanvasElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -41,7 +42,7 @@ function Sender(): React.JSX.Element {
     const count = qr.modules.size + 8;
     const available = Math.min(640, Math.floor(target.parentElement?.clientWidth ?? 400) - 32);
     const scale = Math.floor(available / count);
-    if (scale < 2) throw new Error('This density does not fit the screen. Choose a smaller symbol size.');
+    if (scale < 2) throw new Error('This density does not fit the screen. Widen the display or use a smaller file and symbol size.');
     target.width = target.height = count * scale;
     const ctx = target.getContext('2d')!;
     ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, target.width, target.height);
@@ -72,12 +73,15 @@ function Sender(): React.JSX.Element {
   }, [playing, transfer, fps]);
 
   async function prepare(): Promise<void> {
-    setError(''); setTransfer(null); setPreparing(true); seq.current = 0; setDisplayed(0);
+    setError(''); setPreparationNotice(''); setTransfer(null); setPreparing(true); seq.current = 0; setDisplayed(0);
     try {
-      if (file && file.size > LIMITS.file) throw new Error('Choose a test file no larger than 1 MiB.');
+      if (file && file.size > LIMITS.file) throw new Error('Choose a test file no larger than 5 MiB.');
       const bytes = file ? new Uint8Array(await file.arrayBuffer()) : new TextEncoder().encode(text);
-      const prepared = new Transfer(await prepareContainer(bytes, file?.name ?? 'message.txt', file ? file.type || 'application/octet-stream' : 'text/plain'), size);
-      await draw(prepared, 0); setTransfer(prepared);
+      const container = await prepareContainer(bytes, file?.name ?? 'message.txt', file ? file.type || 'application/octet-stream' : 'text/plain');
+      const selectedSize = chooseSymbolSize(container.length, size);
+      const prepared = new Transfer(container, selectedSize);
+      await draw(prepared, 0); setTransfer(prepared); setSize(selectedSize);
+      if (selectedSize !== size) setPreparationNotice(`Selected ${selectedSize}-byte symbols to fit the file. Denser QR codes need camera testing.`);
     } catch (reason) { setError(message(reason)); }
     finally { setPreparing(false); }
   }
@@ -101,7 +105,7 @@ function Sender(): React.JSX.Element {
     </fieldset>
     <div className="qr-stage">
       <canvas ref={canvas} aria-label="Transfer QR code" hidden={!transfer} />
-      {!transfer && <p className="placeholder">Your QR will appear here.<br /><small>Use a non-sensitive file, up to 1 MiB.</small></p>}
+      {!transfer && <p className="placeholder">Your QR will appear here.<br /><small>Use a non-sensitive file, up to 5 MiB.</small></p>}
     </div>
     <label className="check"><input type="checkbox" checked={acknowledged} disabled={playing} onChange={event => setAcknowledged(event.target.checked)} />I understand that animated QR codes flash. I have checked the surroundings before playback.</label>
     {fps > 10 && <label className="check"><input type="checkbox" checked={highRateAcknowledged} disabled={playing} onChange={event => setHighRateAcknowledged(event.target.checked)} />I agree to test the experimental {fps} fps target with increased flashing and unproven reception.</label>}
@@ -109,6 +113,8 @@ function Sender(): React.JSX.Element {
     <div className="actions"><button disabled={!transfer || !acknowledged || (fps > 10 && !highRateAcknowledged)} onClick={() => setPlaying(value => !value)}>{playing ? 'Pause' : 'Play QR stream'}</button><button className="secondary" disabled={!transfer || playing} onClick={() => { void exportFrames().catch(reason => setError(message(reason))); }}>Export frames</button></div>
     <p className="mono" aria-live="polite">{transfer ? `${transfer.k} symbols · ${displayed} frames drawn · cycle ${Math.floor(Math.max(0, displayed - 1) / transfer.k) + 1}` : 'No transfer prepared'}</p>
     <p className="hint">Stop manually when the receiver finishes. The sender receives no acknowledgements.</p>
+    {transfer && preparationNotice && <p className="hint" role="status">{preparationNotice}</p>}
+    <p className="hint">Use updated sender and receiver builds: older receivers reject larger files or longer symbol cycles. Files above 1 MiB are experimental and may take many minutes.</p>
     {error && <p className="error" role="alert">{error}</p>}
   </section>;
 }
@@ -358,10 +364,10 @@ function CameraReceiver(): React.JSX.Element {
     reset(); setStatus('IMPORTING');
     const generation = runtime.current.generation;
     try {
-      if (file.size > 4_000_000) throw new Error('Frame export exceeds 4 MB.');
+      if (file.size > LIMITS.exportBytes) throw new Error('Frame export exceeds 16 MB.');
       const exported: unknown = JSON.parse(await file.text());
       if (generation !== runtime.current.generation) return;
-      if (!exported || typeof exported !== 'object' || !('format' in exported) || exported.format !== 'lumenlink-frames-v2' || !('frames' in exported) || !Array.isArray(exported.frames) || exported.frames.length > 2048) throw new Error('Invalid frame export.');
+      if (!exported || typeof exported !== 'object' || !('format' in exported) || exported.format !== 'lumenlink-frames-v2' || !('frames' in exported) || !Array.isArray(exported.frames) || exported.frames.length > LIMITS.symbols) throw new Error('Invalid frame export.');
       const texts = exported.frames;
       if (texts.some(text => typeof text !== 'string' || text.length > LIMITS.text)) throw new Error('Invalid frame in export.');
       createWorker(() => {
@@ -380,7 +386,7 @@ function CameraReceiver(): React.JSX.Element {
       {active && scanMode === 'auto_region' && tracking?.region && <svg className="tracking-overlay" role="img" aria-label="Tracked scan region" viewBox={`0 0 ${tracking.source_width} ${tracking.source_height}`} preserveAspectRatio="xMidYMid meet"><rect x={tracking.region.x} y={tracking.region.y} width={tracking.region.width} height={tracking.region.height} vectorEffect="non-scaling-stroke" /></svg>}
       {!active && <span>Camera is off</span>}
     </div>
-    <div className="settings"><label>Expected test payload <select value={expectedKiB} disabled={active} onChange={event => setExpectedKiB(Number(event.target.value))}><option value={10}>10 KiB · 60 s timeout</option><option value={100}>100 KiB · 300 s timeout</option><option value={1024}>1 MiB · 3,072 s timeout</option></select></label><div className="state" aria-live="polite">{status}</div></div>
+    <div className="settings"><label>Expected test payload <select value={expectedKiB} disabled={active} onChange={event => setExpectedKiB(Number(event.target.value))}><option value={10}>10 KiB · 60 s timeout</option><option value={100}>100 KiB · 300 s timeout</option><option value={1024}>1 MiB · 3,072 s timeout</option><option value={2048}>2 MiB · 6,144 s timeout · experimental</option><option value={5120}>5 MiB · 15,360 s timeout · experimental</option></select></label><div className="state" aria-live="polite">{status}</div></div>
     <label>Camera scan mode <select value={scanMode} disabled={active} onChange={event => setScanMode(event.target.value as CameraMode)}><option value="full_frame">Full frame · default</option><option value="auto_region">Auto region · experimental</option></select></label>
     {scanMode === 'auto_region' && <p className="hint">Experimental tracking; faster transfers are unproven. Keep the complete QR in view.</p>}
     {scanMode === 'auto_region' && status === 'RECEIVING' && <p className="tracking-state" role="status">{tracking?.state ?? 'Searching'}</p>}

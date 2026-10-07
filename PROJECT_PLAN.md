@@ -45,6 +45,11 @@ success, not a statistical population guarantee.
 
 ## Scope control
 
+October 7 user-requested CP-02C adds a bounded experimental 5 MiB repeat-capacity profile with
+8192 source symbols. This is local software work pending its checkpoint approval and physical
+measurements. The original 10/100 KiB feasibility cells and future fountain study remain unchanged;
+larger files above 1 MiB are exploratory. See ADR 004 for compatibility and resource bounds.
+
 The early checkpoint may be a browser sender plus Python receiver. It is not the completed PWA
 and is not secure. Ship only claims backed by evidence. Slippage must not produce partial crypto.
 Fountain adoption requires ≥15% better median completion time, no success decrease, ≤10% p95

@@ -4,6 +4,13 @@ Update this file after every meaningful project change. Each entry records **don
 **next**, and **blockers**. Do not call a planned step complete or replace physical data with simulation.
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
+**Latest task — October 7:** CP-02C larger-file capacity is approved; delivery is in progress.
+The supplied observation and diagnostics match by exact bytes/hash and record one full-frame
+859.318 KiB success in 864.4303 seconds. See the retained analysis under `docs/benchmarks`.
+The candidate raises capacity to a bounded 5 MiB with 8192 repeat symbols; final checks passed and
+development/testing agree on the same final revision. The user explicitly approved commit/push
+and Pages deployment; source is frozen while actual delivery results are verified.
+
 **Current handoff — 2026-10-07 (IST):** CP-02B.1 browser diagnostics is approved and delivered,
 following the accepted [autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md).
 Both agents agree PASS on snapshot
@@ -753,3 +760,96 @@ unit/browser/build/interoperability checks and independent project-base native-c
 
 **Blockers:** Replay acceptance/final same-revision reviews are pending. Physical benefit/G2 remain
 unmeasured; the candidate is still unapproved/uncommitted/undeployed.
+
+## 2026-10-07 — Supplied trial reviewed; CP-02C capacity implementation (Asia/Kolkata)
+
+**Done:** Reviewed the two supplied JSON files as observation data. Their exact observation
+byte count and SHA-256 match the diagnostic link. Preserved the originals locally and added
+exact-name ignore rules; retained a sanitized analysis without transferred contents. Named CP-02C
+for the requested larger-file feature and assigned separate development/adversarial-testing agents.
+The bounded candidate is 5 MiB original bytes, 8192 repeat source symbols and 16 MB frame imports.
+It includes automatic supported-symbol selection, explicit oversized-input rejection and matching
+browser timeout choices. Updated the specification/ADR and current plans for expanded capacity.
+
+**Verified:** Recorded success is 879,942 bytes (859.318 KiB) in 864.4303 seconds, approximately
+0.994086 KiB/s. Full-frame mode only; zero ROI attempts. Counters and bounded diagnostic ring
+reconcile. Capture averages 52.79 ms and is the largest measured component. The selected 1024 KiB
+timeout setting differs from actual file size, so this input cannot be silently promoted into the
+strict benchmark CSV. Sender settings/device/commit metadata and received bytes were not supplied.
+Initial source checks are underway; no final capacity verification or deployment is claimed yet.
+
+**Next:** Verify exact maximum files, hostile headers/imports, count/byte limits, source-size
+selection and both-language decoding above 1 MiB. Obtain both independent reviews at one frozen
+revision, then request explicit approval for CP-02C commit/push and Pages deployment.
+
+**Blockers:** Final tests/reviews are pending. Larger-file physical reliability, ROI adoption and
+G2 remain unqualified. The currently hosted build retains its previously delivered capacity.
+
+## 2026-10-07 — CP-02C adversarial import corrections and checks (Asia/Kolkata)
+
+**Done:** Both import paths now validate the entire bounded export before admitting a transfer:
+checksums, frame/session metadata and conflicting duplicate symbols, including trailing entries.
+The CLI also converts parser-depth exhaustion on deeply nested bounded JSON into a controlled
+error before save. Added regressions and repeatable large-transfer conformance tooling to CI and
+Pages. Updated compatibility guidance to include longer symbol cycles even for files at or below
+1 MiB. Original small vectors are unchanged.
+
+**Verified:** Large cross-decoding passed in both directions for 2,097,169 bytes and 2049 symbols,
+including independently serialized containers and comparison of every frame. Browser unit checks:
+147 pass, codec statements 99.56%, branches/functions 100%, lines 99.34%. Python full coverage run:
+337 pass (99.67%), with two later CLI regressions separately passing; 339 unique tests verified,
+not a claimed single 339-test run. All 36 harness E2E cases pass across Chromium/Firefox/WebKit,
+including exact 2 MiB and 5 MiB save and pre-read size-limit rejection. WebKit's 5 MiB software case
+took about 1.7 minutes; this is no phone/camera throughput claim. Initial stale error-message
+assertions were corrected; no E2E timeout budget or acceptance threshold was relaxed.
+Root verified original conformance, Ruff/style/mypy, package build and isolated wheel installation.
+
+**Next:** Finish focused camera lifecycle checks, project-base build and both independent final
+reports at the same fingerprint; submit CP-02C for explicit commit/push/Pages approval.
+
+**Blockers:** Final camera checks/reports are pending. New source remains uncommitted and local;
+the live site has not received this capacity change. Physical performance/adoption and G2 remain
+separate required decisions.
+
+## 2026-10-07 — CP-02C ready for approval (Asia/Kolkata)
+
+**Done:** Both independent agents completed their own reports and explicitly agreed PASS on
+the same 22-path fingerprint
+`9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d`. All confirmed in-scope
+findings are resolved. The approval packet in CHECKPOINTS.md covers the local 5 MiB capacity
+change, safer imports, source/test/tool/workflow changes and current documentation. Reports are
+`docs/reviews/CP-02C-development.md` and `docs/reviews/CP-02C-testing.md`.
+
+**Verified:** Final results: 147 Vitest; 337 Python coverage-suite tests plus two subsequently
+added CLI regressions; 36 harness cases across Chromium/Firefox/WebKit; seven targeted camera
+lifecycle cases; large-transfer byte-identical conformance in both directions. Existing vectors
+are unchanged. Root additionally verified project-base production build and local worker/WASM
+asset paths, restored the default build, and rebuilt the final Python sdist/wheel after the last
+CLI repair. Source fingerprint and diff whitespace checks match both reviews. Coverage exceeds
+99% in configured protocol modules. Original supplied reports remain ignored and unchanged.
+
+**Next:** Obtain explicit user approval for **CP-02C commit/push and Pages deployment after hosted
+CI passes**. Then deliver the frozen part, inspect actual CI/Pages and live asset results, and
+log them. Until approval, preserve the source freeze; the live site retains its prior capacity.
+
+**Blockers:** Required user approval, per AGENTS.md/CHECKPOINTS.md. No known software blocker
+remains for this scope. Larger-file physical trials, measured autoframing benefit and G2 remain
+outstanding; this capacity increase establishes no throughput improvement.
+
+## 2026-10-07 — CP-02C approved; delivery started (Asia/Kolkata)
+
+**Done:** Recorded the user's explicit **"Approved"** for the submitted CP-02C packet, including
+commit/push and Pages deployment after hosted CI. Re-read current rules, plans/specification,
+handoff and both independent reviews. Preserved the reviewed application/test/workflow revision.
+
+**Verified:** The 22-path fingerprint remains
+`9836cda788f8b43884907fe016c54921106036f071a140b73c5509052f6c129d`; diff whitespace passes.
+Both reviews agree PASS. Local and remote `main` still match base `6cd5d92` before delivery.
+Supplied camera JSON files are ignored; generated payloads/exports/build products stay excluded.
+
+**Next:** Commit/push the approved part, wait for hosted CI, dispatch Pages, verify the published
+5 MiB build and record actual run/commit links. Stop after this checkpoint's delivery; physical
+trials/adoption and later features need their own evidence and decisions.
+
+**Blockers:** No known blocker for approved delivery. Physical larger-file performance, ROI
+adoption and G2 remain unqualified; no such result is inferred from software checks.

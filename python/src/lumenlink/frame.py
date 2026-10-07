@@ -54,7 +54,10 @@ class Frame:
         if not 1 <= self.symbol_size <= MAX_SYMBOL_BYTES:
             raise ProtocolError("SYMBOL_SIZE", "Symbol size must be between 1 and 1024")
         if self.k > MAX_SYMBOLS:
-            raise ProtocolError("SYMBOL_COUNT", "Too many symbols; use a larger symbol size")
+            minimum = (self.container_len + MAX_SYMBOLS - 1) // MAX_SYMBOLS
+            raise ProtocolError(
+                "SYMBOL_COUNT", f"Too many symbols; use a symbol size of at least {minimum} bytes"
+            )
         if not 0 <= self.seq <= MAX_SEQ:
             raise ProtocolError("SEQUENCE", "Sequence exhausted; prepare a new session")
         if len(self.symbol) != self.symbol_size:

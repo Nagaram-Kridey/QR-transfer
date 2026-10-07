@@ -1098,3 +1098,35 @@ def test_acceptance_metadata_cannot_describe_unencodable_maximum_file(
     python_observation.update(payload_bytes=1_048_576)
     with pytest.raises(ValueError):
         normalize(python_observation, metadata)
+
+
+@pytest.mark.parametrize("payload", [1_048_577, 5_242_880])
+def test_expanded_payload_is_exploratory_and_cannot_be_promoted(
+    payload, tmp_path, metadata, python_observation
+):
+    metadata.update(payload_bytes=payload, timeout_seconds=3 * payload / 1024, symbol_size=1024)
+    python_observation["payload_bytes"] = payload
+    row = normalize(python_observation, metadata, phase="exploratory")
+    assert row["payload_bytes"] == str(payload)
+    benchmark.summarize_trials([row])
+    with pytest.raises(ValueError):
+        normalize(python_observation, metadata)
+    row["phase"] = "acceptance"
+    with pytest.raises(ValueError):
+        benchmark.summarize_trials([row])
+    path = tmp_path / "promoted.csv"
+    write_csv(path, [row])
+    with pytest.raises(ValueError):
+        benchmark.read_trials(path)
+
+
+def test_new_symbol_capacity_does_not_expand_standard_acceptance(metadata, browser_observation):
+    payload = 1_048_576
+    metadata.update(payload_bytes=payload, timeout_seconds=3072, symbol_size=512)
+    total = math.ceil((payload + 180) / 512)
+    browser_observation.update(payload_bytes=payload, expected_payload_kib=1024)
+    browser_observation["stats"].update(total=total, recovered=total, seen=total + 1)
+    row = normalize(browser_observation, metadata, phase="exploratory")
+    assert int(row["frames_seen"]) > 2048
+    with pytest.raises(ValueError):
+        normalize(browser_observation, metadata)

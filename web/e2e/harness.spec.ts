@@ -168,3 +168,68 @@ test('reset abandons a pending frame import before it can expose a file', async 
   await expect(page.getByRole('button', { name: 'Save verified file' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Enable camera' })).toBeEnabled();
 });
+
+for (const bytes of [2 * 1024 * 1024, 5 * 1024 * 1024]) {
+  test(`prepares adaptive density, exports and verifies ${bytes}-byte file`, async ({ page }) => {
+    test.setTimeout(120_000);
+    const data = Buffer.alloc(bytes, 137);
+    await page.goto('/');
+    await page.getByLabel('Choose file').setInputFiles({ name: 'expanded.bin', mimeType: 'application/octet-stream', buffer: data });
+    await page.getByRole('button', { name: 'Prepare QR', exact: true }).click();
+    await expect(page.getByLabel('Transfer QR code')).toBeVisible();
+    await expect(page.getByLabel('Symbol size')).toHaveValue(bytes > 4 * 1024 * 1024 ? '1024' : '512');
+    const exported = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Export frames' }).click();
+    const path = (await (await exported).path())!;
+    const content = JSON.parse(await readFile(path, 'utf8')) as { frames: string[] };
+    expect(content.frames.length).toBeGreaterThan(2048);
+    expect(content.frames.length).toBeLessThanOrEqual(8192);
+    await page.getByText('Conformance testing without a camera').click();
+    await page.getByLabel('Frame JSON').setInputFiles(path);
+    await expect(page.getByText('File verified', { exact: true })).toBeVisible({ timeout: 60_000 });
+    const saved = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Save verified file' }).click();
+    expect(await readFile((await (await saved).path())!)).toEqual(data);
+    await expect(page.getByRole('button', { name: 'Export trial observation' })).toHaveCount(0);
+  });
+}
+
+test('rejects expanded file plus one byte before reading it', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(File.prototype, 'arrayBuffer', { value: async () => { throw new Error('OVERSIZED_FILE_READ'); } });
+  });
+  await page.goto('/');
+  await page.getByLabel('Choose file').setInputFiles({ name: 'oversized.bin', mimeType: 'application/octet-stream', buffer: Buffer.alloc(5 * 1024 * 1024 + 1) });
+  await page.getByRole('button', { name: 'Prepare QR', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('5 MiB');
+  await expect(page.getByRole('alert')).not.toContainText('OVERSIZED_FILE_READ');
+  await expect(page.getByRole('button', { name: 'Play QR stream' })).toBeDisabled();
+});
+
+test('rejects expanded export byte cap before text parsing or worker creation', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(File.prototype, 'text', { value: async () => { throw new Error('OVERSIZED_IMPORT_READ'); } });
+    window.Worker = new Proxy(Worker, { construct() { throw new Error('OVERSIZED_IMPORT_WORKER'); } });
+  });
+  await page.goto('/');
+  await page.getByText('Conformance testing without a camera').click();
+  await page.getByLabel('Frame JSON').setInputFiles({ name: 'oversized.json', mimeType: 'application/json', buffer: Buffer.alloc(16_000_001, 32) });
+  await expect(page.getByRole('alert')).toContainText('16 MB');
+  await expect(page.getByRole('alert')).not.toContainText('OVERSIZED_IMPORT');
+  await expect(page.getByRole('button', { name: 'Save verified file' })).toHaveCount(0);
+});
+
+test('rejects oversized source list and malformed tail before exposing a verified file', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Prepare QR', exact: true }).click();
+  const exported = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export frames' }).click();
+  const valid = JSON.parse(await readFile((await (await exported).path())!, 'utf8')) as { format: string; frames: unknown[] };
+  await page.getByText('Conformance testing without a camera').click();
+  for (const frames of [Array.from({ length: 8193 }, () => '0'), [...valid.frames, null], [...valid.frames, 'INVALID']]) {
+    await page.getByLabel('Frame JSON').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ format: valid.format, frames })) });
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Save verified file' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Reset session' }).click();
+  }
+});

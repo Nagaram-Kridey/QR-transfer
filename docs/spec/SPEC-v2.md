@@ -21,9 +21,12 @@ Checksum is the first 8 bytes of SHA-256(header || symbol); it detects noise, no
 | 27+S | 8 | Checksum (future encrypted mode: authenticated tag) |
 
 Current supported flags are exactly 0x24. Versions other than 2, bit3 and unsupported modes are rejected.
-Require exactly 35+S bytes, no trailing data. Bounds: S=1..1024, container length=1..1,052,702 and
-k=ceil(container_len/S) ≤2048. Check framing bounds before allocating session buffers. The receiver
-must separately reject plaintext containers exceeding 1,052,674 bytes at final parsing.
+Require exactly 35+S bytes, no trailing data. Experimental repeat-capacity bounds: S=1..1024,
+container length=1..5,247,006 and k=ceil(container_len/S) ≤8192. Check framing bounds before
+allocating session buffers. Separately reject plaintext containers exceeding 5,246,978 bytes
+at final parsing. This October 7 CP-02C expansion changes receiver resource policy, not frame
+layout or wire version. Older builds retain the 1 MiB / 2048-symbol limits and reject larger
+streams; update both endpoints for the experimental capacity. Existing small vectors are unchanged.
 
 Repeat frame seq contains source symbol seq % k. The final symbol is zero-padded to S; reject
 nonzero padding. Trim the reconstructed bytes to the declared container length. Frame seq increases
@@ -46,7 +49,7 @@ Use ordinary JSON string escapes for quotation mark, backslash and controls; low
 U+0000..U+001F escapes. Do not escape slash. Unpaired surrogates are invalid.
 
 - name and mime: nonempty strings, constrained by total manifest size; MIME is not trusted for execution.
-- size: original file byte count, integer 0..1,048,576 inclusive. Empty files are valid.
+- size: original file byte count, integer 0..5,242,880 inclusive (5 MiB). Empty files are valid.
 - sha256: 64 lowercase hexadecimal characters representing the original file digest.
 - created: integer Unix seconds, 0..2^53-1, decimal integer spelling (no exponent, -0 or fractional form).
 - v: integer 1, the manifest schema version, distinct from the wire/application version.
@@ -66,8 +69,12 @@ Receiver.ingest returns a verified ReceivedFile or None, with counters/state. re
 the active session. Browser equivalents have asynchronous hashing and require serialized ingestion;
 concurrent ingestion is rejected. Construct a new browser Receiver to reset.
 
-Frame export JSON: {"format":"lumenlink-frames-v2","frames":["BASE45", ...]}. Limit import to 4 MB
-and 2048 text frames of at most 1589 characters. Exports carry one complete source-symbol cycle.
+Frame export JSON: {"format":"lumenlink-frames-v2","frames":["BASE45", ...]}. Limit import to
+16,000,000 bytes (16 MB) and 8192 text frames of at most 1589 characters. Exports carry one
+complete source-symbol cycle. Bound file bytes before parsing and count/text lengths before worker
+admission. Count all entries, including entries after an otherwise complete transfer.
+Validate every entry's checksum/metadata and reject conflicting symbols at the same source index
+before reconstruction can expose a file, including conflicts in trailing entries.
 Incomplete imports fail without a save. This file format is a test artifact, not an alternate optical
 transport or a field benchmark. Never trim its strings.
 
@@ -97,7 +104,7 @@ independent TS-to-Python path. QR pixel layout and compressor output identity ar
 Compression means zlib-wrapped DEFLATE of file bytes only. Build the manifest around original size/hash;
 container is manifest prefix + compressed payload, then optionally encrypt the whole container.
 Select compression only if it reduces payload length. Decompress after authentication and manifest
-validation, incrementally bounded by min(manifest.size, 1 MiB). Reject excess output, trailing compressed
+validation, incrementally bounded by min(manifest.size, 5 MiB). Reject excess output, trailing compressed
 data, truncation, size/hash mismatch. Different conforming compressors need cross-decoding, not
 byte-identical output. Frame bytes are identical for identical *prepared* container/session inputs.
 

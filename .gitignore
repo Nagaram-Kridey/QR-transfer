@@ -19,3 +19,6 @@ received/
 artifacts/
 *.local
 *.tsbuildinfo
+# User-supplied camera reports stay local; sanitized findings belong in docs.
+/camera-observation (1).json
+/camera-diagnostics.json

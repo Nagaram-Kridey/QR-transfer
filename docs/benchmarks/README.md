@@ -62,8 +62,10 @@ both directions on Windows–Android and Windows–iPhone.
 
 Report successes/20, failures by reason, median/p95 successful completion times and median original-file
 KiB/s. Explicitly label successful-trial-only percentiles; retain timeout information alongside them.
-18/20 is an observed proportion, not a guarantee of 90% population reliability. A supported 1 MiB
-codec limit is not evidence for transferring 1 MiB through real cameras.
+18/20 is an observed proportion, not a guarantee of 90% population reliability. The CP-02C
+experimental 5 MiB capacity is a software limit; larger-file observations remain exploratory.
+The [October 7 supplied report review](2026-10-07-observation-review.md) records one full-frame
+success and explains its expected/actual-size mismatch. It supplies no autoframing comparison.
 
 The CLI/browser reports are intentionally local and incomplete metadata records, not automatic gate
 certificates. Commit raw trials and their settings before changing README/résumé claims.
