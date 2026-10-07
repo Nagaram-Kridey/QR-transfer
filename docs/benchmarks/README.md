@@ -11,6 +11,16 @@ CP-02B.1 adds browser diagnostics under the accepted
 [diagnostics guide](BROWSER_DIAGNOSTICS.md) and current CHECKPOINTS.md status before collecting
 candidate measurements. The original observation-v1 and CSV contracts remain the benchmark inputs;
 separate timing exports do not establish provenance, qualify G2 or prove a performance gain.
+CP-02B.2 is a local [tracking candidate](BROWSER_AUTOFRAMING.md) with diagnostics-v2 in both modes;
+its [controlled replay](AUTOFRAMING_REPLAY.md) is software evidence, separate from physical cells.
+Use the same approved/deployed build for a physical comparison after the candidate's checkpoint.
+
+The October 7 manual-test request adds browser-only 15/20/30 fps target options. Use these as
+exploratory trials, retain observations/diagnostics/failures and record the selected target in `fps`
+with a distinct run ID. The recording candidate accepts those known experimental rates only for
+`phase=exploratory`; they cannot be acceptance rows or qualify an automatic gate. Python optical
+playback and standard acceptance settings remain capped at 10 fps. Do not treat a selector target
+as measured display FPS or received throughput. Receiver polling stays 33 ms with one image in flight.
 
 ## Before acceptance trials
 

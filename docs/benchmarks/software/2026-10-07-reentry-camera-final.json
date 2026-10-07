@@ -1,0 +1,1452 @@
+{
+  "evidence": "Synthetic software replay; no physical camera or adoption claim.",
+  "started_at": "2026-10-07T05:03:05.835Z",
+  "finished_at": "2026-10-07T05:04:01.633Z",
+  "browser_version": "153.0.8010.12",
+  "source_before": {
+    "base_commit": "8fad9841decbe69a0e1b9e90682efccb47b51a7d",
+    "source_sha256": "368e99b07dc07c73c36150ddcc9dfae7c2f94b03b939f837d2d8537858c6e02c",
+    "files": {
+      "web/src/camera/geometry.ts": "fc316f8bfe9a8c7a176a24b39b35dadab69d614115c59bf7f9b7cc8f0ef223c8",
+      "web/src/camera/tracker.ts": "ba75689146435adcc8416bf6a7fd1f147db4d017452af684348bc1ef62f01fa2",
+      "web/src/codec/core.ts": "adbe620414846a9cd8da2928fc98c62aed1a6497439bbeac60743b45e762daa1",
+      "web/src/diagnostics/camera.ts": "b963b472cf6f6700e87eaaf50933caf9b81c6c23fd7c68be9a8dfc9f7ace527a",
+      "web/src/ui/App.tsx": "efd4566e2d43e7ab61a637770e9efbb3754135e827d05fb038bf6dbfac716639",
+      "web/src/ui/style.css": "8e2c69e489e68c37a3323a586ad61c6e37e207943e8cd2373f95027197954bfd",
+      "web/src/workers/messages.ts": "abcff3aa559369b5c1bdb8e572f8f0b5c04e3d83c29af303f644d0a549488034",
+      "web/src/workers/receiver.worker.ts": "8644daa73b29444a9a421ef344198c95a3e76e0afcef78b6c5a7c26f19bd3320"
+    }
+  },
+  "source_after": {
+    "base_commit": "8fad9841decbe69a0e1b9e90682efccb47b51a7d",
+    "source_sha256": "368e99b07dc07c73c36150ddcc9dfae7c2f94b03b939f837d2d8537858c6e02c",
+    "files": {
+      "web/src/camera/geometry.ts": "fc316f8bfe9a8c7a176a24b39b35dadab69d614115c59bf7f9b7cc8f0ef223c8",
+      "web/src/camera/tracker.ts": "ba75689146435adcc8416bf6a7fd1f147db4d017452af684348bc1ef62f01fa2",
+      "web/src/codec/core.ts": "adbe620414846a9cd8da2928fc98c62aed1a6497439bbeac60743b45e762daa1",
+      "web/src/diagnostics/camera.ts": "b963b472cf6f6700e87eaaf50933caf9b81c6c23fd7c68be9a8dfc9f7ace527a",
+      "web/src/ui/App.tsx": "efd4566e2d43e7ab61a637770e9efbb3754135e827d05fb038bf6dbfac716639",
+      "web/src/ui/style.css": "8e2c69e489e68c37a3323a586ad61c6e37e207943e8cd2373f95027197954bfd",
+      "web/src/workers/messages.ts": "abcff3aa559369b5c1bdb8e572f8f0b5c04e3d83c29af303f644d0a549488034",
+      "web/src/workers/receiver.worker.ts": "8644daa73b29444a9a421ef344198c95a3e76e0afcef78b6c5a7c26f19bd3320"
+    }
+  },
+  "source_unchanged": true,
+  "fixture_manifest_sha256": "053a6469e04fe03aaa3b8d34dcb5570a1327da6020fc877537b5024a44c7cf39",
+  "manifest": {
+    "format": "lumenlink-synthetic-reentry-fixtures-v1",
+    "evidence": "Synthetic software replay only; not physical camera qualification.",
+    "session_id": "00112233445566778899aabbccddeeff",
+    "source_symbol_count": 64,
+    "symbol_size": 256,
+    "payload_bytes": 16000,
+    "payload_sha256": "a04eba5214d30c29811d497677cd9ed2096292dadc61d5132a273cf02080f6ae",
+    "blank_png": "blank.png",
+    "blank_png_sha256": "8fd63e2719a28ea25cb6a1167cde00eb3f1360d188c2234eb877f5535ffde1a7",
+    "events": [
+      {
+        "event_id": "R01",
+        "challenge": "jump_right",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 110,
+          "y": 206,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 862,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 1016,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R01-seed.png",
+        "target_png": "R01-target.png",
+        "seed_png_sha256": "ec5dfbc9dd330510af218813e4171f0c873c61b5df2db75546ad6777679ce709",
+        "target_png_sha256": "9de2d2e045bb7ce70df86d30f95db6761f2169bd8e4f831552efc7f8b8094a5f",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R02",
+        "challenge": "jump_left",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 862,
+          "y": 206,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 110,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 264,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R02-seed.png",
+        "target_png": "R02-target.png",
+        "seed_png_sha256": "fb9d36426e00f035681b75d998d4b171299cb9be32f6351099a38380af6f89ab",
+        "target_png_sha256": "44d5870f089fe251493866216950478cafa13911039009a5a6d607156d7aec5d",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R03",
+        "challenge": "jump_down",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 486,
+          "y": 20,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 392,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 546,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R03-seed.png",
+        "target_png": "R03-target.png",
+        "seed_png_sha256": "8494a727a81d1f50103203c9e4b5be241a46b4915379166310c385b559fa7aab",
+        "target_png_sha256": "71d1123c8afdbbe89390cfe6d7d0971e3070c6da99893b68d6c0bc8c242d7fa1",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R04",
+        "challenge": "jump_up",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 486,
+          "y": 392,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 20,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 174,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R04-seed.png",
+        "target_png": "R04-target.png",
+        "seed_png_sha256": "dfb4abccbc6d9d27b07e5da93e24ccaddb91432f05ad00daf041378ea0e1555f",
+        "target_png_sha256": "75c1a9eb2a81563b41666645e058b0d67f33b39d32a5b87ac5667d5202f45aa1",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R05",
+        "challenge": "edge_top_left",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 862,
+          "y": 392,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 12,
+          "y": 12,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 166,
+          "center_y": 166,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R05-seed.png",
+        "target_png": "R05-target.png",
+        "seed_png_sha256": "0179e9a7205850b0318c8a175a401a91d2d2d6e28243350e9f91dba5b2647a3f",
+        "target_png_sha256": "18084c989a55b4c2dbafc833d1dec3945ee6e446ccb0242f0c9389dfa0f8a611",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R06",
+        "challenge": "edge_top_right",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 12,
+          "y": 392,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 960,
+          "y": 12,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 1114,
+          "center_y": 166,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R06-seed.png",
+        "target_png": "R06-target.png",
+        "seed_png_sha256": "b9ca971097c97bd10271e110c65629183c1163a0552ec001512aee7461eb4b57",
+        "target_png_sha256": "667533059791e4d8f034999a90622cfa15eaef3e818b552c4b823cbe82284b4d",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R07",
+        "challenge": "edge_bottom_left",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 960,
+          "y": 12,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 12,
+          "y": 400,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 166,
+          "center_y": 554,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R07-seed.png",
+        "target_png": "R07-target.png",
+        "seed_png_sha256": "fcfdbe07504bf65ca58ead4e5d246321a7ad826fc574d07e6b488ca0f3ed29a6",
+        "target_png_sha256": "d10a24d48f804addbd7745eaef1348796ec175307a69e10d6a834a62492bf0db",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R08",
+        "challenge": "edge_bottom_right",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 12,
+          "y": 12,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 960,
+          "y": 400,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 1114,
+          "center_y": 554,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R08-seed.png",
+        "target_png": "R08-target.png",
+        "seed_png_sha256": "25f5290e6255d23f44a25bd0a20943a44cc5894b5659aa02439d84a84f2b4dc8",
+        "target_png_sha256": "fa7105a533f69e1bc7b075b50d8ad90b6c25df67c569d6adfddfec7866c9e1d1",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R09",
+        "challenge": "quarter_turn_right",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 110,
+          "y": 206,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 862,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 90,
+          "center_x": 1016,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R09-seed.png",
+        "target_png": "R09-target.png",
+        "seed_png_sha256": "ec5dfbc9dd330510af218813e4171f0c873c61b5df2db75546ad6777679ce709",
+        "target_png_sha256": "41b7772bf28d68e8de3eb9277c17c4a119d4641d425744738ade4c7bb17107a9",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R10",
+        "challenge": "half_turn_left",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 862,
+          "y": 206,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 110,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 180,
+          "center_x": 264,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R10-seed.png",
+        "target_png": "R10-target.png",
+        "seed_png_sha256": "fb9d36426e00f035681b75d998d4b171299cb9be32f6351099a38380af6f89ab",
+        "target_png_sha256": "ebe77b418d5474e25d63f969f3659fbd59211a990305456b128e4514d4325d4d",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R11",
+        "challenge": "grow_and_move",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 110,
+          "y": 240,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 780,
+          "y": 180,
+          "side": 385,
+          "rotation_degrees": 0,
+          "center_x": 972.5,
+          "center_y": 372.5,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R11-seed.png",
+        "target_png": "R11-target.png",
+        "seed_png_sha256": "71dac1ed55fbbdd966163f901934d6d545508b2cb867aa053470e6fd0dad9ddd",
+        "target_png_sha256": "b48c08b7072914e6d07e064451f3951a9231b0e2db5d340076dda581f894e7ab",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R12",
+        "challenge": "shrink_and_move",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 60,
+          "y": 160,
+          "side": 385,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 910,
+          "y": 240,
+          "side": 231,
+          "rotation_degrees": 0,
+          "center_x": 1025.5,
+          "center_y": 355.5,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": false,
+        "seed_png": "R12-seed.png",
+        "target_png": "R12-target.png",
+        "seed_png_sha256": "b7aa671cf5af97fcb52d8ce3e90a4fa037010d0404a2ea1b6b1439fa3947cd5f",
+        "target_png_sha256": "c97f90bb594d5d74d2bd0274d194ac38a1c6cffbef7fabbed79d16e2cbf20d9c",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R13",
+        "challenge": "short_occlusion_lateral",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 110,
+          "y": 206,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 862,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 1016,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 250,
+        "stale_same_session_decoy": false,
+        "seed_png": "R13-seed.png",
+        "target_png": "R13-target.png",
+        "seed_png_sha256": "ec5dfbc9dd330510af218813e4171f0c873c61b5df2db75546ad6777679ce709",
+        "target_png_sha256": "9de2d2e045bb7ce70df86d30f95db6761f2169bd8e4f831552efc7f8b8094a5f",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R14",
+        "challenge": "occlusion_vertical",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 486,
+          "y": 20,
+          "side": 308,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 392,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 546,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 500,
+        "stale_same_session_decoy": false,
+        "seed_png": "R14-seed.png",
+        "target_png": "R14-target.png",
+        "seed_png_sha256": "8494a727a81d1f50103203c9e4b5be241a46b4915379166310c385b559fa7aab",
+        "target_png_sha256": "71d1123c8afdbbe89390cfe6d7d0971e3070c6da99893b68d6c0bc8c242d7fa1",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R15",
+        "challenge": "duplicate_decoy_top_left",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 20,
+          "y": 20,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": true,
+        "seed_png": "R15-seed.png",
+        "target_png": "R15-target.png",
+        "seed_png_sha256": "0a09e6bb2b2eec4e338704219f314bd601beaeca0286426b479557e340560792",
+        "target_png_sha256": "c14c71017b96937674eb3cd0b90d68434f17c94f33b8f47124bba855a82dff8f",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R16",
+        "challenge": "duplicate_decoy_top_right",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 1029,
+          "y": 20,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": true,
+        "seed_png": "R16-seed.png",
+        "target_png": "R16-target.png",
+        "seed_png_sha256": "f698c7a8f0a128bf131d3a1295ad10aa3485c6c6f66483887099348734fb63d9",
+        "target_png_sha256": "dc04fc6d82cca31b04c42cd8b788ac993f3f52d5e4b8a98ae0791e8b190719ce",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R17",
+        "challenge": "duplicate_decoy_bottom_left",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 20,
+          "y": 469,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": true,
+        "seed_png": "R17-seed.png",
+        "target_png": "R17-target.png",
+        "seed_png_sha256": "24ed9731548cf32220441f02e2f224370c8e12ec065e3bec5203936b0b7087f8",
+        "target_png_sha256": "f371a624e255c95052fb13015cadc25c53ba8d10ea5ea8476f04f7d7f50cbd2a",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R18",
+        "challenge": "duplicate_decoy_bottom_right",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 1029,
+          "y": 469,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 486,
+          "y": 206,
+          "side": 308,
+          "rotation_degrees": 0,
+          "center_x": 640,
+          "center_y": 360,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": true,
+        "seed_png": "R18-seed.png",
+        "target_png": "R18-target.png",
+        "seed_png_sha256": "64d731da1dd32dd88ce213598e0e0e8e50d0343bf6e78a4b708fb2243c1c0784",
+        "target_png_sha256": "9cbffa28d796021fc32a2024e363834697b2802ff1c1ef673352a393433638a8",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      },
+      {
+        "event_id": "R19",
+        "challenge": "duplicate_decoy_small_target",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 20,
+          "y": 20,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 600,
+          "y": 280,
+          "side": 231,
+          "rotation_degrees": 0,
+          "center_x": 715.5,
+          "center_y": 395.5,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": true,
+        "seed_png": "R19-seed.png",
+        "target_png": "R19-target.png",
+        "seed_png_sha256": "0a09e6bb2b2eec4e338704219f314bd601beaeca0286426b479557e340560792",
+        "target_png_sha256": "cd0e63811c72e658a2e7bd780ef3892b00d79b915ad3ec5729c6bbfca0049355",
+        "paired_order": [
+          "full_frame",
+          "auto_region"
+        ]
+      },
+      {
+        "event_id": "R20",
+        "challenge": "duplicate_decoy_large_target",
+        "source_width": 1280,
+        "source_height": 720,
+        "seed": {
+          "x": 1029,
+          "y": 469,
+          "side": 231,
+          "symbol_index": 0
+        },
+        "target": {
+          "x": 400,
+          "y": 120,
+          "side": 385,
+          "rotation_degrees": 90,
+          "center_x": 592.5,
+          "center_y": 312.5,
+          "symbol_index": 1
+        },
+        "occlusion_ms": 0,
+        "stale_same_session_decoy": true,
+        "seed_png": "R20-seed.png",
+        "target_png": "R20-target.png",
+        "seed_png_sha256": "64d731da1dd32dd88ce213598e0e0e8e50d0343bf6e78a4b708fb2243c1c0784",
+        "target_png_sha256": "fd099040703e8ac4139c809f3fd167f3f07eecf8975b651a720ac988b832fc51",
+        "paired_order": [
+          "auto_region",
+          "full_frame"
+        ]
+      }
+    ]
+  },
+  "oracle": "Seed seq0 must admit with expected seed center and 64-symbol session; target seq1 is the only second symbol. Recovery requires unique_delta>0, recovered==2 and expected target center within unpadded accepted QR bounds mapped by the exact submitted drawImage transform. Start is actual video requestVideoFrameCallback performance.now; negative latency is an ordering_ambiguous failure, never clipped.",
+  "timing": {
+    "sampler": "Unchanged production 33ms polling",
+    "target_timeout_ms": 3000,
+    "p95": "Nearest rank, successful events only; every failed event retained."
+  },
+  "summary": {
+    "full_successes": 14,
+    "roi_successes": 14,
+    "cropped_attempts_by_mode": {
+      "full_frame": 0,
+      "auto_region": 590
+    },
+    "control_successes_lost_by_roi": [],
+    "full_success_p95_ms": 42.1000000089407,
+    "roi_success_p95_ms": 109.70000000298023,
+    "p95_requirement_ms": 292.1000000089407,
+    "p95_pass": true
+  },
+  "format": "lumenlink-synthetic-reentry-summary-v1",
+  "retention_note": "All 40 event outcomes retained. Scan arrays compacted to counters; complete operational dataset remains ignored under artifacts/reentry/results. This is software evidence, not a physical benchmark.",
+  "outcomes": [
+    {
+      "event_id": "R01",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 24.700000002980232,
+      "presented_at_ms": 363.8999999910593,
+      "recovered_at_ms": 388.59999999403954,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R01",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 73.29999999701977,
+      "presented_at_ms": 289.29999999701977,
+      "recovered_at_ms": 362.59999999403954,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 6,
+      "after_target": {
+        "completed_scans": 3,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 4
+    },
+    {
+      "event_id": "R02",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 71.19999998807907,
+      "presented_at_ms": 317.6000000089407,
+      "recovered_at_ms": 388.79999999701977,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R02",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 14.5,
+      "presented_at_ms": 319.80000001192093,
+      "recovered_at_ms": 334.30000001192093,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 6,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R03",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 4.699999988079071,
+      "presented_at_ms": 303.6000000089407,
+      "recovered_at_ms": 308.29999999701977,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R03",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 93,
+      "presented_at_ms": 317.59999999403954,
+      "recovered_at_ms": 410.59999999403954,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 3,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R04",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 76.90000000596046,
+      "presented_at_ms": 298.09999999403954,
+      "recovered_at_ms": 375,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 4,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R04",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 1.7000000029802322,
+      "presented_at_ms": 347.79999999701977,
+      "recovered_at_ms": 349.5,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R05",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 17.700000002980232,
+      "presented_at_ms": 331.8999999910593,
+      "recovered_at_ms": 349.59999999403954,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R05",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 109.70000000298023,
+      "presented_at_ms": 305.19999998807907,
+      "recovered_at_ms": 414.8999999910593,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 3,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R06",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 78.5,
+      "presented_at_ms": 343,
+      "recovered_at_ms": 421.5,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 6,
+      "after_target": {
+        "completed_scans": 3,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 4
+    },
+    {
+      "event_id": "R06",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 32.70000000298023,
+      "presented_at_ms": 372,
+      "recovered_at_ms": 404.70000000298023,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R07",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 20.399999991059303,
+      "presented_at_ms": 360,
+      "recovered_at_ms": 380.3999999910593,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R07",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 77.90000000596046,
+      "presented_at_ms": 344.09999999403954,
+      "recovered_at_ms": 422,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 8,
+      "after_target": {
+        "completed_scans": 4,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 6
+    },
+    {
+      "event_id": "R08",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 79.5,
+      "presented_at_ms": 301.09999999403954,
+      "recovered_at_ms": 380.59999999403954,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 4,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R08",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 13.899999991059303,
+      "presented_at_ms": 335.70000000298023,
+      "recovered_at_ms": 349.59999999403954,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 6,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R09",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 37.79999999701977,
+      "presented_at_ms": 324.20000000298023,
+      "recovered_at_ms": 362,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R09",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 82.5,
+      "presented_at_ms": 378.20000000298023,
+      "recovered_at_ms": 460.70000000298023,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 3,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R10",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 84.59999999403954,
+      "presented_at_ms": 438.79999999701977,
+      "recovered_at_ms": 523.3999999910593,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 3,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R10",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 42.1000000089407,
+      "presented_at_ms": 343.79999999701977,
+      "recovered_at_ms": 385.90000000596046,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R11",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 5.699999988079071,
+      "presented_at_ms": 366.20000000298023,
+      "recovered_at_ms": 371.8999999910593,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 6,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R11",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 73.1000000089407,
+      "presented_at_ms": 345.8999999910593,
+      "recovered_at_ms": 419,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R12",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 78,
+      "presented_at_ms": 313,
+      "recovered_at_ms": 391,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 7,
+      "after_target": {
+        "completed_scans": 4,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R12",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 29.700000002980232,
+      "presented_at_ms": 318.09999999403954,
+      "recovered_at_ms": 347.79999999701977,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 5,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R13",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 21.400000005960464,
+      "presented_at_ms": 601.5999999940395,
+      "recovered_at_ms": 623,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 12,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R13",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 29.700000002980232,
+      "presented_at_ms": 659.7000000029802,
+      "recovered_at_ms": 689.4000000059605,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 12,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 4
+    },
+    {
+      "event_id": "R14",
+      "mode": "auto_region",
+      "outcome": "success",
+      "latency_ms": 13.599999994039536,
+      "presented_at_ms": 821.5,
+      "recovered_at_ms": 835.0999999940395,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 19,
+      "after_target": {
+        "completed_scans": 2,
+        "admitted_scans": 2,
+        "unique_delta": 1,
+        "duplicate_delta": 1,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 5
+    },
+    {
+      "event_id": "R14",
+      "mode": "full_frame",
+      "outcome": "success",
+      "latency_ms": 21,
+      "presented_at_ms": 840.4000000059605,
+      "recovered_at_ms": 861.4000000059605,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 19,
+      "after_target": {
+        "completed_scans": 1,
+        "admitted_scans": 1,
+        "unique_delta": 1,
+        "duplicate_delta": 0,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R15",
+      "mode": "full_frame",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 318.69999998807907,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 86,
+      "after_target": {
+        "completed_scans": 82,
+        "admitted_scans": 82,
+        "unique_delta": 0,
+        "duplicate_delta": 82,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R15",
+      "mode": "auto_region",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 365.6000000089407,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 93,
+      "after_target": {
+        "completed_scans": 88,
+        "admitted_scans": 88,
+        "unique_delta": 0,
+        "duplicate_delta": 88,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 89
+    },
+    {
+      "event_id": "R16",
+      "mode": "auto_region",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 315.90000000596046,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 91,
+      "after_target": {
+        "completed_scans": 88,
+        "admitted_scans": 88,
+        "unique_delta": 0,
+        "duplicate_delta": 88,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 87
+    },
+    {
+      "event_id": "R16",
+      "mode": "full_frame",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 298.3999999910593,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 85,
+      "after_target": {
+        "completed_scans": 82,
+        "admitted_scans": 82,
+        "unique_delta": 0,
+        "duplicate_delta": 82,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R17",
+      "mode": "full_frame",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 330.09999999403954,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 86,
+      "after_target": {
+        "completed_scans": 82,
+        "admitted_scans": 82,
+        "unique_delta": 0,
+        "duplicate_delta": 82,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R17",
+      "mode": "auto_region",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 283.59999999403954,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 90,
+      "after_target": {
+        "completed_scans": 87,
+        "admitted_scans": 87,
+        "unique_delta": 0,
+        "duplicate_delta": 87,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 86
+    },
+    {
+      "event_id": "R18",
+      "mode": "auto_region",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 297.5,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 91,
+      "after_target": {
+        "completed_scans": 88,
+        "admitted_scans": 88,
+        "unique_delta": 0,
+        "duplicate_delta": 88,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 87
+    },
+    {
+      "event_id": "R18",
+      "mode": "full_frame",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 314.6000000089407,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 85,
+      "after_target": {
+        "completed_scans": 81,
+        "admitted_scans": 81,
+        "unique_delta": 0,
+        "duplicate_delta": 81,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R19",
+      "mode": "full_frame",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 309.3999999910593,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 85,
+      "after_target": {
+        "completed_scans": 82,
+        "admitted_scans": 82,
+        "unique_delta": 0,
+        "duplicate_delta": 82,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    },
+    {
+      "event_id": "R19",
+      "mode": "auto_region",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 295.29999999701977,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 91,
+      "after_target": {
+        "completed_scans": 88,
+        "admitted_scans": 88,
+        "unique_delta": 0,
+        "duplicate_delta": 88,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 87
+    },
+    {
+      "event_id": "R20",
+      "mode": "auto_region",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 297,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 90,
+      "after_target": {
+        "completed_scans": 87,
+        "admitted_scans": 87,
+        "unique_delta": 0,
+        "duplicate_delta": 87,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 86
+    },
+    {
+      "event_id": "R20",
+      "mode": "full_frame",
+      "outcome": "timeout",
+      "latency_ms": null,
+      "presented_at_ms": 345.29999999701977,
+      "recovered_at_ms": null,
+      "error": null,
+      "dropped_scans": 0,
+      "scans_recorded": 85,
+      "after_target": {
+        "completed_scans": 81,
+        "admitted_scans": 81,
+        "unique_delta": 0,
+        "duplicate_delta": 81,
+        "rejected_delta": 0
+      },
+      "cropped_scans": 0
+    }
+  ]
+}

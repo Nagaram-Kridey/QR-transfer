@@ -4,12 +4,12 @@ import type { WorkerInput } from './messages';
 
 const reader = vi.hoisted(() => ({
   prepareZXingModule: vi.fn(async () => undefined),
-  readBarcodes: vi.fn<(...args: unknown[]) => Promise<{ text: string }[]>>(async () => []),
+  readBarcodes: vi.fn<(...args: unknown[]) => Promise<{ text: string; position?: unknown }[]>>(async () => []),
 }));
 vi.mock('zxing-wasm/reader', () => reader);
 vi.mock('zxing-wasm/reader/zxing_reader.wasm?url', () => ({ default: '/local-reader.wasm' }));
 
-type Output = { type: string; metrics?: Record<string, unknown>; stats?: Record<string, unknown> };
+type Output = { type: string; capture_epoch?: number; accepted_corners?: unknown; metrics?: Record<string, unknown>; stats?: Record<string, unknown> };
 let output: Output[];
 let scope: { onmessage: ((event: MessageEvent<WorkerInput>) => Promise<void>) | null; postMessage: (message: Output) => void };
 
@@ -34,7 +34,7 @@ async function dispatch(data: WorkerInput): Promise<void> {
   await scope.onmessage!(new MessageEvent('message', { data }));
 }
 async function image(id = 1): Promise<void> {
-  await dispatch({ type: 'image', attempt_id: id, pixels: new Uint8ClampedArray(4), width: 1, height: 1 });
+  await dispatch({ type: 'image', attempt_id: id, capture_epoch: 3, pixels: new Uint8ClampedArray(4), width: 1, height: 1 });
 }
 function scan(): Output {
   const scans = output.filter(message => message.type === 'scan');
@@ -50,6 +50,8 @@ describe('one camera attempt diagnostics without a second decoder/hash pass', ()
       rejected_delta: 0, admitted: false, error_stage: null,
     });
     expect(output.map(message => message.type)).toEqual(['scan', 'idle']);
+    expect(scan().capture_epoch).toBe(3);
+    expect(scan().accepted_corners).toBeNull();
     expect(reader.readBarcodes).toHaveBeenCalledTimes(1);
     expect(reader.readBarcodes.mock.calls[0][1]).toEqual({ formats: ['QRCode'], maxNumberOfSymbols: 1, tryHarder: false });
   });
@@ -121,5 +123,47 @@ describe('one camera attempt diagnostics without a second decoder/hash pass', ()
     await dispatch({ type: 'texts', texts: [await transfer.text(0)] });
     expect(output.map(message => message.type)).toEqual(['complete', 'idle']);
     expect(reader.readBarcodes).not.toHaveBeenCalled();
+  });
+
+  it('returns geometry only for unique or duplicate protocol-admitted frames', async () => {
+    const transfer = new Transfer(await prepareContainer(new Uint8Array(500), 'synthetic.bin', undefined, 0));
+    const position = { topLeft: { x: 1, y: 2, qr_text: 'PRIVATE' }, topRight: { x: 3, y: 2 }, bottomRight: { x: 3, y: 4 }, bottomLeft: { x: 1, y: 4 }, pixels: [1, 2] };
+    reader.readBarcodes.mockResolvedValue([{ text: await transfer.text(0), position }]);
+    await image();
+    expect(scan().accepted_corners).toEqual([{ x: 1, y: 2 }, { x: 3, y: 2 }, { x: 3, y: 4 }, { x: 1, y: 4 }]);
+    expect(JSON.stringify(scan().accepted_corners)).not.toContain('PRIVATE');
+    position.topLeft.x = 999;
+    expect((scan().accepted_corners as { x: number }[])[0].x).toBe(1);
+    output = [];
+    await image(2);
+    expect(scan().metrics).toMatchObject({ unique_delta: 0, duplicate_delta: 1, admitted: true });
+    expect((scan().accepted_corners as { x: number }[])[0].x).toBe(999);
+  });
+
+  it('cannot retarget geometry to a different valid session or malformed QR', async () => {
+    const container = await prepareContainer(new Uint8Array(500), 'synthetic.bin', undefined, 0);
+    const first = new Transfer(container, 256, new Uint8Array(16).fill(1));
+    const other = new Transfer(container, 256, new Uint8Array(16).fill(2));
+    const position = { topLeft: { x: 0, y: 0 }, topRight: { x: 1, y: 0 }, bottomRight: { x: 1, y: 1 }, bottomLeft: { x: 0, y: 1 } };
+    reader.readBarcodes.mockResolvedValue([{ text: await first.text(0), position }]);
+    await image();
+    const session = scan().stats?.session;
+    for (const text of [await other.text(0), 'NOT A FRAME']) {
+      output = [];
+      reader.readBarcodes.mockResolvedValue([{ text, position }]);
+      await image(2);
+      expect(scan().metrics).toMatchObject({ admitted: false, unique_delta: 0, rejected_delta: 1 });
+      expect(scan().accepted_corners).toBeNull();
+      expect(scan().stats?.session).toBe(session);
+    }
+  });
+
+  it.each([undefined, null, { topLeft: { x: NaN, y: 1 } }, { topLeft: { x: 1, y: 1 } }, { get topLeft(): unknown { throw new Error('MALFORMED_GEOMETRY'); } }])('invalid/missing geometry never suppresses a verified file', async position => {
+    const transfer = new Transfer(await prepareContainer(new Uint8Array(), 'empty.bin', undefined, 0));
+    reader.readBarcodes.mockResolvedValue([{ text: await transfer.text(0), position }]);
+    await image();
+    expect(scan().metrics).toMatchObject({ admitted: true, unique_delta: 1, error_stage: null });
+    expect(scan().accepted_corners).toBeNull();
+    expect(output.map(message => message.type)).toEqual(['scan', 'complete', 'idle']);
   });
 });

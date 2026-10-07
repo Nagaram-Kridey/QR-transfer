@@ -318,6 +318,114 @@ def test_setup_cancellation_is_exploratory_and_never_an_acceptance_trial(
     assert summary["gate_decision"] == "manual_review_required"
 
 
+@pytest.mark.parametrize("fps", [15, 20, 30])
+def test_experimental_browser_rates_round_trip_without_losing_failed_trials(
+    fps, tmp_path, metadata, browser_observation
+):
+    metadata.update(fps=fps, sender_app="Test browser sender version", run_id=f"explore-{fps}")
+    metadata_path = tmp_path / "metadata.json"
+    observation_path = tmp_path / "observation.json"
+    csv_path = tmp_path / "trials.csv"
+    write_json(metadata_path, metadata)
+    rows = []
+    for outcome in ("success", "failed", "timeout", "cancelled"):
+        item = copy.deepcopy(browser_observation)
+        if outcome != "success":
+            item.update(
+                outcome=outcome,
+                reason=f"Retained {outcome} trial",
+                elapsed_seconds=60 if outcome == "timeout" else 12.5,
+                payload_bytes=None,
+                payload_sha256=None,
+            )
+            item["stats"].update(state="RECEIVING", recovered=10)
+        write_json(observation_path, item)
+        original = observation_path.read_bytes()
+        rows.append(
+            benchmark.record_observation(
+                observation_path,
+                metadata_path,
+                csv_path,
+                trial_id=f"rate-{fps}-{outcome}",
+                phase="exploratory",
+                attest_physical=True,
+            )
+        )
+        assert observation_path.read_bytes() == original
+    assert benchmark.read_trials(csv_path) == rows
+    assert all(list(row) == CSV_FIELDS and row["fps"] == str(fps) for row in rows)
+    summary = benchmark.summarize_trials(rows)
+    run = summary["runs"][0]
+    assert run["status"] == "not_eligible" and run["timed_trials"] == 4
+    assert run["outcomes"] == {name: 1 for name in ("success", "failed", "timeout", "cancelled")}
+    assert run["successful_only"]["median_elapsed_seconds"] == 12.5
+    assert len(run["failures_by_reason"]) == 3
+    assert summary["gate_decision"] == "manual_review_required"
+    assert run["cell"]["run_id"] == f"explore-{fps}" and run["cell"]["fps"] == str(fps)
+    before = csv_path.read_bytes()
+    metadata["fps"] = 20 if fps == 15 else 15
+    write_json(metadata_path, metadata)
+    with pytest.raises(ValueError, match="Immutable cell metadata changed"):
+        benchmark.record_observation(
+            observation_path,
+            metadata_path,
+            csv_path,
+            trial_id=f"rate-{fps}-changed-settings",
+            phase="exploratory",
+            attest_physical=True,
+        )
+    assert csv_path.read_bytes() == before
+
+
+@pytest.mark.parametrize("fps", [15, 20, 30])
+def test_experimental_rates_cannot_be_promoted_to_acceptance_by_editing_csv(
+    fps, tmp_path, metadata, browser_observation
+):
+    metadata["fps"] = fps
+    with pytest.raises(ValueError, match="exploratory only"):
+        normalize(browser_observation, metadata)
+    row = normalize(browser_observation, metadata, phase="exploratory")
+    row["phase"] = "acceptance"
+    path = tmp_path / "forged-acceptance.csv"
+    write_csv(path, [row])
+    with pytest.raises(ValueError, match="exploratory only"):
+        benchmark.read_trials(path)
+    with pytest.raises(ValueError, match="exploratory only"):
+        benchmark.summarize_trials([row])
+
+
+@pytest.mark.parametrize("fps", [11, 14.999, 15.001, 20.001, 29.999, 30.001, 60])
+def test_unsupported_higher_rates_reject_exploratory_metadata_and_raw_csv(
+    fps, tmp_path, metadata, browser_observation
+):
+    row = normalize(browser_observation, metadata, phase="exploratory")
+    metadata["fps"] = fps
+    with pytest.raises(ValueError):
+        normalize(browser_observation, metadata, phase="exploratory")
+    row["fps"] = str(fps)
+    path = tmp_path / "unsupported-rate.csv"
+    write_csv(path, [row])
+    with pytest.raises(ValueError):
+        benchmark.read_trials(path)
+    with pytest.raises(ValueError):
+        benchmark.summarize_trials([row])
+
+
+@pytest.mark.parametrize("fps", [True, math.nan, math.inf])
+def test_exploratory_rates_still_require_finite_numeric_values(fps, metadata, browser_observation):
+    metadata["fps"] = fps
+    with pytest.raises(ValueError):
+        normalize(browser_observation, metadata, phase="exploratory")
+
+
+def test_standard_ten_fps_acceptance_remains_eligible(metadata, browser_observation):
+    metadata["fps"] = 10
+    rows = make_rows(browser_observation, metadata)
+    run = benchmark.summarize_trials(rows)["runs"][0]
+    assert run["status"] == "tier_b_candidate_requires_tier_a_failure"
+    assert run["successes"] == 18 and run["timed_trials"] == 20
+
+
 def test_failure_size_selection_and_timeout_contradictions_rejected(metadata, browser_observation):
     browser_observation.update(
         outcome="timeout",

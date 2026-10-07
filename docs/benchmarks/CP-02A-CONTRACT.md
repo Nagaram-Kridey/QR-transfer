@@ -108,6 +108,14 @@ The user reports successful transfers in both directions. The supplied browser o
 timeout after 60.0165 seconds, with 434/506 recovered symbols, 585 seen, 151 duplicates and no rejected
 frames. Original file size/hash and optical settings are not present; the selected expected payload
 was 10 KiB. A byte-for-byte copy is retained in [raw evidence](raw/2026-10-05-browser-timeout.json).
+
+## October 7 exploratory rate extension
+
+The CP-02B.2 manual-test request adds browser target rates 15/20/30 fps. The related recording
+candidate accepts exactly those rates above 10 only for exploratory rows; acceptance rows and
+unsupported higher rates remain rejected. CSV fields, raw observation-v1, physical attestation and
+manual gate review remain unchanged. Python optical playback retains its 10 fps cap. Current
+combined review/delivery status is in CHECKPOINTS.md; the original CP-02A delivery above remains historical.
 Successful exports and actual payload/device/settings metadata have been requested. No success
 counts, throughput claims, acceptance rows or G2 pass are inferred from the general report.
 If a report is inadmissible (for example a verified file mismatches the declared target), retain it

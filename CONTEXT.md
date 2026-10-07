@@ -22,22 +22,32 @@ The original owner-context narrative is preserved in the archived draft.
 
 ## Current state
 
+**Pause/resume:** The user paused work at 00:57:56 IST October 7 and requested continuation from
+02:00 IST. All agents were interrupted and partial edits preserved. The user explicitly resumed
+with "Continue" at 07:52:41 IST October 7; development/testing resumed from `8fad984`. Exclude the
+pause from the experiment timebox. The user subsequently requested GitHub/manual-test delivery
+plus higher browser FPS on October 7; that authorizes combined delivery after checks and both reviews.
+
 On **2026-10-06 (IST)** the user requested implementation of the accepted
 [browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md). Only CP-02B.1 diagnostics is
 locally implemented with 69 Vitest/46 browser checks passing and both independent reviews PASS
 on the same final revision. The user approved CP-02B.1 commit/push/Pages deployment on October 7;
-delivery is verified for `6fb59f3` (CI/Pages/both live reviews passed). Continue locally to CP-02B.2,
-then stop at that
-prototype's own approval checkpoint. The eight-hour cap includes tests/docs, with two hours for diagnostics.
-Full-frame mode, plaintext status and physical gates remain in force. Cropping is not yet implemented.
+delivery is verified for `6fb59f3` (CI/Pages/both live reviews passed). CP-02B.2 local implementation
+started on October 7 from `8fad984`; separate development/testing agents are building and challenging
+the bounded opt-in tracker. The latest explicit manual-test request authorizes delivery with
+15/20/30 fps exploratory browser targets after final combined checks and both-agent agreement.
+The eight-hour cap includes tests/docs, with two hours for diagnostics; the rate addition stays in
+the current bounded checkpoint rather than granting another tuning allowance.
+Full-frame remains the default; plaintext status and physical gates remain in force. No ROI benefit
+has been measured on the phone, and the live site still serves the approved diagnostics build.
 
 Stage 1 software exists; physical feasibility remains unqualified. The user reports both-direction
 physical smoke success; one supplied browser export records a timeout, with successful exports and
 frozen acceptance cells still missing. CP-02A observation/summary tooling passed separate
 development/testing review, was explicitly approved on 2026-10-05 and is delivered as `d6b0a7b`
 with all hosted CI jobs passing. See CHECKPOINTS.md and UPDATE.md for evidence. CP-02A changed only
-Python tooling and documents. Pages still serves the corrected CP-01 browser build; the local
-CP-02B.1 diagnostics is delivered as `6fb59f3` with CI/Pages and both live reviews passing.
+Python tooling and documents. CP-02B.1 diagnostics is delivered as `6fb59f3` with CI/Pages and both
+live reviews passing.
 Current modes are plaintext,
 uncompressed repeat-mode. The browser is a test harness, not a completed installable PWA.
 No security, mobile support, field throughput or v1 release claims have been earned yet.
@@ -89,7 +99,10 @@ PROJECT_PLAN.md for numeric gates and IMPLEMENTATION_PLAN.md for stage dependenc
    lock one session, sanitize names, never overwrite silently or auto-open, verify before saving.
 5. Frame-format changes increment the wire version and add vectors. Draft v1 became wire v2
    when the session ID increased to 16 bytes; application versions are separate.
-6. Default 8 fps, maximum 10; first-play acknowledgement, reduced-flashing option, no strobe mode.
+6. Default 8 fps; standard browser rates and Python sender remain capped at 10, with 2 fps reduced
+   flashing and first-play acknowledgement. On October 7 the user requested browser-only exploratory
+   15/20/30 fps targets, with an additional rate-specific acknowledgement. No safe-rate or achieved
+   display/receiver-throughput guarantee; high-rate evidence is exploratory, not an acceptance run.
 7. No secure-transfer claims before the entire security milestone passes; plaintext is conspicuous.
 8. Repeat-mode ships provisionally. Fountain coding must win the bounded measured comparison.
 9. No backend, analytics, file uploads or transfer-dependent networking. Self-host every runtime asset.

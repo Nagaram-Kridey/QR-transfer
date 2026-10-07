@@ -4,10 +4,12 @@ import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import type { DiagnosticExport } from '../src/diagnostics/camera';
 
-test('reconstructs Python QR video through the camera, worker and WASM decoder', async ({ page }) => {
+for (const mode of ['full_frame', 'auto_region'] as const) {
+test(`reconstructs Python QR video in ${mode} through camera, worker and WASM`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
+  await page.getByLabel('Camera scan mode').selectOption(mode);
   await page.getByRole('button', { name: 'Enable camera' }).click();
   await expect(page.getByRole('button', { name: 'Start receiving' })).toBeEnabled({ timeout: 15000 });
   await page.getByRole('button', { name: 'Start receiving' }).click();
@@ -27,14 +29,22 @@ test('reconstructs Python QR video through the camera, worker and WASM decoder',
   expect(sidecar.diagnostics.first_valid_acquisition_ms).toBeGreaterThanOrEqual(0);
   expect(sidecar.diagnostics.latest_attempts.at(-1).outcome).toBe('completed');
   expect(sidecar.diagnostics.pending).toBeNull();
+  expect(sidecar.format).toBe('lumenlink-camera-diagnostics-v2');
+  expect(sidecar.diagnostics.mode).toBe(mode);
   for (const attempt of sidecar.diagnostics.latest_attempts) {
     const scale = Math.min(1, 960 / attempt.source_width);
-    expect(attempt.input_width).toBe(Math.round(attempt.source_width * scale));
-    expect(attempt.input_height).toBe(Math.round(attempt.source_height * scale));
+    if (attempt.kind === 'full_frame') {
+      expect(attempt.input_width).toBe(Math.round(attempt.source_width * scale));
+      expect(attempt.input_height).toBe(Math.round(attempt.source_height * scale));
+    } else {
+      expect(attempt.input_width).toBeLessThanOrEqual(attempt.crop_width);
+      expect(attempt.input_height).toBeLessThanOrEqual(attempt.crop_height);
+    }
     expect(attempt.pixels).toBe(attempt.input_width * attempt.input_height);
   }
   expect(errors).toEqual([]);
 });
+}
 
 async function holdCameraDecoding(page: Page): Promise<void> {
   await page.addInitScript(() => {
@@ -70,8 +80,9 @@ async function waitForSubmittedImage(page: Page): Promise<void> {
   await expect.poll(() => page.evaluate(() => (window as unknown as { cameraImages?: number }).cameraImages ?? 0)).toBe(1);
 }
 
-async function beginTrial(page: Page): Promise<void> {
+async function beginTrial(page: Page, mode = 'full_frame'): Promise<void> {
   await page.goto('/');
+  await page.getByLabel('Camera scan mode').selectOption(mode);
   await page.getByRole('button', { name: 'Enable camera' }).click();
   await expect(page.getByRole('button', { name: 'Start receiving' })).toBeEnabled({ timeout: 15000 });
   await page.getByRole('button', { name: 'Start receiving' }).click();
@@ -107,6 +118,140 @@ test('reset keeps a cancelled observation for an already-started camera trial', 
   expect(JSON.stringify((await readDiagnostics(page)).diagnostics)).toBe(before);
   await expect(page.getByRole('button', { name: 'Save verified file' })).toHaveCount(0);
 });
+
+type CapturedImage = { attempt_id: number; capture_epoch: number; width: number; height: number; draw: number[] };
+async function mockedCameraFrames(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const state = window as unknown as { roiImages: CapturedImage[]; replyToImage: (data: unknown) => void; lastVideoDraw: number[] };
+    state.roiImages = [];
+    const draw = CanvasRenderingContext2D.prototype.drawImage;
+    CanvasRenderingContext2D.prototype.drawImage = function (image: CanvasImageSource, ...coordinates: number[]): void {
+      if (image instanceof HTMLVideoElement) state.lastVideoDraw = coordinates;
+      Reflect.apply(draw, this, [image, ...coordinates]);
+    };
+    const post = Worker.prototype.postMessage;
+    Worker.prototype.postMessage = function (this: Worker, message: unknown, options?: Transferable[] | StructuredSerializeOptions): void {
+      const image = message as { type?: string; attempt_id: number; capture_epoch: number; width: number; height: number };
+      if (image.type === 'image') {
+        state.roiImages.push({ attempt_id: image.attempt_id, capture_epoch: image.capture_epoch, width: image.width, height: image.height, draw: [...state.lastVideoDraw] });
+        const handler = this.onmessage?.bind(this);
+        state.replyToImage = data => handler?.(new MessageEvent('message', { data }));
+      } else if (Array.isArray(options)) post.call(this, message, { transfer: options });
+      else post.call(this, message, options);
+    };
+  });
+}
+async function capturedImage(page: Page, count: number): Promise<CapturedImage> {
+  await expect.poll(() => page.evaluate(() => (window as unknown as { roiImages: CapturedImage[] }).roiImages.length)).toBe(count);
+  return page.evaluate(() => (window as unknown as { roiImages: CapturedImage[] }).roiImages.at(-1)!);
+}
+async function mockedScan(page: Page, image: CapturedImage, admitted: boolean, corners: { x: number; y: number }[] | null, release = true): Promise<void> {
+  await page.evaluate(({ image, admitted, corners, release }) => {
+    const state = window as unknown as { replyToImage: (data: unknown) => void };
+    state.replyToImage({ type: 'scan', capture_epoch: image.capture_epoch, accepted_corners: corners,
+      metrics: { attempt_id: image.attempt_id, decode_ms: 1, admission_ms: admitted ? 1 : null, decoded_qr_count: admitted ? 1 : 0, unique_delta: admitted ? 1 : 0, duplicate_delta: 0, rejected_delta: 0, admitted, error_stage: null },
+      stats: { state: 'RECEIVING', recovered: 1, total: 64, seen: image.attempt_id, duplicates: 0, rejected: 0, session: 'a'.repeat(32) },
+    });
+    if (release) state.replyToImage({ type: 'idle' });
+  }, { image, admitted, corners, release });
+}
+const smallAcceptedBox = [{ x: 100, y: 100 }, { x: 220, y: 100 }, { x: 220, y: 220 }, { x: 100, y: 220 }];
+
+test('mocked admission drives native crop/readback and two misses restore full frame', async ({ page }) => {
+  await mockedCameraFrames(page);
+  await page.goto('/');
+  await expect(page.getByLabel('Camera scan mode')).toHaveValue('full_frame');
+  await page.getByLabel('Camera scan mode').selectOption('auto_region');
+  await page.getByRole('button', { name: 'Enable camera' }).click();
+  await expect(page.getByRole('button', { name: 'Start receiving' })).toBeEnabled({ timeout: 15000 });
+  await expect(page.getByLabel('Camera scan mode')).toBeDisabled();
+  expect(await page.evaluate(() => (window as unknown as { roiImages: CapturedImage[] }).roiImages.length)).toBe(0);
+  await page.getByRole('button', { name: 'Start receiving' }).click();
+  await expect(page.getByText('Searching', { exact: true })).toBeVisible();
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
+  const first = await capturedImage(page, 1);
+  expect(first.draw).toEqual([0, 0, first.width, first.height]);
+  await mockedScan(page, first, true, smallAcceptedBox);
+  await expect(page.getByText('Tracking', { exact: true })).toBeVisible();
+  const second = await capturedImage(page, 2);
+  expect(second.draw).toEqual([76, 76, 168, 168, 0, 0, 168, 168]);
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toBeVisible();
+  await mockedScan(page, second, false, null);
+  const third = await capturedImage(page, 3);
+  expect(third.draw).toHaveLength(8);
+  await mockedScan(page, third, false, null);
+  await expect(page.getByText('Reacquiring', { exact: true })).toBeVisible();
+  const fourth = await capturedImage(page, 4);
+  expect(fourth.draw).toEqual([0, 0, fourth.width, fourth.height]);
+  await page.getByRole('button', { name: 'Stop', exact: true }).click();
+  const diagnostics = (await readDiagnostics(page)).diagnostics;
+  expect(diagnostics.mode).toBe('auto_region');
+  expect(diagnostics.scans.roi).toMatchObject({ submitted: 2, completed: 2 });
+  expect(diagnostics.scans.full_frame).toMatchObject({ submitted: 2, completed: 1, interrupted: 1 });
+  expect(diagnostics.latest_attempts.map(attempt => attempt.kind)).toEqual(['full_frame', 'roi', 'roi', 'full_frame']);
+});
+
+test('intrinsic A-to-portrait-to-A resize invalidates held ROI geometry without rejecting progress', async ({ page }) => {
+  await mockedCameraFrames(page); await beginTrial(page, 'auto_region');
+  const first = await capturedImage(page, 1);
+  await mockedScan(page, first, true, smallAcceptedBox);
+  const second = await capturedImage(page, 2);
+  await page.evaluate(() => {
+    const source = document.querySelector('video')!;
+    const originalWidth = source.videoWidth, originalHeight = source.videoHeight;
+    Object.defineProperty(source, 'videoWidth', { configurable: true, value: 720 });
+    Object.defineProperty(source, 'videoHeight', { configurable: true, value: 1280 });
+    source.dispatchEvent(new Event('resize'));
+    Object.defineProperty(source, 'videoWidth', { configurable: true, value: originalWidth });
+    Object.defineProperty(source, 'videoHeight', { configurable: true, value: originalHeight });
+    source.dispatchEvent(new Event('resize'));
+  });
+  await mockedScan(page, second, true, smallAcceptedBox);
+  const third = await capturedImage(page, 3);
+  expect(third.capture_epoch).toBeGreaterThan(second.capture_epoch);
+  expect(third.draw).toEqual([0, 0, third.width, third.height]);
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
+  await expect(page.getByText(/1\/64 symbols/)).toBeVisible();
+  await page.getByRole('button', { name: 'Reset session' }).click();
+  await expect(page.getByLabel('Camera scan mode')).toBeEnabled();
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
+});
+
+test('portrait native feed bypasses crops that reduce more detail than full control', async ({ page }) => {
+  await mockedCameraFrames(page);
+  await page.addInitScript(() => {
+    Object.defineProperty(HTMLVideoElement.prototype, 'videoWidth', { configurable: true, get: () => 720 });
+    Object.defineProperty(HTMLVideoElement.prototype, 'videoHeight', { configurable: true, get: () => 1280 });
+  });
+  await beginTrial(page, 'auto_region');
+  const first = await capturedImage(page, 1);
+  expect([first.width, first.height]).toEqual([720, 1280]);
+  await mockedScan(page, first, true, [{ x: 200, y: 60 }, { x: 400, y: 60 }, { x: 400, y: 1220 }, { x: 200, y: 1220 }]);
+  const second = await capturedImage(page, 2);
+  expect(second.draw).toEqual([0, 0, 720, 1280]);
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Stop', exact: true }).click();
+  expect((await readDiagnostics(page)).diagnostics.scans.roi.submitted).toBe(0);
+});
+
+for (const ending of ['reset', 'background', 'timeout'] as const) {
+  test(`active mocked ROI clears geometry on ${ending} and keeps interruption diagnostics`, async ({ page }) => {
+    await mockedCameraFrames(page);
+    if (ending === 'timeout') await page.clock.install();
+    await beginTrial(page, 'auto_region');
+    const first = await capturedImage(page, 1); await mockedScan(page, first, true, smallAcceptedBox);
+    await capturedImage(page, 2);
+    if (ending === 'reset') await page.getByRole('button', { name: 'Reset session' }).click();
+    else if (ending === 'background') await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); });
+    else await page.clock.fastForward(60001);
+    await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
+    const diagnostics = (await readDiagnostics(page)).diagnostics;
+    expect(diagnostics.scans.roi).toMatchObject({ submitted: 1, completed: 0, interrupted: 1 });
+    expect(diagnostics.latest_attempts.at(-1)).toMatchObject({ kind: 'roi', outcome: 'interrupted', decode_ms: null });
+    expect((await readObservation(page)).outcome).toBe(ending === 'reset' ? 'cancelled' : ending === 'background' ? 'failed' : 'timeout');
+    await expect(page.getByRole('button', { name: 'Save verified file' })).toHaveCount(0);
+  });
+}
 
 test('backgrounding an active trial fails it and preserves a local observation', async ({ page }) => {
   await holdCameraDecoding(page);

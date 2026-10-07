@@ -4,14 +4,22 @@ Update this file after every meaningful project change. Each entry records **don
 **next**, and **blockers**. Do not call a planned step complete or replace physical data with simulation.
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
-**Current handoff — 2026-10-07 (IST):** CP-02B.1 browser diagnostics is locally implemented,
-verified and frozen for approved delivery, following the accepted
-[autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md). Both agents agree PASS on snapshot
+**Current handoff — 2026-10-07 (IST):** CP-02B.1 browser diagnostics is approved and delivered,
+following the accepted [autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md).
+Both agents agree PASS on snapshot
 `91675844c1ca3f90f87779288a92ec1376bd4284d704916519df49a644287374`.
 69 unit tests and 46 browser tests pass; exact observation/export linkage and the GitHub Pages base
-were checked locally. No ROI behavior is being implemented until this checkpoint is explicitly
-approved and delivered. The user now approved CP-02B.1 commit/push/Pages deployment; delivery checks
-are complete. Candidate `6fb59f3` is pushed/deployed; hosted CI, Pages and both live reviews passed.
+were checked locally. Candidate `6fb59f3` is pushed/deployed; hosted CI, Pages and both live reviews
+passed. Delivery notes `8fad984` are pushed with passing CI. CP-02B.2 local implementation and
+adversarial testing started on October 7; full-frame remains the default and its new prototype
+requires final combined checks and both reviews before delivery. The user explicitly requested
+GitHub/manual-test delivery plus higher browser FPS on October 7; that authorizes reviewed commit/
+push/Pages deployment after hosted CI passes. No physical ROI
+benefit or G2 qualification is claimed.
+**Pause/resume:** the user paused work at 00:57:56 IST October 7 and explicitly resumed with
+"Continue" at 07:52:41 IST. Agents resumed from preserved partial edits; exclude the pause from
+the engineering timebox. Combined manual-test delivery is now authorized; no new commit/deployment
+is claimed until actual review/check/delivery results are recorded.
 Existing delivery:
 implementation resumed with
 [CHECKPOINTS.md](CHECKPOINTS.md): separate development/adversarial-testing agents, agreement on each
@@ -30,6 +38,30 @@ passed hosted checks/deployment on October 4; live harness: https://nagaram-krid
 
 Entries below are chronological. Read the latest entry for current verification/blockers; earlier
 temporary failures and delivery tasks describe the state at their date, not unresolved issues forever.
+
+## 2026-10-07 — CP-02B.2 review complete; authorized delivery in progress (Asia/Kolkata)
+
+**Done:** Completed the combined review packet for the browser autoframing experiment and the
+requested exploratory 15/20/30 fps sender targets. The development-side and adversarial-testing
+reviews agree PASS on the same normalized freeze
+`27adca065b0f31a1ee319705c731934836dba999146aa07d3731c61a7cd44326`, with no known unresolved
+in-scope blocker. The user explicitly authorized pushing the current working code for manual
+checking. Full-frame remains the default and higher rates are target settings, not measured rates.
+
+**Verified:** Final recorded checks include 123 Vitest cases, strict browser lint/types/build,
+21 sender E2E cases across Chromium/Firefox/WebKit, 310 Python tests including 213 benchmark
+cases, Ruff/format/mypy, shared-vector reproduction, project-base worker/WASM smoke, and the
+complete 40-outcome replay. Replay results remain 14/20 in each mode with six shared decoy
+timeouts and the comparative p95 margin passing. No physical Android/iPhone performance or
+autoframing adoption claim is made.
+
+**Next:** Commit and push the reviewed packet to `origin/main`, wait for hosted CI, dispatch the
+GitHub Pages workflow, verify the live project-base URL and record the actual commit/run URLs.
+Then hand the hosted build to the user for manual Windows/Android checking. CP-02B.3 remains the
+separate physical comparison decision.
+
+**Blockers:** None for this authorized software delivery. Physical trials, device metadata and
+the adoption threshold remain outstanding by design.
 
 ## Entry format for future updates
 
@@ -557,3 +589,129 @@ before committing/pushing/deploying that prototype. Keep the accepted timebox an
 **Blockers:** No known CP-02B.1 delivery blocker remains. Physical settings/successful exports/frozen
 cells/G2 are still missing. ROI and its adoption evidence remain future work; deployment of diagnostics
 does not certify real Samsung/iPhone camera support or measured throughput.
+
+## 2026-10-07 — CP-02B.2 bounded tracker started locally (Asia/Kolkata)
+
+**Done:** Pushed approved delivery notes as `8fad9841decbe69a0e1b9e90682efccb47b51a7d` and began
+CP-02B.2 from that clean base. Development owns the opt-in geometry/tracker, worker and UI;
+adversarial testing owns regressions and a separate controlled-reentry replay task. Root owns
+integration and documentation. The current live site remains approved diagnostics code `6fb59f3`.
+Diagnostic exports will move to v2 in both modes to identify full/ROI attempts honestly, preserving
+observation-v1, benchmark CSV, codecs and wire bytes. Full-frame remains the default.
+
+**Verified:** Administrative [CI 37517601760](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37517601760)
+completed successfully for `8fad984`. No new ROI result is claimed at startup. Budget anchor:
+00:45:30 IST October 7 (19:15:30 UTC October 6); CP-02B.2 allows three implementation hours plus
+three testing/docs hours within the total eight-hour experiment cap. Automation wall time and
+parallel agent work do not measure human engineering hours; physical trials/approval waits are separate.
+
+**Next:** Build and challenge admission-only tracking, bounded native-pixel crops, independent
+full probes, stale-result isolation and complete paired replay evidence. Run integration checks,
+obtain both agents' agreement on the final revision, then stop for approval explicitly including
+commit/push and Pages deployment. Do not begin CP-02B.3 during that approval wait.
+
+**Blockers:** Prototype implementation/replay results are not yet complete. No physical ROI benefit
+has been measured; computer/camera/Chrome metadata, successful observations and frozen G2 cells remain
+missing. No new prototype push or deployment is authorized yet.
+
+## 2026-10-07 — Geometry boundaries and replay challenge defined (Asia/Kolkata)
+
+**Done:** Added draft candidate/replay guides. Development created pure native-coordinate geometry
+and tracker modules: outward padded crops, per-axis sampling safeguards, admission-driven regions,
+attempt/epoch isolation and independent full dispatch timing. Testing defined 20 paired real-pipeline
+events with known moved targets and same-session duplicate decoys; fixture/test implementation is
+in progress. A stationary duplicate may keep admission alive until a periodic full scan, potentially
+failing the +250 ms replay limit. This is an explicit counterexample to test, not an assumed pass.
+
+**Verified:** Root inspected the initial pure modules and installed ZXing position definitions.
+Unchanged Python vectors reproduce the checked-in contract; Python verified all four independently
+emitted TypeScript transfers. These preliminary checks preceded remaining worker/UI/diagnostics
+integration and are not final candidate acceptance. No paired replay result is available yet.
+
+**Next:** Finish source integration, exercise the fixed replay events and adversarial lifecycle tests,
+retain failed datasets and correct confirmed defects within the accepted timebox. Complete final
+checks and both same-revision reviews before requesting the user's deployment approval.
+
+**Blockers:** No completed ROI/replay acceptance or physical benefit result yet. Duplicate-decoy
+latency remains an unproven design risk. Physical settings/exports/G2 remain missing.
+
+## 2026-10-07 — User pause until 02:00 IST (Asia/Kolkata)
+
+**Done:** Honored the user's request to pause now and continue from 02:00 a.m. IST on October 7
+(20:30 UTC October 6). Interrupted development, testing and the replay child; preserved all local
+uncommitted work. Recorded the pause in checkpoints/context/handoff. No commit, push or deployment.
+Current source includes geometry/tracker modules, admission-only worker corners, diagnostic-v2,
+UI crop/outline/selector integration and partial test adaptation. The public scene generator exists;
+CI/current verification docs include its command. Draft tracking/replay and diagnostic-v2 guides exist.
+
+**Verified:** Clock at pause: 19:27:56 UTC October 6 = 00:57:56 IST October 7. Git is still `main`
+at `8fad984` with local source/tests/docs only; live Pages remains `6fb59f3`. Initial B2 active
+automation wall interval: 00:45:30–00:57:56 IST, 12 minutes 26 seconds. Exclude this pause from the
+engineering timebox. Testing reported 42 initial pure geometry/tracker cases passing; root has not
+run final candidate checks. No `reentry.spec.ts` or paired replay result exists at this stop point.
+
+**Next:** At or after 02:00 IST, resume both agents, coordinate stable source/build/replay, resolve
+landscape-only fixture versus proposed portrait replay wording before measurement, retain initial
+failed datasets and challenge duplicate-decoy recovery. Complete integration checks and both final
+same-revision verdicts, then stop for the user's new commit/push/Pages approval.
+
+**Blockers:** Intentional timed pause. Candidate/replay/final review are incomplete; duplicate-decoy
+latency is unproven. No physical ROI adoption or G2 evidence is available. Pause is not prototype approval.
+
+## 2026-10-07 — User resumed CP-02B.2 (Asia/Kolkata)
+
+**Done:** Honored the user's explicit "Continue" and reactivated development/testing from preserved
+partial work. Source and adversarial tests remain separate, with the replay child coordinated by
+testing. No commit/push/deployment or CP-02B.3 start. Reconciled current pause/resume status.
+
+**Verified:** Resume clock: 02:22:41 UTC = 07:52:41 IST October 7. Git remains `main` at `8fad984`;
+the interrupted local edits are intact. Initial active interval remains 12 minutes 26 seconds;
+pause time is excluded. No new candidate tests or replay outcome is claimed at resumption.
+
+**Next:** Complete source/test integration, run the frozen paired replay and relevant regressions,
+resolve confirmed findings, obtain final same-revision agreement, then submit the concrete prototype
+for new approval including Pages deployment.
+
+**Blockers:** Replay and final checks/review remain incomplete; no physical ROI benefit/G2 evidence.
+
+## 2026-10-07 — Integrated candidate checks started (Asia/Kolkata)
+
+**Done:** Development declared source stable for the testing agent's build/replay window. Added
+candidate architecture/README/checkpoint descriptions and diagnostic-v2 collection semantics.
+Replay contract is fixed before measurement at 20 landscape 1280×720 events; portrait behavior
+has separate geometry/browser lifecycle tests. CI generates public reentry fixtures before E2E.
+
+**Verified:** Root's preliminary strict TypeScript check failed on a new test wrapper's drawImage
+overload signature (`camera.spec.ts:118`, TS2322); testing is repairing it. Generator Ruff also found
+import-order/formatting issues and its owner is fixing them. These are real preliminary check
+failures, not camera-performance findings. Root inspected integration: native crop precedes readback,
+dimension changes invalidate tracking even while busy, final scan remains before verified completion,
+and geometry failure cannot replace protocol verification. No completed real replay is claimed yet.
+
+**Next:** Retest repaired test typing/generator style, finish the fixed replay implementation,
+run camera/harness/replay checks against one stable build, and retain failed outcomes. Final reviews
+must cover the same source/test/workflow revision before user approval.
+
+**Blockers:** Preliminary type/style checks and paired replay remain unfinished. Duplicate-decoy
+latency and physical benefit remain unproven; no new push/deployment is authorized.
+
+## 2026-10-07 — Preliminary browser regressions passed; replay underway (Asia/Kolkata)
+
+**Done:** Testing fixed the drawImage wrapper signature and the replay owner corrected generator
+import/format style. The fixed landscape fixture manifest has 64 source symbols, public 16,000-byte
+payload and sequence 0 acquisition/sequence 1 target. Source is held stable during the first actual
+worker/WASM replay, with no speculative change to the original one-second full-probe policy.
+
+**Verified:** Development independently observed 123 Vitest cases and ESLint passing. Testing's
+fresh lint/types/production build passed and 58 camera/harness Playwright checks passed, including
+six new mocked-admission crop/resize/portrait/reset/background/timeout cases. These mocked cases
+verify lifecycle and scheduling, not optical performance. The tester then added both-mode actual
+fixture save/completion coverage for the final run. Root checked 114 current local Markdown links
+and diff whitespace with no errors. No complete paired replay result is assumed yet.
+
+**Next:** Retain the first complete 40-outcome dataset, review each matching event and complete-array
+p95 margin, correct any confirmed in-scope finding and rerun unchanged event geometry. Finish final
+unit/browser/build/interoperability checks and independent project-base native-crop save/export smoke.
+
+**Blockers:** Replay acceptance/final same-revision reviews are pending. Physical benefit/G2 remain
+unmeasured; the candidate is still unapproved/uncommitted/undeployed.

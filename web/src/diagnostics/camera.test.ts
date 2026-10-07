@@ -4,6 +4,7 @@ import {
   CameraDiagnostics, MAX_RECENT_ATTEMPTS, buildDiagnosticsExport,
 } from './camera';
 import type { DiagnosticSnapshot, ScanMetrics } from './camera';
+import type { CaptureAttempt } from '../camera/tracker';
 
 function metrics(attempt_id: number, changes: Partial<ScanMetrics> = {}): ScanMetrics {
   return {
@@ -216,7 +217,7 @@ describe('observation-linked separate diagnostics export', () => {
     expect(Buffer.from(digest.mock.calls[0][0]).toString('utf8')).toBe(observation);
     expect(exported.observation).toEqual({ filename: 'camera-observation.json', utf8_bytes: Buffer.byteLength(observation), sha256: createHash('sha256').update(observation).digest('hex') });
     expect(Object.keys(exported)).toEqual(['format', 'observation', 'diagnostics']);
-    expect(exported.format).toBe('lumenlink-camera-diagnostics-v1');
+    expect(exported.format).toBe('lumenlink-camera-diagnostics-v2');
     expect(exported).not.toHaveProperty('observation_text');
     expect(JSON.stringify(exported)).not.toContain('café');
     expect(Object.isFrozen(exported.diagnostics)).toBe(true);
@@ -240,5 +241,49 @@ describe('observation-linked separate diagnostics export', () => {
     await expect(buildDiagnosticsExport(observation, snapshot, () => Promise.reject(new Error('hash unavailable')))).rejects.toThrow('hash unavailable');
     expect(snapshot.totals.started).toBe(0);
     expect(snapshot.stopped).toBe(false);
+  });
+});
+
+describe('v2 full/ROI capture accounting', () => {
+  function capture(id: number, kind: 'full_frame' | 'roi'): CaptureAttempt {
+    return { attempt_id: id, epoch: 3, reason: kind === 'roi' ? 'tracking' : 'periodic', kind,
+      source_width: 1280, source_height: 720, crop_x: kind === 'roi' ? 101 : 0, crop_y: kind === 'roi' ? 201 : 0,
+      crop_width: kind === 'roi' ? 401 : 1280, crop_height: kind === 'roi' ? 301 : 720,
+      input_width: kind === 'roi' ? 401 : 960, input_height: kind === 'roi' ? 301 : 540 };
+  }
+  it('separates per-kind counters/pixels and measures full-only gaps across intervening ROI scans', () => {
+    const diagnostics = new CameraDiagnostics(100, 'auto_region');
+    for (const [id, now, kind] of [[1, 100, 'full_frame'], [2, 200, 'roi'], [3, 300, 'roi'], [4, 1100, 'full_frame']] as const) {
+      const context = capture(id, kind);
+      diagnostics.begin(now, 1280, 720, context.input_width, context.input_height, context);
+      diagnostics.submitted(id, now);
+      diagnostics.completed(metrics(id), now + 1);
+    }
+    diagnostics.finish(1102);
+    const snapshot = diagnostics.snapshot();
+    expect(snapshot.mode).toBe('auto_region');
+    expect(snapshot.scans.full_frame).toMatchObject({ submitted: 2, completed: 2, pixels_submitted: 2 * 518400 });
+    expect(snapshot.scans.roi).toMatchObject({ submitted: 2, completed: 2, pixels_submitted: 2 * 401 * 301 });
+    expect(snapshot.timings.full_scan_gap_ms).toEqual({ count: 1, total_ms: 1000, min_ms: 1000, max_ms: 1000 });
+    expect(snapshot.timings.roi_scan_gap_ms).toEqual({ count: 1, total_ms: 100, min_ms: 100, max_ms: 100 });
+    expect(snapshot.timings.dispatch_gap_ms).toMatchObject({ count: 3, total_ms: 1000 });
+    expect(snapshot.latest_attempts[1]).toMatchObject({ kind: 'roi', crop_x: 101, crop_y: 201, crop_width: 401, crop_height: 301, scale_x: 1, scale_y: 1, capture_epoch: 3 });
+    expect(snapshot.latest_attempts[1]).not.toHaveProperty('accepted_corners');
+  });
+  it('retains interrupted ROI dimensions/pixels without inventing worker timing', () => {
+    const diagnostics = new CameraDiagnostics(100, 'auto_region');
+    const context = capture(1, 'roi');
+    diagnostics.begin(100, 1280, 720, 401, 301, context); diagnostics.submitted(1, 101); diagnostics.finish(105);
+    expect(diagnostics.snapshot().scans.roi).toMatchObject({ submitted: 1, completed: 0, interrupted: 1, pixels_interrupted: 401 * 301 });
+    expect(diagnostics.snapshot().latest_attempts[0]).toMatchObject({ outcome: 'interrupted', kind: 'roi', decode_ms: null });
+  });
+  it('does not accept ROI context in full mode or mismatched capture identities/dimensions', () => {
+    const full = new CameraDiagnostics(100);
+    expect(() => full.begin(100, 1280, 720, 401, 301, capture(1, 'roi'))).toThrow();
+    const auto = new CameraDiagnostics(100, 'auto_region');
+    for (const patch of [{ attempt_id: 2 }, { crop_x: -1 }, { crop_width: 0 }, { source_width: 1279 }, { input_width: 400 }]) {
+      expect(() => auto.begin(100, 1280, 720, 401, 301, { ...capture(1, 'roi'), ...patch })).toThrow();
+      expect(auto.snapshot().totals.started).toBe(0);
+    }
   });
 });

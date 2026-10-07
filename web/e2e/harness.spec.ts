@@ -39,6 +39,66 @@ test('starts and pauses playback only after the flashing acknowledgement', async
   await expect(page.getByRole('button', { name: 'Play QR stream' })).toBeVisible();
 });
 
+test('experimental sender targets require a fresh rate acknowledgement and preserve paused session', async ({ page }) => {
+  await page.goto('/');
+  const rate = page.getByLabel('Playback rate');
+  await expect(rate).toHaveValue('8');
+  expect(await rate.locator('option').evaluateAll(options => options.map(option => (option as HTMLOptionElement).value))).toEqual(['2', '4', '8', '10', '15', '20', '30']);
+  await page.getByRole('button', { name: 'Prepare QR', exact: true }).click();
+  const firstExport = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export frames' }).click();
+  const firstFrames = await readFile((await (await firstExport).path())!, 'utf8');
+  const flashing = page.getByRole('checkbox', { name: /I understand that animated QR codes flash/ });
+  const highRate = page.getByRole('checkbox', { name: /I agree to test the experimental/ });
+  const play = page.getByRole('button', { name: 'Play QR stream' });
+  await flashing.check();
+  await expect(play).toBeEnabled();
+  await rate.selectOption('15');
+  await expect(highRate).not.toBeChecked();
+  await expect(highRate).toHaveAccessibleName(/15 fps target/);
+  await expect(play).toBeDisabled();
+  await highRate.check();
+  await expect(play).toBeEnabled();
+  await rate.selectOption('20');
+  await expect(highRate).not.toBeChecked();
+  await expect(play).toBeDisabled();
+  await highRate.check();
+  await flashing.uncheck();
+  await expect(play).toBeDisabled();
+  await flashing.check();
+  await rate.selectOption('30');
+  await expect(highRate).not.toBeChecked();
+  await expect(highRate).toHaveAccessibleName(/30 fps target/);
+  await expect(play).toBeDisabled();
+  await highRate.check();
+  await play.click();
+  await expect(rate).toBeDisabled();
+  await expect(page.getByLabel('Symbol size')).toBeDisabled();
+  await expect(highRate).toBeDisabled();
+  await expect(flashing).toBeDisabled();
+  const counter = page.getByText(/frames drawn/);
+  const displayed = async (): Promise<number> => Number((await counter.textContent())?.match(/(\d+) frames drawn/)?.[1]);
+  await expect.poll(displayed).toBeGreaterThan(0);
+  await page.getByRole('button', { name: 'Pause', exact: true }).click();
+  await expect(rate).toBeEnabled();
+  const paused = await displayed();
+  await page.waitForTimeout(100);
+  expect(await displayed()).toBe(paused);
+  await expect(highRate).toBeChecked();
+  await play.click();
+  await expect.poll(displayed).toBeGreaterThan(paused);
+  await page.getByRole('button', { name: 'Pause', exact: true }).click();
+  const afterExport = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export frames' }).click();
+  expect(await readFile((await (await afterExport).path())!, 'utf8')).toBe(firstFrames);
+  await rate.selectOption('8');
+  await expect(highRate).toHaveCount(0);
+  await expect(play).toBeEnabled();
+  await rate.selectOption('30');
+  await expect(highRate).not.toBeChecked();
+  await expect(play).toBeDisabled();
+});
+
 test('handles camera denial without leaving an active session', async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: {

@@ -1,7 +1,9 @@
-# Browser camera diagnostics (CP-02B.1)
+# Browser camera diagnostics
 
-This checkpoint instruments the existing full-frame browser receiver. It does not implement
-autoframing or establish a camera bottleneck, performance gain, supported phone or physical G2 pass.
+CP-02B.1 instruments the full-frame browser receiver and is approved/deployed as `6fb59f3`.
+The local CP-02B.2 candidate adds an opt-in tracker and diagnostic-v2 geometry/accounting; its review
+and deployment approval are pending. Neither checkpoint establishes a camera bottleneck, performance
+gain, supported phone or physical G2 pass.
 See the [experiment plan](../planning/AUTOFRAMING_PLAN.md) and [approval status](../../CHECKPOINTS.md).
 
 ## Collect an observation and its diagnostics
@@ -31,15 +33,20 @@ diagnostics. No files are uploaded; no QR contents or camera images belong in th
 
 ## Interpret measurements carefully
 
-The sidecar format is `lumenlink-camera-diagnostics-v1`. Its top-level `observation` object carries
-`filename`, `utf8_bytes` and lowercase `sha256`; `diagnostics` contains a `full_frame` mode snapshot.
-The observation document itself retains its original `lumenlink-camera-observation-v1` format.
+The delivered CP-02B.1 sidecar is `lumenlink-camera-diagnostics-v1` and contains only full-frame scans.
+The local CP-02B.2 candidate exports `lumenlink-camera-diagnostics-v2` in both modes, explicitly
+distinguishing full/ROI geometry and accounting. Retain each original export with its format marker;
+do not relabel a v1 export as v2. Both versions link the unchanged observation: top-level
+`observation` carries `filename`, `utf8_bytes` and lowercase `sha256`. The observation itself retains
+its strict `lumenlink-camera-observation-v1` format and remains the CLI/CSV input.
 
 | Snapshot field | Meaning |
 |---|---|
 | `totals` | Started/submitted/completed/interrupted attempts, capture/initialization failures, measured decode/admission errors and busy skips |
 | `pixels` | Submitted/completed/interrupted input pixel totals |
-| `timings` | Count, total, minimum and maximum milliseconds for capture, readback, round-trip, decoding, admission and full-scan gaps |
+| `mode` | `full_frame` control or, in v2, the selected `auto_region` experiment; an Auto region trial can still contain full scans |
+| `scans` (v2) | Separate `full_frame` and `roi` started/submitted/completed/interrupted/capture-failed counts and submitted/completed/interrupted pixels |
+| `timings` | Count, total, minimum and maximum milliseconds for capture, readback, round-trip, decoding, admission and full-scan gaps; v2 also distinguishes all-dispatch and ROI-only gaps |
 | `frames` | Decoded QR count, new symbols, duplicates and rejected ingests |
 | `first_valid_acquisition_ms` | Trial-relative time when the main thread receives the first valid admission result; null if none |
 | `latest_attempts`, `dropped_records` | At most 256 terminal records and the number removed from that buffer |
@@ -48,7 +55,12 @@ The observation document itself retains its original `lumenlink-camera-observati
 Scan records identify the attempt, source/input dimensions, trial-relative capture/dispatch/finish
 times, completion/interruption/failure status, measured stage durations and admission deltas.
 Unknown timings/counts are null. Error stages are fixed labels, not copies of arbitrary decoder
-exceptions or decoded text. All recorded attempts are full-frame scans in CP-02B.1.
+exceptions or decoded text. All recorded attempts are full-frame scans in CP-02B.1. V2 records also
+carry `kind`, `capture_epoch`, bounded `reason`, native `crop_x/y/width/height`, and `scale_x/y` as
+actual input pixels divided by crop pixels. An epoch identifies geometry invalidation, not protocol
+version/session identity. Reasons explain control/acquisition/reacquisition/periodic/tracking/bypass
+selection; they do not certify that the next image contains a QR. Corners and tracking clocks remain
+internal, and the export still contains no camera pixels or decoded contents.
 
 - Submitted images count successful dispatches to the worker, rather than pump ticks or decoded
   QR texts. A capture/readback/dispatch failure must not be called a submitted image.
@@ -68,7 +80,10 @@ exceptions or decoded text. All recorded attempts are full-frame scans in CP-02B
   not all camera images or successful new source symbols.
   A terminal container verification failure can increase the recovered-symbol delta while rejecting
   admission; those deltas describe receiver processing and do not certify verified file bytes.
-- Full-scan dispatch gaps expose actual scheduling frequency. The unchanged 33 ms polling interval
+- Full-scan dispatch gaps expose actual scheduling frequency. In v2, `full_scan_gap_ms` is between
+  successful full-frame dispatches only, `roi_scan_gap_ms` between ROI dispatches only, and
+  `dispatch_gap_ms` between all successful dispatches. V1 contains only full scans, so its full gap
+  covers all submissions. The unchanged 33 ms polling interval
   does not guarantee 30 images/second: one image remains in flight and busy frames are skipped.
   Gaps are between successive successful dispatch starts, excluding trial-to-first and last-to-end.
 - Aggregate counts/sums/minima/maxima cover the recorded trial. Only the latest 256 terminal scan
@@ -86,9 +101,11 @@ before attributing loss to decoding. A 506-symbol stream at an assumed 8 fps nee
 seconds even with an immediately available first symbol; the prior 60-second timeout does not
 prove an image-processing bottleneck. Its actual source settings remain unconfirmed.
 
-Autoframing must later pass the predeclared completion-time/reliability/recovery comparisons. Smaller
+Autoframing must pass the predeclared completion-time/reliability/recovery comparisons. Smaller
 per-attempt pixel counts alone do not qualify adoption. The current pipeline retains its camera
-constraints, width-960 scaling, 33 ms polling, QR decoder options and one-image-in-flight behavior.
-Use the same diagnostics in both eventual comparison arms and retain all outcomes.
+constraints, original full-frame width-960 scaling, 33 ms polling, QR decoder options and one image
+in flight. The candidate crops before readback under its stricter longest-side/pixel/detail limits;
+see the [tracking guide](BROWSER_AUTOFRAMING.md). Use the same diagnostic-v2 build in both eventual
+comparison arms and retain all outcomes.
 
 No measured baseline, physical comparison or ROI adoption result has been recorded by this document.

@@ -179,8 +179,8 @@ def _metadata(value: object) -> Trial:
         raise ValueError("Invalid payload_sha256")
     result["symbol_size"] = str(_integer(value["symbol_size"], "symbol_size", 1024, 1))
     fps = _number(value["fps"], "fps")
-    if fps > 10:
-        raise ValueError("FPS exceeds the current 10 fps limit")
+    if fps > 10 and fps not in {15, 20, 30}:
+        raise ValueError("FPS exceeds the standard 10 fps limit or supported experimental targets")
     result["fps"] = _numeric_text(fps)
     result["ecc"] = _text(value["ecc"], "ecc")
     if result["ecc"] not in {"L", "M", "Q", "H"}:
@@ -215,6 +215,8 @@ def _trial_rules(row: Trial) -> None:
     timeout = float(row["timeout_seconds"])
     payload = int(row["payload_bytes"])
     if row["phase"] == "acceptance":
+        if float(row["fps"]) > 10:
+            raise ValueError("Experimental FPS targets are exploratory only")
         if elapsed is None or not _complete(row):
             raise ValueError("Acceptance requires a timed trial and complete known metadata")
         if timeout != max(60, 3 * payload / 1024):

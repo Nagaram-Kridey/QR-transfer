@@ -2,6 +2,8 @@ import { prepareZXingModule, readBarcodes } from 'zxing-wasm/reader';
 import wasmUrl from 'zxing-wasm/reader/zxing_reader.wasm?url';
 import { ProtocolError, Receiver } from '../codec/core';
 import type { ScanMetrics } from '../diagnostics/camera';
+import { decoderCorners } from '../camera/geometry';
+import type { Point } from '../camera/geometry';
 import type { WorkerInput, WorkerOutput } from './messages';
 
 const receiver = new Receiver();
@@ -9,12 +11,13 @@ let busy = false;
 const send = (message: WorkerOutput): void => self.postMessage(message);
 prepareZXingModule({ overrides: { locateFile: (path: string, prefix: string) => path.endsWith('.wasm') ? wasmUrl : prefix + path } });
 
-async function ingest(texts: string[], onAdmission?: () => void): Promise<Extract<WorkerOutput, { type: 'progress' | 'complete' }>> {
+async function ingest(texts: string[], onAdmission?: (index: number) => void): Promise<Extract<WorkerOutput, { type: 'progress' | 'complete' }>> {
   let warning: string | undefined;
-  for (const text of texts) {
+  for (let index = 0; index < texts.length; index++) {
+    const text = texts[index];
     try {
       const file = await receiver.ingest(text);
-      onAdmission?.();
+      onAdmission?.(index);
       if (file) return { type: 'complete', file, stats: { ...receiver.stats } };
     } catch (error) {
       if (!(error instanceof ProtocolError) || receiver.stats.state === 'FAILED') throw error;
@@ -31,6 +34,7 @@ async function scan(message: Extract<WorkerInput, { type: 'image' }>): Promise<v
     admitted: false, error_stage: null,
   };
   let response: WorkerOutput | undefined;
+  let acceptedCorners: readonly Point[] | null = null;
   let stage: 'decode' | 'admission' = 'decode';
   let started = performance.now();
   try {
@@ -40,7 +44,10 @@ async function scan(message: Extract<WorkerInput, { type: 'image' }>): Promise<v
     metrics.decoded_qr_count = codes.length;
     if (codes.length) {
       stage = 'admission'; started = performance.now();
-      response = await ingest(codes.map(code => code.text), () => { metrics.admitted = true; });
+      response = await ingest(codes.map(code => code.text), index => {
+        metrics.admitted = true;
+        acceptedCorners = decoderCorners(codes[index].position);
+      });
       metrics.admission_ms = performance.now() - started;
     }
   } catch (error) {
@@ -54,7 +61,7 @@ async function scan(message: Extract<WorkerInput, { type: 'image' }>): Promise<v
   metrics.rejected_delta = receiver.stats.rejected - before.rejected;
   // Finish the attempt and publish its receiver state before a terminal response
   // can make the UI terminate this worker.
-  send({ type: 'scan', metrics, stats: { ...receiver.stats } });
+  send({ type: 'scan', capture_epoch: message.capture_epoch, accepted_corners: acceptedCorners, metrics, stats: { ...receiver.stats } });
   if (response) send(response);
 }
 self.onmessage = async (event: MessageEvent<WorkerInput>): Promise<void> => {

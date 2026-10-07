@@ -109,9 +109,15 @@ implementation plan; do not silently substitute another RNG/distribution in a de
 
 ## Optical defaults
 
-256-byte symbols, ECC M, 8 fps; maximum 10 fps, reduced mode 2 fps. Quiet zone at least four modules,
-integer scaling, black-on-white, minimum two display pixels per module. No rate is guaranteed safe
+256-byte symbols, ECC M, 8 fps; standard profile maximum 10 fps, reduced mode 2 fps. Quiet zone at
+least four modules, integer scaling, black-on-white, minimum two display pixels per module. No rate is guaranteed safe
 for photosensitivity. Benchmark density/ECC/hold time on actual devices before changing defaults.
+
+User-authorized browser experiments on October 7 add optional 15/20/30 fps **targets**, requiring
+the standard flashing acknowledgement plus a selected-rate experimental acknowledgement. They do
+not change wire bytes, default settings or the Python optical 10 fps limit. Record high-rate trials
+as exploratory; acceptance cells retain the standard profile. Actual displayed rate and receiver
+completion must be measured rather than inferred from the target selector.
 
 ## References
 

@@ -33,12 +33,15 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] Independent TypeScript codec and both-direction conformance checks.
 - [x] Minimal browser harness: file/text, static/animated QR, camera, worker, verified download.
 - [x] Permission errors, cancellation, first-send acknowledgement, ≤10 fps and 2 fps option.
+- [ ] User-requested browser-only exploratory 15/20/30 fps targets with additional acknowledgement
+  and evidence recording; included with CP-02B.2 manual-test delivery after combined review.
 - [x] Synthetic clean/degraded video regression through the actual WASM worker path.
 - [x] CP-02A bounded observation recorder/per-cell summaries, independent review, approval and
   GitHub delivery (`d6b0a7b`; hosted Windows/Linux/browser/audit checks passed).
 - [x] CP-02B.1 full-frame browser diagnostics and bounded sidecar export: approved/delivered as
   `6fb59f3`, hosted CI/Pages and both independent live checks passed.
-- [ ] CP-02B.2 optional ROI prototype, only after CP-02B.1 approval.
+- [ ] CP-02B.2 optional ROI prototype: local implementation/review in progress after CP-02B.1 delivery;
+  user requested GitHub/manual-test delivery October 7; final combined reviews/checks required first.
 - [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.
 - [ ] Android Chrome and iPhone Safari physical camera smoke tests.
@@ -134,6 +137,7 @@ npm --prefix web run test:coverage
 npm --prefix web run vectors:emit
 uv run --project python python tools/verify_ts_vectors.py
 uv run --project python python tools/generate_camera_fixtures.py
+uv run --project python python tools/generate_reentry_fixtures.py
 npm --prefix web run build
 ```
 

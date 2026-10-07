@@ -6,28 +6,43 @@ protocol specification or the execution checklist. Refresh it after meaningful p
 
 ## 1. Where work stopped
 
-**CP-02B.1 browser diagnostics is delivered; CP-02B.2 is next**, following the user-accepted
-[autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md). Software checks passed for the frozen
-eight-file snapshot `91675844c1ca3f90f87779288a92ec1376bd4284d704916519df49a644287374`,
-based on `5ee3561`. Both independent reports explicitly agree PASS with no known unresolved
-in-scope blocker. The user approved CP-02B.1 commit/push/Pages deployment on October 7;
-delivery passed CI/Pages and both independent live reviews for `6fb59f3`. Continue to CP-02B.2
-locally, then stop for its own review/approval before push or deployment. No ROI code or physical
-performance claim belongs to CP-02B.1. Its two-hour cap is part of the eight-hour total experiment
-budget; physical trials are separate. See the latest UPDATE.md entries for elapsed time/results.
-Local checks: 69 Vitest tests, 46 Playwright tests, lint/types, Pages-base production build and
-independent interoperability pass. The Python recorder accepts the unchanged synthetic cancelled
-v1 export and its sidecar digest matches exact bytes. These are software checks, not physical trials.
-The approved candidate is committed/pushed/deployed as `6fb59f3`; hosted CI and Pages completed
-successfully, and both independent live checks passed. Pages now includes separate camera diagnostic
-exports. Testing passed seven lifecycle/delivery cases; development independently verified the actual
-synthetic camera/worker/WASM transfer and exact save. Physical G2 remains pending.
-The approval packet requests CP-02B.1 commit/push plus Pages deployment after hosted CI passes.
-Its [development](docs/reviews/CP-02B.1-development.md) and
-[testing](docs/reviews/CP-02B.1-testing.md) reports define the eight-file fingerprint and scoped checks.
-The latest **"approved"** response authorizes this packet; earlier "continue" during construction
-was a resume instruction. Push only the reviewed part, verify CI, deploy/verify/log the
-candidate, then begin CP-02B.2 within the remaining experiment budget. Do not skip physical evidence.
+**CP-02B.2 has passed combined same-revision review; the user authorized GitHub/manual-test
+delivery with higher browser FPS on October 7.** Base `8fad984`. Commit/push the reviewed part,
+inspect hosted CI, dispatch Pages and verify the live build. The request covers the
+opt-in tracker plus browser 15/20/30 fps experimental targets and related exploratory-only benchmark
+recording. It does not authorize ROI adoption, G2 or later stages. CP-02B.3 still needs physical data.
+
+The prototype retains full-frame default, admission-only native-coordinate crops, two-miss/500 ms
+recovery, independent one-second full probes, one decode in flight, outline/stale-geometry isolation
+and separate diagnostic-v2 exports. Observation-v1, CSV, codecs and wire bytes remain unchanged.
+The sender retains default 8 fps and standard 2/4/8/10 rates; higher targets require both normal
+flashing consent and a rate-specific acknowledgement reset when the rate changes. Python camera
+adapters still cap playback at 10. The benchmark tool accepts only 15/20/30 above 10 for exploratory
+rows, rejecting acceptance promotion through normalize/read/summarize paths.
+
+Two complete actual-worker/WASM replays each retained all 40 outcomes: **14/20 recovered in each
+mode**, with six shared decoy timeouts R15–R20, zero control-success loss and the +250 ms p95 criterion
+passing. First successful-event p95: full 53.8 / auto 133.9 ms; final camera run: full 42.1 / auto
+109.7 ms. Auto mode genuinely cropped 540/590 attempts respectively. These are target-reentry
+software results, not whole-file throughput, 20 successful events, decoy rescue or phone qualification.
+Compact datasets and the fixed landscape manifest are under `docs/benchmarks/software`; portrait
+behavior has separate geometry/mocked lifecycle regressions. Decoder options remain unchanged.
+
+Current checks reported: 310 Python tests (213 benchmark), 123 Vitest (codec-only coverage 100%),
+Ruff/format/mypy/lint/types/build/vector checks; 60 camera/harness cases plus actual replay passed
+(61 passes, two non-Chromium replay skips), then 21 cross-engine sender cases passed for the rate
+addition. The receiver function is byte-identical across that sender addition. Minimal sender label
+cleanup and final project-base native-ROI save smoke/review remain in progress; read the latest log
+for final counts/fingerprint. No new candidate commit, hosted CI or Pages deployment is claimed yet.
+
+Budget: B2 began 00:45:30 IST, paused at 00:57:56 and explicitly resumed at 07:52:41 October 7.
+Exclude the user pause from the eight-hour engineering cap (2 diagnostics, 3 implementation,
+3 testing/docs); physical trials and approval waits are separate. These clock intervals are automation
+wall time, not measured human engineering effort. Do not grant another tuning allowance for rates.
+
+CP-02B.1 is already approved/delivered as `6fb59f3`, with passing CI/Pages and both independent live
+reviews; administrative delivery notes `8fad984` also passed CI. Its historical review fingerprint
+and reports are in CHECKPOINTS.md. Current live Pages still serves that full-frame diagnostics build.
 
 **Stage 1 software is implemented. The physical feasibility gate is still pending.** The repository
 contains an independent Python/TypeScript plaintext repeat-mode implementation, a CLI, a minimal
@@ -55,7 +70,7 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at current handoff | `main` at `6fb59f3`; local delivery notes pending, no new application edits |
+| Branch at current handoff | `main` at `8fad984`; CP-02B.2 local source/tests/docs in progress |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
 | Latest delivered Python code | `d6b0a7b` — approved benchmark recording/summary tooling |
@@ -271,6 +286,7 @@ npm --prefix web run test:coverage
 npm --prefix web run vectors:emit
 uv run --project python python tools/verify_ts_vectors.py
 uv run --project python python tools/generate_camera_fixtures.py
+uv run --project python python tools/generate_reentry_fixtures.py
 npm --prefix web run build
 ```
 

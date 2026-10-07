@@ -55,7 +55,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-02 | Physical Windows–Android feasibility and G2 decision | Real Chrome/camera smoke checks and frozen 20-trial cells; all failures retained | In progress: awaiting computer identity and real smoke observations |
 | CP-02A | Observation recorder and per-cell benchmark summaries | Independent dev/test agreement, strict metadata/provenance boundaries, retained failures | Approved/delivered as d6b0a7b; all hosted CI jobs passed |
 | CP-02B.1 | Browser full-frame diagnostics | Bounded exports, exact observation linkage, lifecycle regressions, both reviews | Approved/delivered as 6fb59f3; CI, Pages and both live reviews passed |
-| CP-02B.2 | Experimental browser autoframing | CP-02B.1 approval; bounded ROI and adversarial replay | Not started; full-frame remains default |
+| CP-02B.2 | Experimental browser autoframing and requested exploratory sender rates | CP-02B.1 delivery; bounded ROI/replay plus combined dev/test agreement | User authorized GitHub/manual-test delivery Oct 7; final combined checks/review pending; full-frame default |
 | CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
@@ -292,6 +292,38 @@ late hash reset and setup denial. Both observed expected local project-base asse
 no page/asset errors or external requests. Committed source/test fingerprint remains identical to
 the approved freeze. Generated reports remain ignored. These are software delivery checks, not G2.
 CP-02B.1 is complete; continue to local CP-02B.2, which requires a new review/approval before delivery.
+
+## CP-02B.2: reviewed and authorized for manual-test delivery
+
+Base `8fad9841decbe69a0e1b9e90682efccb47b51a7d`; the user approved and delivery verified CP-02B.1
+before this work began. CP-02B.2 implements opt-in browser-only QR region tracking, preserving
+full-frame default, original camera polling/decoder settings, observation-v1, CSV and wire codecs.
+It adds conservative native-coordinate crops, admission-only corner results, stale-geometry
+isolation, an experimental selector/outline and diagnostic-v2 accounting in both modes.
+
+The fixed [20-event replay](docs/benchmarks/AUTOFRAMING_REPLAY.md) ran twice with the actual worker/
+WASM path: each mode recovered the same 14/20 events; all six decoy scenes timed out in both modes.
+No control-success loss and the successful-event p95 margin passed, with complete outcomes retained.
+This passes the comparative replay criterion, not all-event recovery or a physical speed/adoption
+gate. Guides and retained compact public results are linked from the benchmark README. Source/tests,
+public fixture generator and CI fixture generation will be part of the reviewed packet; generated
+camera images/videos remain ignored. Final combined agent agreement is still required.
+
+The user explicitly instructed on **October 7**: **"Update to github the current working code for
+manual test with the autoframing and also add additional FPS higher level for possible checking
+if it is possible or not"**. This authorizes commit/push and the Pages manual-test update after
+combined checks and both reviews. It extends the reviewed scope with browser target options
+15/20/30 fps and selected-rate acknowledgement, plus related exploratory-only benchmark recording.
+Default 8 fps, standard/Python optical 10 fps cap, receiver polling and wire bytes stay unchanged.
+Final reports must inspect this combined revision before delivery; authorization cannot replace
+their agreement or failed checks. Pages will be dispatched only after hosted CI passes.
+Physical adoption is separate CP-02B.3 and remains unapproved/unmeasured; no later phase is authorized.
+
+Both same-revision reviews are recorded in
+[development](docs/reviews/CP-02B.2-development.md) and [testing](docs/reviews/CP-02B.2-testing.md).
+They agree **PASS** for this manual-test delivery with no known unresolved in-scope blocker at
+freeze `27adca065b0f31a1ee319705c731934836dba999146aa07d3731c61a7cd44326`.
+Commit, hosted CI, Pages deployment and live URL verification remain to be recorded below.
 
 ## Approval packet template
 

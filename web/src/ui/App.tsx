@@ -5,6 +5,9 @@ import type { ReceivedFile, ReceiveStats } from '../codec/core';
 import { CameraDiagnostics, buildDiagnosticsExport } from '../diagnostics/camera';
 import type { DiagnosticSnapshot } from '../diagnostics/camera';
 import type { WorkerInput, WorkerOutput } from '../workers/messages';
+import { RegionTracker } from '../camera/tracker';
+import type { CaptureAttempt, TrackingSnapshot } from '../camera/tracker';
+import type { CameraMode } from '../camera/geometry';
 
 const emptyStats = (): ReceiveStats => ({ state: 'IDLE', recovered: 0, total: 0, seen: 0, duplicates: 0, rejected: 0, session: '' });
 const message = (error: unknown): string => error instanceof Error ? error.message : 'Something went wrong';
@@ -20,6 +23,7 @@ function Sender(): React.JSX.Element {
   const [size, setSize] = useState(256);
   const [fps, setFps] = useState(8);
   const [acknowledged, setAcknowledged] = useState(false);
+  const [highRateAcknowledged, setHighRateAcknowledged] = useState(false);
   const [transfer, setTransfer] = useState<Transfer | null>(null);
   const [playing, setPlaying] = useState(false);
   const [preparing, setPreparing] = useState(false);
@@ -91,7 +95,7 @@ function Sender(): React.JSX.Element {
       {file && <button className="secondary" onClick={() => { setFile(null); setTransfer(null); if (fileInput.current) fileInput.current.value = ''; }}>Use text instead</button>}
       <div className="settings">
         <label>Symbol size <select value={size} onChange={event => { setSize(Number(event.target.value)); setTransfer(null); }}><option value={256}>256 B · low density</option><option value={512}>512 B · medium</option><option value={1024}>1,024 B · high</option></select></label>
-        <label>Playback rate <select value={fps} onChange={event => setFps(Number(event.target.value))}><option value={2}>2 fps · reduced flashing</option><option value={4}>4 fps</option><option value={8}>8 fps · default</option><option value={10}>10 fps · maximum</option></select></label>
+        <label>Playback rate <select value={fps} onChange={event => { setFps(Number(event.target.value)); setHighRateAcknowledged(false); }}><option value={2}>2 fps · reduced flashing</option><option value={4}>4 fps</option><option value={8}>8 fps · default</option><option value={10}>10 fps</option><option value={15}>15 fps · experimental target</option><option value={20}>20 fps · experimental target</option><option value={30}>30 fps · experimental target</option></select></label>
       </div>
       <button onClick={() => { void prepare(); }}>{preparing ? 'Preparing…' : 'Prepare QR'}</button>
     </fieldset>
@@ -100,8 +104,10 @@ function Sender(): React.JSX.Element {
       {!transfer && <p className="placeholder">Your QR will appear here.<br /><small>Use a non-sensitive file, up to 1 MiB.</small></p>}
     </div>
     <label className="check"><input type="checkbox" checked={acknowledged} disabled={playing} onChange={event => setAcknowledged(event.target.checked)} />I understand that animated QR codes flash. I have checked the surroundings before playback.</label>
-    <div className="actions"><button disabled={!transfer || !acknowledged} onClick={() => setPlaying(value => !value)}>{playing ? 'Pause' : 'Play QR stream'}</button><button className="secondary" disabled={!transfer || playing} onClick={() => { void exportFrames().catch(reason => setError(message(reason))); }}>Export frames</button></div>
-    <p className="mono" aria-live="polite">{transfer ? `${transfer.k} symbols · ${displayed} frames displayed · cycle ${Math.floor(Math.max(0, displayed - 1) / transfer.k) + 1}` : 'No transfer prepared'}</p>
+    {fps > 10 && <label className="check"><input type="checkbox" checked={highRateAcknowledged} disabled={playing} onChange={event => setHighRateAcknowledged(event.target.checked)} />I agree to test the experimental {fps} fps target with increased flashing and unproven reception.</label>}
+    {fps > 10 && <p className="hint">This is a target rate. Actual display and reception rates are unmeasured.</p>}
+    <div className="actions"><button disabled={!transfer || !acknowledged || (fps > 10 && !highRateAcknowledged)} onClick={() => setPlaying(value => !value)}>{playing ? 'Pause' : 'Play QR stream'}</button><button className="secondary" disabled={!transfer || playing} onClick={() => { void exportFrames().catch(reason => setError(message(reason))); }}>Export frames</button></div>
+    <p className="mono" aria-live="polite">{transfer ? `${transfer.k} symbols · ${displayed} frames drawn · cycle ${Math.floor(Math.max(0, displayed - 1) / transfer.k) + 1}` : 'No transfer prepared'}</p>
     <p className="hint">Stop manually when the receiver finishes. The sender receives no acknowledgements.</p>
     {error && <p className="error" role="alert">{error}</p>}
   </section>;
@@ -114,11 +120,34 @@ function CameraReceiver(): React.JSX.Element {
   const [warning, setWarning] = useState('');
   const [result, setResult] = useState<ReceivedFile | null>(null);
   const [expectedKiB, setExpectedKiB] = useState(10);
+  const [scanMode, setScanMode] = useState<CameraMode>('full_frame');
+  const [tracking, setTracking] = useState<Pick<TrackingSnapshot, 'state' | 'region' | 'source_width' | 'source_height'> | null>(null);
   const [reportText, setReportText] = useState<string | null>(null);
   const [diagnosticsText, setDiagnosticsText] = useState<string | null>(null);
   const [diagnosticsStatus, setDiagnosticsStatus] = useState('');
   const video = useRef<HTMLVideoElement>(null);
-  const runtime = useRef({ worker: null as Worker | null, stream: null as MediaStream | null, timer: 0, busy: false, scanning: false, started: 0, generation: 0, latest: emptyStats(), diagnostics: null as CameraDiagnostics | null, attemptId: 0 });
+  const runtime = useRef({ worker: null as Worker | null, stream: null as MediaStream | null, timer: 0, busy: false, scanning: false, started: 0, generation: 0, latest: emptyStats(), diagnostics: null as CameraDiagnostics | null, attemptId: 0, tracker: null as RegionTracker | null });
+
+  function publishTracking(): void {
+    const snapshot = runtime.current.tracker?.snapshot();
+    const next = snapshot ? { state: snapshot.state, region: snapshot.region, source_width: snapshot.source_width, source_height: snapshot.source_height } : null;
+    setTracking(current => {
+      if (current && next && current.state === next.state && current.source_width === next.source_width && current.source_height === next.source_height
+        && current.region?.x === next.region?.x && current.region?.y === next.region?.y
+        && current.region?.width === next.region?.width && current.region?.height === next.region?.height) return current;
+      return next;
+    });
+  }
+  function trackResult(action: (tracker: RegionTracker) => void): void {
+    const live = runtime.current;
+    if (!live.tracker) return;
+    try { action(live.tracker); }
+    catch {
+      live.tracker = new RegionTracker('full_frame');
+      setWarning('Auto region is unavailable; full-frame scanning continues.');
+    }
+    publishTracking();
+  }
 
   function recordDiagnostics(action: (diagnostics: CameraDiagnostics) => void): void {
     const live = runtime.current;
@@ -135,6 +164,7 @@ function CameraReceiver(): React.JSX.Element {
     const live = runtime.current; live.generation++; live.scanning = false;
     window.clearTimeout(live.timer); live.worker?.terminate(); live.worker = null;
     live.stream?.getTracks().forEach(track => track.stop()); live.stream = null; live.busy = false;
+    live.tracker?.reset(); live.tracker = null;
     if (video.current) video.current.srcObject = null;
   }
   function finish(outcome: string, file?: ReceivedFile, reason?: string): void {
@@ -150,7 +180,7 @@ function CameraReceiver(): React.JSX.Element {
     }, null, 2) : null;
     let diagnosticSnapshot: DiagnosticSnapshot | undefined;
     recordDiagnostics(diagnostics => { diagnostics.finish(now); diagnosticSnapshot = diagnostics.snapshot(); });
-    live.started = 0; stopHardware(); setStatus(outcome.toUpperCase());
+    live.started = 0; stopHardware(); setTracking(null); setStatus(outcome.toUpperCase());
     if (observationText) {
       // Download and hash these exact frozen UTF-8 bytes; diagnostics never
       // changes the strict v1 observation profile.
@@ -170,6 +200,14 @@ function CameraReceiver(): React.JSX.Element {
     }
   }
   useEffect(() => () => stopHardware(), []);
+  useEffect(() => {
+    const source = video.current;
+    const invalidateOnResize = (): void => {
+      if (source && runtime.current.scanning) trackResult(tracker => tracker.observeDimensions(source.videoWidth, source.videoHeight));
+    };
+    source?.addEventListener('resize', invalidateOnResize);
+    return () => source?.removeEventListener('resize', invalidateOnResize);
+  }, []);
   useEffect(() => {
     const failWhenHidden = (): void => {
       if (document.hidden && runtime.current.started) {
@@ -192,7 +230,13 @@ function CameraReceiver(): React.JSX.Element {
       if (response.type === 'ready') { live.busy = false; onReady(); }
       if (response.type === 'idle') live.busy = false;
       if (response.type === 'scan') {
-        recordDiagnostics(diagnostics => diagnostics.completed(response.metrics, performance.now()));
+        const now = performance.now();
+        recordDiagnostics(diagnostics => diagnostics.completed(response.metrics, now));
+        const source = video.current;
+        trackResult(tracker => {
+          tracker.completed(response.metrics.attempt_id, response.capture_epoch, response.metrics.admitted === true,
+            response.accepted_corners, now, source?.videoWidth ?? 0, source?.videoHeight ?? 0);
+        });
         live.latest = response.stats; setStats(response.stats);
       }
       if (response.type === 'progress' || response.type === 'complete') { live.latest = response.stats; setStats(response.stats); }
@@ -217,7 +261,7 @@ function CameraReceiver(): React.JSX.Element {
     if (interruptedTrial) finish('cancelled', undefined, 'Session reset during trial.');
     else stopHardware();
     runtime.current.started = 0; runtime.current.latest = emptyStats(); runtime.current.diagnostics = null;
-    setStats(emptyStats()); setResult(null);
+    setStats(emptyStats()); setResult(null); setTracking(null);
     if (!interruptedTrial) { setReportText(null); setDiagnosticsText(null); setDiagnosticsStatus(''); }
     setError(''); setWarning(''); setStatus('IDLE');
   }
@@ -245,7 +289,8 @@ function CameraReceiver(): React.JSX.Element {
   function startReceiving(): void {
     const live = runtime.current;
     live.started = performance.now(); live.scanning = true; setStatus('RECEIVING');
-    live.diagnostics = new CameraDiagnostics(live.started); live.attemptId = 0;
+    live.diagnostics = new CameraDiagnostics(live.started, scanMode); live.attemptId = 0;
+    live.tracker = new RegionTracker(scanMode); publishTracking();
     let scratch: HTMLCanvasElement;
     let context: CanvasRenderingContext2D;
     try {
@@ -262,18 +307,26 @@ function CameraReceiver(): React.JSX.Element {
         setError(reason); finish('timeout', undefined, reason); return;
       }
       const source = video.current;
+      if (source) trackResult(tracker => tracker.observeDimensions(source.videoWidth, source.videoHeight));
       if (live.busy) recordDiagnostics(diagnostics => diagnostics.busySkip());
       if (!live.busy && live.worker && source && source.readyState >= 2 && source.videoWidth) {
         let attempt: number | undefined;
         let stage: 'capture' | 'readback' | 'submit' = 'capture';
         let stageStarted = performance.now();
         try {
-          const scale = Math.min(1, 960 / source.videoWidth);
-          const width = Math.round(source.videoWidth * scale), height = Math.round(source.videoHeight * scale);
           attempt = ++live.attemptId;
-          recordDiagnostics(diagnostics => { diagnostics.begin(stageStarted, source.videoWidth, source.videoHeight, width, height); });
-          scratch.width = width; scratch.height = height;
-          context.drawImage(source, 0, 0, scratch.width, scratch.height);
+          let capture: CaptureAttempt;
+          try { capture = live.tracker!.choose(stageStarted, source.videoWidth, source.videoHeight, attempt); }
+          catch {
+            live.tracker = new RegionTracker('full_frame');
+            setWarning('Auto region is unavailable; full-frame scanning continues.');
+            capture = live.tracker.choose(stageStarted, source.videoWidth, source.videoHeight, attempt);
+          }
+          publishTracking();
+          recordDiagnostics(diagnostics => { diagnostics.begin(stageStarted, source.videoWidth, source.videoHeight, capture.input_width, capture.input_height, capture); });
+          scratch.width = capture.input_width; scratch.height = capture.input_height;
+          if (capture.kind === 'roi') context.drawImage(source, capture.crop_x, capture.crop_y, capture.crop_width, capture.crop_height, 0, 0, scratch.width, scratch.height);
+          else context.drawImage(source, 0, 0, scratch.width, scratch.height);
           recordDiagnostics(diagnostics => diagnostics.stage(attempt!, 'capture', performance.now() - stageStarted));
           stage = 'readback'; stageStarted = performance.now();
           const pixels = context.getImageData(0, 0, scratch.width, scratch.height).data;
@@ -281,7 +334,8 @@ function CameraReceiver(): React.JSX.Element {
           stage = 'submit';
           live.busy = true;
           const submittedAt = performance.now();
-          live.worker.postMessage({ type: 'image', attempt_id: attempt, pixels, width: scratch.width, height: scratch.height } satisfies WorkerInput, [pixels.buffer]);
+          live.worker.postMessage({ type: 'image', attempt_id: attempt, capture_epoch: capture.epoch, pixels, width: scratch.width, height: scratch.height } satisfies WorkerInput, [pixels.buffer]);
+          trackResult(tracker => tracker.submitted(attempt!, capture.epoch, submittedAt));
           // Only a successful dispatch is submitted. Dimensions were counted
           // before pixels.buffer became detached by transfer.
           recordDiagnostics(diagnostics => diagnostics.submitted(attempt!, submittedAt));
@@ -322,8 +376,14 @@ function CameraReceiver(): React.JSX.Element {
   const active = ['OPENING', 'ARMED', 'RECEIVING', 'IMPORTING'].includes(status);
   return <section className="panel" aria-labelledby="receive-title">
     <div className="section-heading"><span className="step">02</span><div><h2 id="receive-title">Receive & verify</h2><p>Enable the camera, align the QR, then start receiving.</p></div></div>
-    <div className="camera-stage"><video ref={video} muted playsInline aria-label="Camera preview" />{!active && <span>Camera is off</span>}</div>
+    <div className="camera-stage"><video ref={video} muted playsInline aria-label="Camera preview" />
+      {active && scanMode === 'auto_region' && tracking?.region && <svg className="tracking-overlay" role="img" aria-label="Tracked scan region" viewBox={`0 0 ${tracking.source_width} ${tracking.source_height}`} preserveAspectRatio="xMidYMid meet"><rect x={tracking.region.x} y={tracking.region.y} width={tracking.region.width} height={tracking.region.height} vectorEffect="non-scaling-stroke" /></svg>}
+      {!active && <span>Camera is off</span>}
+    </div>
     <div className="settings"><label>Expected test payload <select value={expectedKiB} disabled={active} onChange={event => setExpectedKiB(Number(event.target.value))}><option value={10}>10 KiB · 60 s timeout</option><option value={100}>100 KiB · 300 s timeout</option><option value={1024}>1 MiB · 3,072 s timeout</option></select></label><div className="state" aria-live="polite">{status}</div></div>
+    <label>Camera scan mode <select value={scanMode} disabled={active} onChange={event => setScanMode(event.target.value as CameraMode)}><option value="full_frame">Full frame · default</option><option value="auto_region">Auto region · experimental</option></select></label>
+    {scanMode === 'auto_region' && <p className="hint">Experimental tracking; faster transfers are unproven. Keep the complete QR in view.</p>}
+    {scanMode === 'auto_region' && status === 'RECEIVING' && <p className="tracking-state" role="status">{tracking?.state ?? 'Searching'}</p>}
     <div className="actions"><button disabled={active} onClick={() => { void enableCamera(); }}>Enable camera</button><button disabled={status !== 'ARMED'} onClick={startReceiving}>Start receiving</button><button className="secondary" disabled={!active} onClick={() => finish('cancelled', undefined, 'User stopped receiving.')}>Stop</button><button className="secondary" onClick={reset}>Reset session</button></div>
     <progress value={stats.recovered} max={Math.max(stats.total, 1)} aria-label="Symbols recovered" />
     <p className="mono" aria-live="polite">{stats.recovered}/{stats.total} symbols · {stats.duplicates} duplicates · {stats.rejected} rejected</p>

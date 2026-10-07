@@ -66,7 +66,9 @@ the real 20-trial acceptance runs. Check [CHECKPOINTS.md](CHECKPOINTS.md) for ap
 The [browser autoframing experiment](docs/planning/AUTOFRAMING_PLAN.md) starts with delivered
 full-frame diagnostics. After a timed camera trial, export the observation and separate camera
 diagnostics; the [collection guide](docs/benchmarks/BROWSER_DIAGNOSTICS.md) explains their bounds
-and checksum linkage. ROI tracking and measured speed gains remain pending; see CHECKPOINTS.md.
+and checksum linkage. An [opt-in ROI prototype](docs/benchmarks/BROWSER_AUTOFRAMING.md) is under local
+development/review and is not yet approved or deployed. Full-frame remains default; measured speed
+gains and physical adoption remain pending. See CHECKPOINTS.md.
 
 ## Implementation
 
@@ -96,7 +98,10 @@ simulator or generated-camera results in the physical benchmark table.
 ## Safety and boundaries
 
 Animated QR codes flash. Check your surroundings, use the 2 fps option to reduce flashing, and
-pause whenever needed; no playback rate is represented as medically safe. The maximum is 10 fps.
+pause whenever needed; no playback rate is represented as medically safe. Standard rates and the
+Python sender are capped at 10 fps. The local candidate adds opt-in browser **15/20/30 fps target
+rates** for exploratory tests, with a separate acknowledgement for the selected high rate. Actual
+display speed depends on rendering/device load; higher targets may miss receiver opportunities.
 Only transfer data you are authorized to move. There are no stealth features.
 
 Keep files small. Use a conventional channel when available for large files. Anyone able to

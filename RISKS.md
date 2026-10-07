@@ -19,7 +19,7 @@ Review at every milestone. The original scored register is preserved in the arch
 | Supply-chain defects | Lockfiles, dependency audits, pinned workflow actions | Audits configured |
 | Missing offline decoder assets | Explicit local WASM path; origin checks; future precache | Local WASM path tested |
 | Pages CSP limits | Document meta-policy limits; local scripts; no unsafe-inline/eval | Production CSP present |
-| Flashing images | Acknowledgement, ≤10 fps, 2 fps option and pause; no safe-rate guarantee | Harness/CLI controls |
+| Flashing images | Standard/CLI ≤10 fps, 2 fps option/pause; browser-only experimental 15/20/30 targets need extra selected-rate acknowledgement; no safe-rate guarantee | Higher targets requested Oct 7; actual speed/phone performance unproven |
 | Publication prerequisites | Preserve remote history; verify Pages/CI before claiming deployment | Remote supplied; see UPDATE.md |
 
 Stop expansion if fewer than 16/20 succeed at 10 KiB, or Tier B remains unmet after the single

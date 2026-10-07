@@ -8,7 +8,13 @@ Current status **2026-10-07 (IST)**: CP-02B.1 diagnostics is locally implemented
 46 browser checks pass, and development/testing explicitly agree PASS on the same frozen revision.
 The user approved its commit/push/Pages deployment on October 7; `6fb59f3` is delivered with
 hosted CI, Pages and both independent live reviews passing.
-CP-02B.2 and CP-02B.3 have not started.
+CP-02B.2 local development/testing started on October 7 from `8fad984`; CP-02B.3 remains pending.
+The user paused work at 00:57:56 IST and explicitly resumed with "Continue" at 07:52:41 IST October 7;
+partial edits were preserved and agents are resumed. Exclude that pause from engineering wall time.
+The user subsequently requested GitHub/manual-test delivery plus higher browser FPS on October 7.
+That authorizes combined reviewed delivery after checks, adding 15/20/30 fps exploratory sender
+targets and their evidence recording. Receiver sampling, full-frame default and adoption gates stay
+unchanged. No new prototype commit/deployment or physical performance result is claimed yet.
 See CHECKPOINTS.md and the latest UPDATE.md for the precise packet and measured work interval.
 
 ## Checkpoints and budget
