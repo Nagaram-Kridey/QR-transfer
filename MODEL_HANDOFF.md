@@ -6,9 +6,10 @@ protocol specification or the execution checklist. Refresh it after meaningful p
 
 ## 1. Where work stopped
 
-**CP-02B.2 has passed combined same-revision review; the user authorized GitHub/manual-test
-delivery with higher browser FPS on October 7.** Base `8fad984`. Commit/push the reviewed part,
-inspect hosted CI, dispatch Pages and verify the live build. The request covers the
+**CP-02B.2 has passed combined same-revision review and is deployed for manual testing.** Base
+`8fad984`. Reviewed implementation commit `19b5ca3` and workflow correction `e637cdf` are on
+`main`; hosted CI and Pages passed. Live URL: https://nagaram-kridey.github.io/QR-transfer/.
+The request covers the
 opt-in tracker plus browser 15/20/30 fps experimental targets and related exploratory-only benchmark
 recording. It does not authorize ROI adoption, G2 or later stages. CP-02B.3 still needs physical data.
 

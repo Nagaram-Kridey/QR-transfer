@@ -323,7 +323,15 @@ Both same-revision reviews are recorded in
 [development](docs/reviews/CP-02B.2-development.md) and [testing](docs/reviews/CP-02B.2-testing.md).
 They agree **PASS** for this manual-test delivery with no known unresolved in-scope blocker at
 freeze `27adca065b0f31a1ee319705c731934836dba999146aa07d3731c61a7cd44326`.
-Commit, hosted CI, Pages deployment and live URL verification remain to be recorded below.
+Delivery is complete. Reviewed implementation commit `19b5ca391e692d5b1a503529ab9058700fc28eff`
+was pushed to `main`; hosted CI passed at
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37575340215. The first Pages run
+failed because its workflow omitted replay-fixture generation; workflow correction
+`e637cdf675fe209d695efaedd231e71a88829eb2` was pushed, hosted CI passed at
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37575923334, and Pages completed at
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37576176736. The live project-base URL
+is https://nagaram-kridey.github.io/QR-transfer/ and returned HTTP 200 with the Auto region and
+15/20/30 fps UI assets. This is ready for manual testing; physical adoption remains CP-02B.3.
 
 ## Approval packet template
 

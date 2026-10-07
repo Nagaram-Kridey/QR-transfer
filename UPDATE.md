@@ -81,6 +81,29 @@ delivery record rather than treating it as a product failure.
 **Blockers:** Pages publication is temporarily blocked by the workflow correction. Physical
 autoframing benefit and G2 remain outside this delivery.
 
+## 2026-10-07 — CP-02B.2 deployed for manual testing (Asia/Kolkata)
+
+**Done:** Pushed the reviewed autoframing and exploratory-rate implementation as
+`19b5ca391e692d5b1a503529ab9058700fc28eff`. Hosted CI passed all required jobs at
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37575340215. The first Pages run
+failed only because the deployment workflow lacked replay-fixture generation; added that step,
+pushed workflow correction `e637cdf675fe209d695efaedd231e71a88829eb2`, and Pages then completed
+successfully at https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37576176736.
+
+**Verified:** The live project-base URL https://nagaram-kridey.github.io/QR-transfer/ returned
+HTTP 200. Its JavaScript and CSS assets returned HTTP 200 and the built JavaScript contains the
+Auto region selector plus 15, 20 and 30 fps target options. The public build is ready for the
+requested Windows/Android manual check. No physical result is inferred from this availability
+check.
+
+**Next:** On the Samsung A17 5G and Windows pair, compare Full frame and Auto region using the
+documented exploratory procedure. Record the selected target FPS, payload/settings, failures,
+and exported diagnostics. Treat 15/20/30 as experimental targets whose actual display and
+reception rates are unmeasured. Review the result at CP-02B.3 before changing the default.
+
+**Blockers:** None for hosted manual testing. Physical adoption thresholds, iPhone evidence,
+security/PWA milestones and G2 remain outstanding.
+
 ## Entry format for future updates
 
 Append a dated entry after every meaningful code, documentation, measurement or release update.
