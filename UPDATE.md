@@ -10,16 +10,13 @@ Both agents agree PASS on snapshot
 `91675844c1ca3f90f87779288a92ec1376bd4284d704916519df49a644287374`.
 69 unit tests and 46 browser tests pass; exact observation/export linkage and the GitHub Pages base
 were checked locally. Candidate `6fb59f3` is pushed/deployed; hosted CI, Pages and both live reviews
-passed. Delivery notes `8fad984` are pushed with passing CI. CP-02B.2 local implementation and
-adversarial testing started on October 7; full-frame remains the default and its new prototype
-requires final combined checks and both reviews before delivery. The user explicitly requested
-GitHub/manual-test delivery plus higher browser FPS on October 7; that authorizes reviewed commit/
-push/Pages deployment after hosted CI passes. No physical ROI
-benefit or G2 qualification is claimed.
+passed. Delivery notes `8fad984` are pushed with passing CI. CP-02B.2 implementation `19b5ca3`,
+Pages workflow correction `e637cdf` and log update `4153c27` are pushed; hosted CI and Pages
+passed. Full-frame remains the default and no physical ROI benefit or G2 qualification is claimed.
 **Pause/resume:** the user paused work at 00:57:56 IST October 7 and explicitly resumed with
 "Continue" at 07:52:41 IST. Agents resumed from preserved partial edits; exclude the pause from
-the engineering timebox. Combined manual-test delivery is now authorized; no new commit/deployment
-is claimed until actual review/check/delivery results are recorded.
+the engineering timebox. Combined manual-test delivery is complete; the live build is ready for
+manual checking and actual physical results remain to be recorded.
 Existing delivery:
 implementation resumed with
 [CHECKPOINTS.md](CHECKPOINTS.md): separate development/adversarial-testing agents, agreement on each

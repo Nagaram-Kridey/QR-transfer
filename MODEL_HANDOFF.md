@@ -32,9 +32,10 @@ behavior has separate geometry/mocked lifecycle regressions. Decoder options rem
 Current checks reported: 310 Python tests (213 benchmark), 123 Vitest (codec-only coverage 100%),
 Ruff/format/mypy/lint/types/build/vector checks; 60 camera/harness cases plus actual replay passed
 (61 passes, two non-Chromium replay skips), then 21 cross-engine sender cases passed for the rate
-addition. The receiver function is byte-identical across that sender addition. Minimal sender label
-cleanup and final project-base native-ROI save smoke/review remain in progress; read the latest log
-for final counts/fingerprint. No new candidate commit, hosted CI or Pages deployment is claimed yet.
+addition. The receiver function is byte-identical across that sender addition. Final project-base
+smoke passed; implementation `19b5ca3`, workflow correction `e637cdf` and log update `4153c27` are
+pushed, hosted CI and Pages passed, and the live URL is ready for manual testing. No physical
+benefit or adoption is claimed.
 
 Budget: B2 began 00:45:30 IST, paused at 00:57:56 and explicitly resumed at 07:52:41 October 7.
 Exclude the user pause from the eight-hour engineering cap (2 diagnostics, 3 implementation,
@@ -71,7 +72,7 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at current handoff | `main` at `8fad984`; CP-02B.2 local source/tests/docs in progress |
+| Branch at current handoff | `main` at `4153c27`; CP-02B.2 deployed for manual testing |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
 | Latest delivered Python code | `d6b0a7b` — approved benchmark recording/summary tooling |
