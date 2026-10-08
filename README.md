@@ -72,9 +72,9 @@ and checksum linkage. An [opt-in ROI prototype](docs/benchmarks/BROWSER_AUTOFRAM
 for manual testing with experimental 15/20/30 fps sender targets. Full-frame remains default; measured speed
 gains and physical adoption remain pending. See CHECKPOINTS.md.
 
-The local CP-02D candidate adds dark framing to the sender and a contrasting receiver region
-outline/outside shade, including a portrait preview alignment repair. It awaits checkpoint approval
-and deployment. Receiver framing is visible in Auto region only after a valid frame is admitted;
+The approved/deployed CP-02D build adds dark framing to the sender and a contrasting receiver region
+outline/outside shade, including a portrait preview alignment repair. Refresh both devices to load
+the new build. Receiver framing is visible in Auto region only after a valid frame is admitted;
 it marks the padded scan input, not a promised detection-speed gain. The
 [throughput debate/plan](docs/planning/THROUGHPUT_PLAN.md) covers density, capture and missing-frame
 feedback as gated future work, alongside the existing PWA/security/release sequence.
@@ -114,7 +114,7 @@ simulator or generated-camera results in the physical benchmark table.
 
 Animated QR codes flash. Check your surroundings, use the 2 fps option to reduce flashing, and
 pause whenever needed; no playback rate is represented as medically safe. Standard rates and the
-Python sender are capped at 10 fps. The local candidate adds opt-in browser **15/20/30 fps target
+Python sender are capped at 10 fps. The deployed harness includes opt-in browser **15/20/30 fps target
 rates** for exploratory tests, with a separate acknowledgement for the selected high rate. Actual
 display speed depends on rendering/device load; higher targets may miss receiver opportunities.
 Only transfer data you are authorized to move. There are no stealth features.

@@ -25,10 +25,11 @@ The original owner-context narrative is preserved in the archived draft.
 October 8 CP-02D continuation: actual resume was 11:07 AM IST, after the requested 02:50 start
 was missed. The user requested a throughput debate and dark QR framing in **both** views. Debate
 is complete; its gated plan is linked into IMPLEMENTATION_PLAN.md without displacing G2/PWA/
-security work. Local App/style changes add sender framing, receiver outside shading/contrasting
+security work. Approved/deployed App/style changes add sender framing, receiver outside shading/contrasting
 outline and a reproduced portrait preview alignment repair. 49 focused E2E cases and unchanged
-conformance checks pass; final independent review/approval is the current checkpoint. No feedback
-or new speed mechanism has been implemented. Existing deployed CP-02C remains live until approval.
+conformance checks pass; CP-02D is delivered as `c5ce0f7` with hosted CI, Pages and both independent
+live reviews passing. No feedback or new speed mechanism has been implemented. Physical trials
+and later features remain separately gated; refresh both endpoints for the current UI.
 
 October 7 continuation: CP-02B.2 is deployed for manual testing (implementation `19b5ca3`,
 workflow fix `e637cdf`). The user supplied a full-frame success observation and linked diagnostics,

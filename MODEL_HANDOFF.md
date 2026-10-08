@@ -17,23 +17,28 @@ request authorizes local work at that time, not an automatic commit/push/Pages d
 
 Current CP-02D: the debate is complete and both agents agree on the bounded
 `docs/planning/THROUGHPUT_PLAN.md`, now linked into IMPLEMENTATION_PLAN.md. The dark framing
-candidate is local in App.tsx/style.css; 49 focused E2E and 147 Vitest cases pass. Sender shadow is outside the original
+build is approved/deployed as `c5ce0f7`; 49 focused E2E and 147 Vitest cases pass. Sender shadow is outside the original
 canvas/white quiet zone; receiver shades outside the padded admitted scan region and uses contrasting
 dark/white outlines. Capture/worker/codec/tracker files are unchanged. Feedback/compression/LT and
-new speed mechanisms are planning only. Both final reviews and explicit commit/push/Pages approval
-must precede delivery. Both independent reports now explicitly agree PASS on the same final six
-paths; the user explicitly **approved CP-02D commit/push and Pages after hosted CI on October 8**.
-Delivery is in progress; inspect actual CI/deployment/live outcomes and log them. Source is
-frozen; no confirmed in-scope issue remains. Previously pending documentation CI `37665632955` ended cancelled; source
+new speed mechanisms are planning only. Both final reviews agreed PASS on the same six paths;
+the user explicitly **approved CP-02D commit/push and Pages on October 8**. Implementation
+`c5ce0f7c344108b9363d409113ffb125e70137b5` is pushed; [CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757)
+and [Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881) passed. Both
+independent hosted reviews passed sender pixels/quiet zone/screenshot decode, portrait/landscape
+alignment and actual synthetic optical saves. The live site serves CP-02D. No runtime changes
+followed review; administrative completion status is updated in the plan/checklist. Previously
+pending documentation CI `37665632955` ended cancelled; source
 delivery CI/Pages/live verification for CP-02C passed. Do not invent the cancellation cause.
 The initial portrait repro retained 19 passes/two failures at about 75.7-pixel offset; the CSS video
 positioning repair passes the same subpixel checks (<0.1 pixels) and actual clean/degraded software
 transfers. Twelve sender screenshots across three engines were independently decoded. All source/
-test/plan work is frozen at six-path fingerprint
-`b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6` for final reports. Root verified
+test/plan work at implementation commit `c5ce0f7` matches the reviewed six-path fingerprint
+`b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6`. Later administrative status
+updates in IMPLEMENTATION_PLAN/THROUGHPUT_PLAN do not change the approved work order. Root verified
 lint/types, original cross-language vectors and default/project-base builds. Read CHECKPOINTS.md
-and both CP-02D reports before requesting approval. Administrative status files are outside the
-fingerprint; capture/tracker/worker/codec/spec/vector files are unchanged from `61dab08`.
+and both CP-02D reports before continuing. Capture/tracker/worker/codec/spec/vector files are
+unchanged from `61dab08`. Next is operator-collected physical evidence; do not automatically start
+CP-02E or feedback implementation just because it is listed. New feature approval remains required.
 
 Latest task on October 7: **CP-02C larger-file capacity is approved and delivered for manual testing.** Base
 `6cd5d925adc1251cffbc90099010f1ec525f802b`. Requested scope is a bounded 5 MiB original-file maximum,
@@ -120,11 +125,11 @@ Full v1 still needs both device pairs.
 | Workspace | `C:\Users\NAGARAM KRIDEY\Desktop\QR Project` |
 | Authorized repository | [Nagaram-Kridey/QR-transfer](https://github.com/Nagaram-Kridey/QR-transfer) |
 | Git remote | `https://github.com/Nagaram-Kridey/QR-transfer.git` |
-| Branch at current handoff | `main` contains CP-02C implementation `c451a1a` plus delivery notes |
+| Branch at current handoff | `main` contains CP-02D implementation `c5ce0f7` plus delivery notes |
 | Implementation commit | `8eb1d1c` — wire-v2 plaintext feasibility build |
 | CP-01 review base | `d40966e` — complete handoff and delivery log |
 | Latest delivered Python code | `c451a1a` — 5 MiB capacity, adaptive density, bounded imports |
-| Deployed browser code | `c451a1a` — 5 MiB capacity with autoframing and exploratory FPS |
+| Deployed browser code | `c5ce0f7` — dark framing/portrait alignment with 5 MiB and exploratory FPS |
 | Original history retained | `c25d645` — initial commit; no history rewrite |
 | Hosted experiment | [GitHub Pages harness](https://nagaram-kridey.github.io/QR-transfer/) |
 | Application versions | Python `0.1.0.dev0`; browser `0.1.0-dev.0` |

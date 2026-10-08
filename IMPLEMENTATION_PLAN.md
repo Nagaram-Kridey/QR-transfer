@@ -50,8 +50,9 @@ contracts. G2/physical ROI, portfolio, PWA, complete security/compression and LT
 - [x] CP-02C 5 MiB experimental repeat capacity: approved/delivered as `c451a1a`; bounded imports,
   adaptive symbol selection, larger-file conformance and adversarial checks passed. Hosted CI,
   Pages and both independent live software checks passed. Physical larger-file results pending.
-- [ ] CP-02D throughput debate/implementation-plan integration and dark QR framing on sender and
-  receiver preview: local work; preserve quiet zones, native tracking coordinates and capture logic.
+- [x] CP-02D throughput debate/plan integration, dark QR framing on both views and portrait preview
+  alignment repair: approved/delivered as `c5ce0f7`; CI, Pages and both independent live checks pass.
+  This is visibility/alignment and planning work; no new throughput mechanism or physical gain.
 - [ ] Proposed CP-02E verified-throughput instrumentation/density/capture experiment: do not start
   without an approved measured contract; adding this task does not authorise implementing it.
 - [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.

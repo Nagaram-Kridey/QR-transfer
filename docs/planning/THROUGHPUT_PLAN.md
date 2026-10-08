@@ -1,7 +1,7 @@
 # Verified-throughput debate and investigation plan
 
-Date: 2026-10-08, Asia/Kolkata. Status: development/adversarial debate agreed; local CP-02D
-documentation, awaiting final same-revision review and user approval. Future experiments below
+Date: 2026-10-08, Asia/Kolkata. Status: debate agreed; CP-02D approved/delivered as `c5ce0f7`,
+with CI/Pages and both independent live software reviews passing. Future experiments below
 are planned, not implemented or automatically authorised. Adding this plan does not make it the
 sole workstream or replace physical feasibility, PWA, security or release work.
 

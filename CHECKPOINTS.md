@@ -58,7 +58,7 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-02B.2 | Experimental browser autoframing and requested exploratory sender rates | CP-02B.1 delivery; bounded ROI/replay plus combined dev/test agreement | Reviewed, pushed and Pages-deployed for manual testing; full-frame default |
 | CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
 | CP-02C | Bounded larger-file capacity | Consistent Python/browser limits, oversized-input rejection, independent conformance and both reviews | Approved/delivered as c451a1a; CI, Pages and both independent live reviews passed |
-| CP-02D | Throughput debate/plan and QR framing visibility | Agreed debate, bounded sender/preview change, quiet-zone/geometry/optical regressions and both reviews | User approved October 8; frozen commit/push/CI/Pages delivery in progress |
+| CP-02D | Throughput debate/plan and QR framing visibility | Agreed debate, bounded sender/preview change, quiet-zone/geometry/optical regressions and both reviews | Approved/delivered as c5ce0f7; CI, Pages and both independent live reviews passed |
 | CP-02E (proposed) | Verified-throughput investigation | Fresh opportunities/missing-tail evidence, frozen contract, budget and explicit approval | Planning only; not authorised by plan inclusion |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
@@ -414,8 +414,16 @@ scoped review evidence, not user approval or a physical performance result.
 
 Approval requested: **commit/push CP-02D and deploy to GitHub Pages after hosted CI passes**, including
 the source/tests, agreed plan, current documentation/logs and both review reports. This approval
-was explicitly received as **"Approved" on October 8**. Delivery is in progress; the live site
-still serves CP-02C until the approved deployment is verified. It does not authorise implementing
+was explicitly received as **"Approved" on October 8**. Approved implementation
+`c5ce0f7c344108b9363d409113ffb125e70137b5` is committed/pushed. [Hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757)
+passed, then [Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881) was
+dispatched and completed for that exact commit. Expected live JS/CSS/worker/WASM assets return
+HTTP 200. Both independent live reviews PASS: exact sender pixels/quiet zone and screenshot
+decoding, true portrait/landscape preview geometry, clear region interior/stale clearing and
+actual hosted-worker synthetic optical saving with diagnostic linkage. Generated evidence stays
+ignored. CP-02D delivery is verified; no application changes followed the reviewed freeze.
+Administrative completion status updates do not change the agreed plan or tested UI.
+This delivery does not authorise implementing
 the planned feedback/throughput experiments or claim any measured transfer-speed gain.
 
 For each checkpoint record:

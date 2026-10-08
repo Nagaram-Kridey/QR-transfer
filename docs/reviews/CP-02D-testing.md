@@ -101,3 +101,39 @@ engines do not qualify phone throughput, physical ROI adoption, G2 or iPhone sup
 Commit/push and GitHub Pages deployment require a new explicit CP-02D approval. The current live
 site remains CP-02C until that approval and successful delivery. Both agents' agreement is a
 technical review result and does not replace the user's checkpoint approval.
+
+## Approved delivery verification — 2026-10-08, Asia/Kolkata
+
+**Independent hosted software verification PASS.** The user approved CP-02D delivery, and
+implementation `c5ce0f7c344108b9363d409113ffb125e70137b5` is now published at
+https://nagaram-kridey.github.io/QR-transfer/. The reviewer independently recomputed the six-path
+fingerprint above and verified those files match the committed revision without differences.
+The coordinator reported exact-commit [CI success](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757)
+and [Pages success](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881) before
+the reviewer began the hosted checks.
+
+Actual hosted checks, using public synthetic fixtures only:
+
+- Mobile 390-pixel/256-byte and desktop 1280-pixel/1024-byte sender preparations passed complete
+  RGBA/quiet-zone comparisons: zero mismatched pixels, integer three-pixel module scale, no CSS
+  rescaling, external six-pixel dark shadow and no horizontal overflow. Both full-page sender PNGs
+  independently decoded through Python `zxingcpp` and `decode_frame` checksum/bounds validation.
+- True 640x480 landscape and 720x1280 portrait synthetic video streams, both on a 390-pixel
+  viewport, passed native padded-region projection/size checks below 0.1 display pixels. The
+  displayed stage remained 4:3. The mask interior was clear, exterior shaded, dark/white outlines
+  coincident, pointer events passed through and no horizontal overflow occurred. Reset and a late
+  held worker response could not restore the tracking outline. These geometry checks deliberately
+  mock worker admission and do not establish camera decoding performance.
+- A separate actual production worker/WASM synthetic optical trial saved the exact **320-byte**
+  public fixture, SHA-256 `5911335f7416557fb64c1956e6d78a9ad92fd950c152992ceb37de2227c32e2e`.
+  One ROI scan completed, observation/diagnostic SHA-256 linkage passed, no pending interruption
+  remained, and the completed tracking outline was hidden.
+- Hosted index, `index-WDP4yxJJ.js`, `index-CqLTdv7Q.css`, `receiver.worker-DYrXf6hs.js` and
+  self-hosted `zxing_reader-Bb9Mx2Pu.wasm` returned HTTP 200. Across these checks there were no
+  page errors or external runtime requests. Full frame remains the default.
+- Reviewer visually inspected hosted sender and portrait preview screenshots. Original test
+  scripts, screenshots, observations, exports and saved fixture remain ignored under
+  `artifacts/cp02d-live-testing`; the compact results are in its local `result.json`.
+
+This verifies approved software delivery and manual-test readiness. No physical Samsung/iPhone
+trial, faster-transfer result, energy claim, ROI adoption or G2 decision is established.

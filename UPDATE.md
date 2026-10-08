@@ -13,8 +13,8 @@ over the existing implementation sequence, and review/improve QR framing visibil
 box. Existing approval checkpoints and separate development/testing reviews remain in force.
 Current CP-02D local verification passes: 49 focused E2E, 147 Vitest, lint/types/build and unchanged
 cross-language vectors. The portrait alignment defect is repaired; both independent reports agree
-PASS on the same final revision. The user approved commit/push/Pages on October 8; delivery is
-in progress. No throughput algorithm ships
+PASS on the same final revision. The user approved commit/push/Pages on October 8; CP-02D is
+delivered as `c5ce0f7` with hosted CI, Pages and both independent live checks passing. No throughput algorithm ships
 merely because the new plan was recorded.
 The supplied observation and diagnostics match by exact bytes/hash and record one full-frame
 859.318 KiB success in 864.4303 seconds. See the retained analysis under `docs/benchmarks`.
@@ -1088,3 +1088,81 @@ delivery results before ending this checkpoint. Future speed/feedback work remai
 
 **Blockers:** Hosted CI, Pages and live checks pending. No known in-scope software blocker remains.
 No measured throughput, phone qualification or G2 result is inferred from this delivery.
+
+## 2026-10-08 — CP-02D pushed; hosted CI running (Asia/Kolkata)
+
+**Done:** Committed/pushed the approved plan, visual/alignment change, tests and documentation as
+`c5ce0f7c344108b9363d409113ffb125e70137b5`. Source and plan are frozen. Existing development and
+adversarial agents are preparing separate hosted software checks, awaiting publication readiness.
+
+**Verified:** Push succeeded; local `main` was clean after push. Hosted CI began for this exact
+commit at https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757. The testing
+agent independently matched the committed six-path approval fingerprint. CI is in progress,
+not yet claimed successful; the live site still serves CP-02C.
+
+**Next:** Wait for CI, dispatch Pages after success, verify expected live assets and both independent
+UI/optical software checks, then record delivery. Generated images/streams/exports remain ignored.
+
+**Blockers:** Hosted checks/deployment/live review pending. Speed/feedback work remains planned,
+and no physical transfer-speed improvement or adoption decision is claimed.
+
+## 2026-10-08 — CP-02D hosted CI passed; Pages dispatched (Asia/Kolkata)
+
+**Done:** Hosted CI passed for implementation commit
+`c5ce0f7c344108b9363d409113ffb125e70137b5`. Dispatched the approved Pages workflow afterward
+(HTTP 204), selecting `main` at that same source commit.
+
+**Verified:** CI https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757 reports
+completed/success. All required Windows/Linux Python, audit and browser/interop jobs passed.
+Pages https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881 is queued/running
+for that exact commit; published availability and live tests have not yet been claimed complete.
+
+**Next:** Wait for Pages, verify expected project-base assets and source identity, then run both
+independent live UI/optical software checks. Record actual deployment and review results.
+
+**Blockers:** Pages/live verification pending. Planned throughput/feedback experiments are not
+implemented by this delivery, and physical adoption/G2 remain separate.
+
+## 2026-10-08 — CP-02D Pages published; independent live checks started (Asia/Kolkata)
+
+**Done:** Pages completed successfully for approved implementation
+`c5ce0f7c344108b9363d409113ffb125e70137b5`:
+https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881. Both independent agents
+started their prepared hosted software checks against the new build.
+
+**Verified:** Root fetched https://nagaram-kridey.github.io/QR-transfer/ with HTTP 200 and the
+expected `index-WDP4yxJJ.js` and `index-CqLTdv7Q.css`. Those files, local receiver worker and
+WASM all returned HTTP 200. Sender frame/receiver mask styles are present. This establishes
+published availability; the independent live geometry/saving outcomes are still pending.
+
+**Next:** Finish actual live reviews, retain generated evidence locally, update delivery state
+and push the administrative notes. No source/test/plan changes during these checks.
+
+**Blockers:** Independent live checks pending. No physical throughput/ROI claim is made.
+
+## 2026-10-08 — CP-02D approved delivery verified (Asia/Kolkata)
+
+**Done:** Approved implementation `c5ce0f7c344108b9363d409113ffb125e70137b5` is pushed and live at
+https://nagaram-kridey.github.io/QR-transfer/. Both agents appended actual independent hosted
+results to their CP-02D reviews and agree delivery PASS. Updated current status in README,
+context/handoff, checkpoints and planning documents. Later status-only edits to plan/checklist
+do not implement or reprioritise future throughput features; runtime/test files remain frozen.
+
+**Verified:** [CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757) and
+[Pages](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881) passed for the exact
+approved source commit and its reviewed six-path fingerprint. Live JS/CSS/worker/WASM returned
+HTTP 200. Both agents verified exact sender pixels/white quiet zone and decoded framed full-page
+screenshots with Python wire validation. True portrait/landscape streams aligned within 0.1 pixels,
+with clear mask interior, nonblocking controls and stale/stop/reset clearing. Actual production
+worker Auto-region tests saved the exact public 320-byte fixture with matching observation/
+diagnostic hashes; both observed no page errors or external runtime requests. Generated images,
+streams/exports/downloads remain ignored. These checks establish software delivery, not phone speed.
+
+**Next:** Manual Windows/Android checking: refresh both devices; prepare a QR to see the sender
+border; select Auto region and begin receiving to see the padded-region surround after admission.
+Retain real observations/settings for physical comparisons. CP-02E and return feedback are planned
+future work with separate approval/budget/measurement gates, alongside existing PWA/security work.
+
+**Blockers:** No known blocker for this approved application delivery. Physical throughput,
+autoframing adoption, authenticated feedback and G2 remain unqualified. Documentation-only notes
+will be pushed after this record; no new application deployment is needed for those status edits.

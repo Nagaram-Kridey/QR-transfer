@@ -81,3 +81,41 @@ final passing result on the frozen fingerprint above. No confirmed in-scope issu
 The coordinator should obtain the independent testing report on that same fingerprint, refresh
 the administrative logs, then present CP-02D for explicit approval including any proposed Pages
 deployment. Physical comparisons and future throughput mechanisms remain separate checkpoints.
+
+## Approved delivery verification — 2026-10-08
+
+The user approved CP-02D delivery. Independently verified implementation commit
+`c5ce0f7c344108b9363d409113ffb125e70137b5`: all six fingerprinted paths match HEAD with no diff,
+and the recomputed fingerprint remains `b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6`.
+The coordinator verified [hosted CI](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37738942757)
+and [Pages deployment](https://github.com/Nagaram-Kridey/QR-transfer/actions/runs/37739423881)
+success on this exact source commit before requesting independent live checks.
+
+Independent development live check: **PASS** at
+https://nagaram-kridey.github.io/QR-transfer/. The index, expected JavaScript
+`index-WDP4yxJJ.js`, CSS `index-CqLTdv7Q.css`, worker `receiver.worker-DYrXf6hs.js` and local WASM
+returned HTTP 200. No page errors or external runtime requests occurred.
+
+- Public 1500-byte sender fixture: zero RGBA mismatches against the exported frame's QR,
+  exact four-module white quiet zone, six display pixels/module, 462-pixel intrinsic/displayed
+  canvas and external six-pixel dark shadow. Python zxing-cpp independently decoded the hosted
+  full-page screenshot to the exact exported first frame; wire checksum/bounds passed.
+- True 640 x 480 and 720 x 1280 synthetic video streams at a 390-pixel viewport with controlled
+  admitted-region responses: native/video/SVG projection and size errors below 0.00001 display
+  pixels, clear region interior, shaded exterior, nonblocking input, six/two-pixel outlines and
+  no overlay after stopping. This isolates live preview geometry; admissions in these two
+  geometry checks were mocked.
+- Separate actual production camera/worker/WASM path in Auto region using the public synthetic
+  QR recording: exact 320-byte saved file, SHA-256
+  `5911335f7416557fb64c1956e6d78a9ad92fd950c152992ceb37de2227c32e2e`, two completed ROI scans and
+  one completed full scan. Observation/diagnostic digest linkage passed and the completed
+  overlay was cleared.
+- Visually inspected the hosted full-page sender and portrait preview screenshots. Dark sender
+  framing leaves the white quiet zone visible; the portrait tracking box aligns with the
+  controlled region inside the stable letterboxed preview.
+
+The result JSON, public fixture export and screenshots remain under ignored
+`artifacts/cp02d-live-development`. No received/user data was committed or uploaded. These checks
+verify hosted software and synthetic optical behavior; physical phone performance, ROI adoption,
+G2 and new throughput mechanisms remain unqualified. Development continues to agree PASS on the
+approved revision with no known in-scope blocker.
