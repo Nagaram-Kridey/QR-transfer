@@ -27,6 +27,12 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 
 ## Stage 1 — Baseline and feasibility
 
+October 8 [throughput debate and plan](docs/planning/THROUGHPUT_PLAN.md) is now part of this
+implementation plan. It adds a gated backlog, not automatic priority over the existing stages.
+Current CP-02D implements only dark framing/visibility in both UI views after the debate.
+Proposed CP-02E measurement and optional reverse-feedback experiments need their own approved
+contracts. G2/physical ROI, portfolio, PWA, complete security/compression and LT retain their order.
+
 - [x] Python Base45, bounded frame parser, canonical container, repeat sender/receiver.
 - [x] Session locking, duplicate/conflict detection, safe filenames, no overwrite/auto-open.
 - [x] CLI local QR display/capture, frame import/export, deterministic lossy-channel simulator.
@@ -44,6 +50,10 @@ Exit: reproducible setup and passing checks. No camera or security claims.
 - [x] CP-02C 5 MiB experimental repeat capacity: approved/delivered as `c451a1a`; bounded imports,
   adaptive symbol selection, larger-file conformance and adversarial checks passed. Hosted CI,
   Pages and both independent live software checks passed. Physical larger-file results pending.
+- [ ] CP-02D throughput debate/implementation-plan integration and dark QR framing on sender and
+  receiver preview: local work; preserve quiet zones, native tracking coordinates and capture logic.
+- [ ] Proposed CP-02E verified-throughput instrumentation/density/capture experiment: do not start
+  without an approved measured contract; adding this task does not authorise implementing it.
 - [ ] CP-02B.3 measured autoframing adoption/rejection; no assumed speed benefit.
 - [ ] Retain user-reported both-direction smoke successes with measured exports/settings.
 - [ ] Android Chrome and iPhone Safari physical camera smoke tests.
@@ -85,6 +95,9 @@ Dependency: Stage 2 and supported-device evidence.
 Do not replace physical mobile checks with desktop WebKit emulation or Lighthouse scores.
 
 ## Stage 4 — Security and compression
+
+The throughput plan retains compression here. Optional feedback needs separate schema/conformance,
+resource/replay and authentication review; it does not silently change the one-way wire-v2 profile.
 
 Dependency: reliable browser transfer. Future reserved modes are rejected by the current build.
 

@@ -104,7 +104,7 @@ function Sender(): React.JSX.Element {
       <button onClick={() => { void prepare(); }}>{preparing ? 'Preparing…' : 'Prepare QR'}</button>
     </fieldset>
     <div className="qr-stage">
-      <canvas ref={canvas} aria-label="Transfer QR code" hidden={!transfer} />
+      <canvas className="qr-display" ref={canvas} aria-label="Transfer QR code" hidden={!transfer} />
       {!transfer && <p className="placeholder">Your QR will appear here.<br /><small>Use a non-sensitive file, up to 5 MiB.</small></p>}
     </div>
     <label className="check"><input type="checkbox" checked={acknowledged} disabled={playing} onChange={event => setAcknowledged(event.target.checked)} />I understand that animated QR codes flash. I have checked the surroundings before playback.</label>
@@ -383,12 +383,16 @@ function CameraReceiver(): React.JSX.Element {
   return <section className="panel" aria-labelledby="receive-title">
     <div className="section-heading"><span className="step">02</span><div><h2 id="receive-title">Receive & verify</h2><p>Enable the camera, align the QR, then start receiving.</p></div></div>
     <div className="camera-stage"><video ref={video} muted playsInline aria-label="Camera preview" />
-      {active && scanMode === 'auto_region' && tracking?.region && <svg className="tracking-overlay" role="img" aria-label="Tracked scan region" viewBox={`0 0 ${tracking.source_width} ${tracking.source_height}`} preserveAspectRatio="xMidYMid meet"><rect x={tracking.region.x} y={tracking.region.y} width={tracking.region.width} height={tracking.region.height} vectorEffect="non-scaling-stroke" /></svg>}
+      {active && scanMode === 'auto_region' && tracking?.region && <svg className="tracking-overlay" role="img" aria-label="Tracked scan region" viewBox={`0 0 ${tracking.source_width} ${tracking.source_height}`} preserveAspectRatio="xMidYMid meet">
+        <path className="tracking-mask" fillRule="evenodd" d={`M0 0H${tracking.source_width}V${tracking.source_height}H0Z M${tracking.region.x} ${tracking.region.y}h${tracking.region.width}v${tracking.region.height}h-${tracking.region.width}Z`} />
+        <rect className="tracking-outline-dark" x={tracking.region.x} y={tracking.region.y} width={tracking.region.width} height={tracking.region.height} vectorEffect="non-scaling-stroke" />
+        <rect className="tracking-outline" x={tracking.region.x} y={tracking.region.y} width={tracking.region.width} height={tracking.region.height} vectorEffect="non-scaling-stroke" />
+      </svg>}
       {!active && <span>Camera is off</span>}
     </div>
     <div className="settings"><label>Expected test payload <select value={expectedKiB} disabled={active} onChange={event => setExpectedKiB(Number(event.target.value))}><option value={10}>10 KiB · 60 s timeout</option><option value={100}>100 KiB · 300 s timeout</option><option value={1024}>1 MiB · 3,072 s timeout</option><option value={2048}>2 MiB · 6,144 s timeout · experimental</option><option value={5120}>5 MiB · 15,360 s timeout · experimental</option></select></label><div className="state" aria-live="polite">{status}</div></div>
     <label>Camera scan mode <select value={scanMode} disabled={active} onChange={event => setScanMode(event.target.value as CameraMode)}><option value="full_frame">Full frame · default</option><option value="auto_region">Auto region · experimental</option></select></label>
-    {scanMode === 'auto_region' && <p className="hint">Experimental tracking; faster transfers are unproven. Keep the complete QR in view.</p>}
+    {scanMode === 'auto_region' && <p className="hint">Experimental tracking; faster transfers are unproven. The dark surround marks the padded scan region after a valid QR is received. Keep the complete QR in view.</p>}
     {scanMode === 'auto_region' && status === 'RECEIVING' && <p className="tracking-state" role="status">{tracking?.state ?? 'Searching'}</p>}
     <div className="actions"><button disabled={active} onClick={() => { void enableCamera(); }}>Enable camera</button><button disabled={status !== 'ARMED'} onClick={startReceiving}>Start receiving</button><button className="secondary" disabled={!active} onClick={() => finish('cancelled', undefined, 'User stopped receiving.')}>Stop</button><button className="secondary" onClick={reset}>Reset session</button></div>
     <progress value={stats.recovered} max={Math.max(stats.total, 1)} aria-label="Symbols recovered" />

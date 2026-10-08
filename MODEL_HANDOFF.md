@@ -1,10 +1,39 @@
 # LumenLink: next-model handoff
 
-Snapshot: **2026-10-07, Asia/Kolkata (IST)**. Read this before continuing the project.
+Snapshot: **2026-10-08, Asia/Kolkata (IST)**. Read this before continuing the project.
 This document explains the existing implementation and the next steps; it does not replace the
 protocol specification or the execution checklist. Refresh it after meaningful progress.
 
 ## 1. Where work stopped
+
+**October 8 resume:** The user explicitly requested continuation; actual resume was **11:07 AM IST**.
+The requested 02:50 AM start was missed during the waiting session; do not claim work began then.
+Run a development/adversarial
+debate about increasing verified data throughput beyond FPS, including optional sender/receiver
+feedback and targeted missing frames. Record the agreed plan without making it the sole workstream.
+Also inspect the autoframing outline and prepare a dark QR framing box in the site UI for review.
+The user confirmed **both sender and receiver preview**. Preserve checkpoint approvals; this
+request authorizes local work at that time, not an automatic commit/push/Pages deployment.
+
+Current CP-02D: the debate is complete and both agents agree on the bounded
+`docs/planning/THROUGHPUT_PLAN.md`, now linked into IMPLEMENTATION_PLAN.md. The dark framing
+candidate is local in App.tsx/style.css; 49 focused E2E and 147 Vitest cases pass. Sender shadow is outside the original
+canvas/white quiet zone; receiver shades outside the padded admitted scan region and uses contrasting
+dark/white outlines. Capture/worker/codec/tracker files are unchanged. Feedback/compression/LT and
+new speed mechanisms are planning only. Both final reviews and explicit commit/push/Pages approval
+must precede delivery. Both independent reports now explicitly agree PASS on the same final six
+paths; the user explicitly **approved CP-02D commit/push and Pages after hosted CI on October 8**.
+Delivery is in progress; inspect actual CI/deployment/live outcomes and log them. Source is
+frozen; no confirmed in-scope issue remains. Previously pending documentation CI `37665632955` ended cancelled; source
+delivery CI/Pages/live verification for CP-02C passed. Do not invent the cancellation cause.
+The initial portrait repro retained 19 passes/two failures at about 75.7-pixel offset; the CSS video
+positioning repair passes the same subpixel checks (<0.1 pixels) and actual clean/degraded software
+transfers. Twelve sender screenshots across three engines were independently decoded. All source/
+test/plan work is frozen at six-path fingerprint
+`b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6` for final reports. Root verified
+lint/types, original cross-language vectors and default/project-base builds. Read CHECKPOINTS.md
+and both CP-02D reports before requesting approval. Administrative status files are outside the
+fingerprint; capture/tracker/worker/codec/spec/vector files are unchanged from `61dab08`.
 
 Latest task on October 7: **CP-02C larger-file capacity is approved and delivered for manual testing.** Base
 `6cd5d925adc1251cffbc90099010f1ec525f802b`. Requested scope is a bounded 5 MiB original-file maximum,

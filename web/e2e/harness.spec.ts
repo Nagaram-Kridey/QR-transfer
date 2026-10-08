@@ -1,5 +1,45 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import QRCode from 'qrcode';
+
+test('dark sender frame stays outside byte-exact QR pixels and quiet zone at every supported density', async ({ page }, testInfo) => {
+  for (const [width, symbol] of [[1280, 256], [1280, 512], [1280, 1024], [390, 256]]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.getByLabel('Symbol size').selectOption(String(symbol));
+    await page.getByLabel('Choose file').setInputFiles({ name: 'public-visibility.bin', mimeType: 'application/octet-stream', buffer: Buffer.alloc(1500, 41) });
+    await page.getByRole('button', { name: 'Prepare QR', exact: true }).click();
+    const canvas = page.getByLabel('Transfer QR code');
+    await expect(canvas).toBeVisible();
+    const exported = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Export frames' }).click();
+    const { frames } = JSON.parse(await readFile((await (await exported).path())!, 'utf8')) as { frames: string[] };
+    const qr = QRCode.create([{ data: frames[0], mode: 'alphanumeric' }], { errorCorrectionLevel: 'M' });
+    const result = await canvas.evaluate((element, expected) => {
+      const target = element as HTMLCanvasElement;
+      const scale = target.width / (expected.size + 8);
+      const pixels = target.getContext('2d')!.getImageData(0, 0, target.width, target.height).data;
+      let mismatches = 0;
+      for (let y = 0; y < target.height; y++) for (let x = 0; x < target.width; x++) {
+        const row = Math.floor(y / scale) - 4, col = Math.floor(x / scale) - 4;
+        const black = row >= 0 && col >= 0 && row < expected.size && col < expected.size && expected.modules[row * expected.size + col];
+        const value = black ? 0 : 255, offset = (y * target.width + x) * 4;
+        if (pixels[offset] !== value || pixels[offset + 1] !== value || pixels[offset + 2] !== value || pixels[offset + 3] !== 255) mismatches++;
+      }
+      const bounds = target.getBoundingClientRect(), parent = target.parentElement!.getBoundingClientRect();
+      return { mismatches, scale, intrinsic: target.width, displayed: bounds.width, shadow: getComputedStyle(target).boxShadow,
+        inset: Math.min(bounds.left - parent.left, parent.right - bounds.right), overflow: document.documentElement.scrollWidth > innerWidth };
+    }, { size: qr.modules.size, modules: Array.from(qr.modules.data) });
+    expect(result.mismatches).toBe(0);
+    expect(Number.isInteger(result.scale)).toBe(true);
+    expect(result.scale).toBeGreaterThanOrEqual(2);
+    expect(result.displayed).toBe(result.intrinsic);
+    expect(result.shadow).toBe('rgb(17, 24, 39) 0px 0px 0px 6px');
+    expect(result.inset).toBeGreaterThanOrEqual(6);
+    expect(result.overflow).toBe(false);
+    await page.screenshot({ path: testInfo.outputPath(`sender-dark-${width}-${symbol}.png`), fullPage: true });
+  }
+});
 
 test('prepares, exports, verifies and saves the exact message', async ({ page }) => {
   const errors: string[] = [];

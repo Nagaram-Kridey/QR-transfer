@@ -5,6 +5,17 @@ Update this file after every meaningful project change. Each entry records **don
 Dates use Asia/Kolkata (IST). The implementation checklist is in IMPLEMENTATION_PLAN.md.
 
 **Latest task — October 7:** CP-02C larger-file capacity is approved and delivered as `c451a1a`.
+**Current continuation — October 8:** The user explicitly resumed work. Actual resume was
+**11:07 AM IST**, not the requested 02:50 AM; the scheduled start was missed during the wait.
+Scope at resume:
+debate verified throughput and feedback options, record the agreed plan without letting it take
+over the existing implementation sequence, and review/improve QR framing visibility with a dark
+box. Existing approval checkpoints and separate development/testing reviews remain in force.
+Current CP-02D local verification passes: 49 focused E2E, 147 Vitest, lint/types/build and unchanged
+cross-language vectors. The portrait alignment defect is repaired; both independent reports agree
+PASS on the same final revision. The user approved commit/push/Pages on October 8; delivery is
+in progress. No throughput algorithm ships
+merely because the new plan was recorded.
 The supplied observation and diagnostics match by exact bytes/hash and record one full-frame
 859.318 KiB success in 864.4303 seconds. See the retained analysis under `docs/benchmarks`.
 The candidate raises capacity to a bounded 5 MiB with 8192 repeat symbols; final checks passed and
@@ -931,3 +942,149 @@ feature work at this completed checkpoint; physical comparisons/G2 remain their 
 
 **Blockers:** None for the approved application delivery. Physical 5 MiB reliability/throughput,
 measured autoframing adoption, iPhone qualification and G2 remain outstanding.
+
+## 2026-10-08 — Timed continuation requested for 02:50 IST (Asia/Kolkata)
+
+**Done:** Recorded the user's instruction to resume at 02:50 AM IST on October 8. Kept the new
+work paused. Requested clarification of whether the dark QR box should appear on sender, receiver
+or both. The throughput/feedback work is a debate and implementation-plan update; adding it to
+the plan does not authorize displacing existing gates or implementing all proposed mechanisms.
+
+**Verified:** Initial clock was October 7 19:53:28 UTC = October 8 01:23:28 IST. Scheduled target
+is October 7 21:20 UTC = October 8 02:50 IST. Git remains `main` at delivery-notes commit
+`61dab08`, with no source changes. CP-02C is already published; its documentation CI needs a
+fresh outcome check when continuation resumes.
+
+**Next:** Remain in this session's timed wait until 02:50 IST; then form the independent debate,
+inspect actual capture/duplicate evidence, consider missing-frame feedback and other throughput
+options, document the agreed order and implement the bounded QR-visibility fix for review.
+
+**Blockers:** Intentional timed wait. New work has no commit/push/deployment approval yet. Physical
+throughput and autoframing adoption still require actual comparisons; no simulated speed claim.
+
+## 2026-10-08 — Explicit continuation; throughput debate started (Asia/Kolkata)
+
+**Done:** Honored the new "continue" request at 11:07 AM IST. The requested 02:50 AM start did not
+occur; this log does not invent a timely resume. The user confirmed dark framing on both sender
+and receiver. Assigned independent development/adversarial agents to debate throughput and
+feedback first; UI implementation waits for that debate's decision. New scope is CP-02D.
+
+**Verified:** Clock returned 05:37:20 UTC = 11:07:20 IST. Git remains `main` at `61dab08`; prior
+timed-wait log/handoff edits are preserved. Previous documentation-only CI run `37665632955`
+ended **cancelled**, not successful. Application CI/Pages and both CP-02C live reviews had passed
+for `c451a1a`; no cancellation cause is inferred. Current UI uses a thin green receiver outline
+and a dashed sender stage; source investigation and debate are underway.
+
+**Next:** Agree the bounded throughput/feedback plan, add it to the existing implementation
+sequence with clear prerequisites, then develop/test the dark framing change. Obtain both
+same-revision reviews before asking for commit/push/Pages approval.
+
+**Blockers:** New checkpoint approval is pending; physical throughput/ROI comparisons remain
+unmeasured. No backchannel, compression or coding mechanism is implemented by adding a plan.
+
+## 2026-10-08 — Debate agreed; plan integrated; visual slice starts (Asia/Kolkata)
+
+**Done:** Development and adversarial testing exchanged proposals/counterexamples and explicitly
+agreed before source edits. Added `docs/planning/THROUGHPUT_PLAN.md` and integrated its ordered
+work packages into IMPLEMENTATION_PLAN.md. Decisions prioritise useful original-byte throughput,
+fresh-frame/missing-tail evidence, density/capture experiments, Stage 4 compression and Stage 5 LT.
+Manual missing-frame feedback precedes any possible duplex study, with explicit hardware/latency,
+resource, replay/session and security gates. Listed ideas do not become automatic implementation.
+
+**Verified:** Debate distinguishes duplicates of camera exposures from repeat-cycle tail losses;
+the supplied report cannot establish their split or sender FPS. Worker round-trip includes decode.
+Primary references confirm quiet-zone and ECC trade-offs, without establishing phone speed. No
+source/test changes occurred during debate. Both agents agree the bounded plan is testable.
+
+**Next:** Implement the requested dark frame around sender QR and stronger receiver preview
+tracking box/mask. Preserve QR pixels/quiet zone, coordinates, wire bytes, sampler and defaults;
+test actual rendering, geometry/clearing and synthetic optical transfer. Both reviews must agree
+on the final source and plan before a new commit/push/Pages approval packet.
+
+**Blockers:** New approval and physical speed comparisons remain pending. No feedback, compression,
+interleaving, multi-QR or new coding algorithm is implemented in this visual change.
+
+## 2026-10-08 — Dark framing and reproduced portrait alignment repair (Asia/Kolkata)
+
+**Done:** Added a dark external sender frame while preserving the original canvas and four-module
+white quiet zone. Receiver preview now shades outside the admitted padded region and draws dark/
+white contrasting outlines. Camera capture, worker, tracking protocol and FPS settings are unchanged.
+Adversarial replay reproduced a portrait preview layout defect; the developer repaired only the
+video's CSS positioning within the existing aspect-ratio stage.
+
+**Verified:** The first focused run retained 19 passing checks and two portrait failures; projected
+SVG/native-region versus actual video error was about 75.7 display pixels. Landscape aligned.
+The same unrelaxed portrait/landscape checks are being rerun after absolute video positioning.
+Initial source lint/type/build checks and original Python/TypeScript conformance passed; these
+are preliminary results, not final acceptance. Failed traces/screenshots remain ignored.
+
+**Next:** Verify both viewports and edge/clearing behaviour, inspect actual visual screenshots and
+optical decoding of the framed sender, finish relevant final checks and both same-revision reviews.
+Then submit the complete CP-02D plan/UI packet for commit/push/Pages approval.
+
+**Blockers:** Final portrait retest/reviews pending. This is a visibility/alignment change with no
+claim of lower verified-transfer time; future throughput mechanisms still need separate experiments.
+
+## 2026-10-08 — CP-02D final checks passed; same-revision review (Asia/Kolkata)
+
+**Done:** The same unrelaxed portrait/landscape tests passed after the video layout repair.
+Integrated the agreed throughput/feedback plan into the existing work sequence, and finished
+dark framing for both requested UI views. Reviewed actual sender/portrait screenshots visually.
+Source/test/plan freeze consists of six paths; administrative logs/handoff/checkpoint files are
+outside the fingerprint. Agents are independently confirming and documenting the final verdict.
+
+**Verified:** All 49 focused E2E cases pass (23 camera cases in both clean/degraded projects plus
+sender checks in three engines). Twelve complete sender screenshots decode through Python ZXing
+and wire validation, with exact QR canvas/quiet-zone pixels, integer display and no overflow.
+Native portrait/landscape overlay error is <0.1 pixels; mask interior is clear, pointer events pass
+through, and stale/reset/background/timeout clearing passes. Actual synthetic worker saves and
+observation/diagnostic linkage pass. Root lint/types, 147 Vitest, Python fixture reproduction and
+four independent TS-to-Python fixtures pass. Default and project-base builds pass; default restored.
+No change to codec, tracker, capture or worker source; no physical speed result is inferred.
+
+**Next:** Finish both independent reports on
+`b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6`, then submit CP-02D for explicit
+commit/push/Pages approval. Original failures, images and generated outputs remain ignored.
+
+**Blockers:** New delivery approval pending. Physical throughput, autoframing adoption and future
+feedback experiments remain their own decisions. The hosted app is still the prior CP-02C build.
+
+## 2026-10-08 — CP-02D both reviews agree; awaiting approval (Asia/Kolkata)
+
+**Done:** Both agents wrote and read the independent final reports, then explicitly agreed PASS
+on fingerprint `b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6`. The six reviewed
+paths contain App/styles, two E2E files, the agreed throughput plan and its implementation-plan
+integration. All confirmed in-scope findings are resolved. Current checkpoint/handoff/logs record
+the concrete approval packet; no commit, push or deployment has occurred for CP-02D.
+
+**Verified:** Final 49/49 E2E and 12 framed screenshot optical checks pass, alongside root final
+lint/types, 147 Vitest, original both-language conformance and production builds. The initial
+portrait failures and their repair remain documented; no thresholds were relaxed. Both reports
+confirm future throughput/feedback work is planning only, with existing physical/security gates.
+The dark receiver box outlines the admitted padded crop; it is not an independent QR detector.
+
+**Next:** Obtain explicit approval for **CP-02D commit/push and Pages deployment after hosted CI**.
+On approval deliver the frozen part, verify actual hosted/live outcomes and log them. Future speed
+studies must use their own approved budget/contract and cannot consume an automatic extra G2 tuning cycle.
+
+**Blockers:** Required new user approval per AGENTS.md/CHECKPOINTS.md. No known software blocker
+for this scope. No lower transfer time, physical ROI adoption, authenticated feedback or G2 pass
+is claimed. The live site continues to serve the previously approved CP-02C build.
+
+## 2026-10-08 — CP-02D approved; frozen delivery started (Asia/Kolkata)
+
+**Done:** Recorded the user's explicit **"Approved"** for the submitted CP-02D packet: commit/push
+and Pages deployment after hosted CI. Re-read current rules, plans, handoff/spec and both reviews.
+Preserved the approved source/test/plan freeze and all received/generated-file exclusions.
+
+**Verified:** The six-path fingerprint remains
+`b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6`; diff whitespace passes.
+Both reviews agree PASS. Local and remote `main` still match base `61dab08`. User reports and
+generated screenshots/exports remain ignored. No application/source changes follow approval.
+
+**Next:** Commit/push the approved part, wait for hosted CI, deploy Pages and verify the live
+sender/receiver framing and portrait alignment with both independent agents. Record actual
+delivery results before ending this checkpoint. Future speed/feedback work remains planned.
+
+**Blockers:** Hosted CI, Pages and live checks pending. No known in-scope software blocker remains.
+No measured throughput, phone qualification or G2 result is inferred from this delivery.

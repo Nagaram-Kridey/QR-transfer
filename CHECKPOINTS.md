@@ -58,6 +58,8 @@ queue below breaks it into approval units; approval does not bypass an unmet dep
 | CP-02B.2 | Experimental browser autoframing and requested exploratory sender rates | CP-02B.1 delivery; bounded ROI/replay plus combined dev/test agreement | Reviewed, pushed and Pages-deployed for manual testing; full-frame default |
 | CP-02B.3 | Autoframing adoption decision | CP-02B.2 approval; frozen physical comparisons and replay results | Pending actual evidence; G2 remains separate |
 | CP-02C | Bounded larger-file capacity | Consistent Python/browser limits, oversized-input rejection, independent conformance and both reviews | Approved/delivered as c451a1a; CI, Pages and both independent live reviews passed |
+| CP-02D | Throughput debate/plan and QR framing visibility | Agreed debate, bounded sender/preview change, quiet-zone/geometry/optical regressions and both reviews | User approved October 8; frozen commit/push/CI/Pages delivery in progress |
+| CP-02E (proposed) | Verified-throughput investigation | Fresh opportunities/missing-tail evidence, frozen contract, budget and explicit approval | Planning only; not authorised by plan inclusion |
 | CP-03 | Stage 2 portfolio checkpoint | Qualifying physical gate, measured demo, documented limits and install evidence | Pending G2 |
 | CP-04 | Stage 3 production receiver lifecycle | Physical phone permission/interruption/cancellation/save checks plus regressions | Pending portfolio checkpoint |
 | CP-05 | Stage 3 offline PWA and phase exit | Cached workers/WASM, update deferral, installed offline cold-start on supported phones | Pending receiver readiness; iPhone qualification still needed |
@@ -381,6 +383,40 @@ in [the observation analysis](docs/benchmarks/2026-10-07-observation-review.md);
 full-frame success and do not clear adoption or G2.
 
 ## Approval packet template
+
+## CP-02D review packet — October 8
+
+Base `61dab088964d782f04040db57573c691f975cf7a`. Scope: the agreed
+[throughput plan](docs/planning/THROUGHPUT_PLAN.md), its IMPLEMENTATION_PLAN.md integration,
+dark framing on both sender QR and receiver tracking preview, and reproduced portrait preview
+alignment correction. Source changes are limited to App.tsx/style.css; regressions are in the
+camera/harness E2E files. Plan inclusion does not implement feedback or other speed mechanisms.
+
+First focused run retained 19 passes and two portrait failures, with about 75.7-pixel offset.
+CSS absolute video positioning repaired the shared aspect-ratio/contain layout. The unrelaxed
+rerun passed all 49 cases; portrait/landscape projection error was below 0.1 pixels. Twelve complete
+sender screenshots across three engines/densities and mobile were independently decoded with
+Python ZXing and wire checksum verification; QR canvas pixels/white quiet zone remain exact.
+Actual clean/degraded synthetic worker transfers saved verified bytes in both receiver modes;
+state clearing/reset/background/timeout/stale-frame cases passed. These are software observations.
+
+Root lint/strict types, 147 Vitest, original both-language vectors, default and project-base builds
+passed. Protocol, capture, tracker, worker source and optical settings are unchanged. External
+masking leaves the padded region interior clear and ignores pointer events; the preview frame
+appears only in Auto region after an admitted QR. Screenshot artifacts and failed traces stay ignored.
+
+The final [development](docs/reviews/CP-02D-development.md) and
+[testing](docs/reviews/CP-02D-testing.md) reports record the same six-path source/plan fingerprint
+and verdict. Both explicitly agree **PASS**, with all confirmed in-scope issues resolved and no
+known blocker, on fingerprint `b0955b1ca0b6c531937ba5295fe7b0435debbe3ce74cf7490930a3f0984a64a6`.
+Administrative logs/checkpoint/handoff files are outside that fingerprint. This agreement is
+scoped review evidence, not user approval or a physical performance result.
+
+Approval requested: **commit/push CP-02D and deploy to GitHub Pages after hosted CI passes**, including
+the source/tests, agreed plan, current documentation/logs and both review reports. This approval
+was explicitly received as **"Approved" on October 8**. Delivery is in progress; the live site
+still serves CP-02C until the approved deployment is verified. It does not authorise implementing
+the planned feedback/throughput experiments or claim any measured transfer-speed gain.
 
 For each checkpoint record:
 

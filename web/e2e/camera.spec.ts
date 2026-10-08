@@ -14,6 +14,7 @@ test(`reconstructs Python QR video in ${mode} through camera, worker and WASM`, 
   await expect(page.getByRole('button', { name: 'Start receiving' })).toBeEnabled({ timeout: 15000 });
   await page.getByRole('button', { name: 'Start receiving' }).click();
   await expect(page.getByText('File verified', { exact: true })).toBeVisible({ timeout: 20000 });
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
   const saved = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Save verified file' }).click();
   const file = await saved;
@@ -181,6 +182,7 @@ test('mocked admission drives native crop/readback and two misses restore full f
   expect(third.draw).toHaveLength(8);
   await mockedScan(page, third, false, null);
   await expect(page.getByText('Reacquiring', { exact: true })).toBeVisible();
+  await expect(page.getByRole('img', { name: 'Tracked scan region' })).toHaveCount(0);
   const fourth = await capturedImage(page, 4);
   expect(fourth.draw).toEqual([0, 0, fourth.width, fourth.height]);
   await page.getByRole('button', { name: 'Stop', exact: true }).click();
@@ -190,6 +192,59 @@ test('mocked admission drives native crop/readback and two misses restore full f
   expect(diagnostics.scans.full_frame).toMatchObject({ submitted: 2, completed: 1, interrupted: 1 });
   expect(diagnostics.latest_attempts.map(attempt => attempt.kind)).toEqual(['full_frame', 'roi', 'roi', 'full_frame']);
 });
+
+for (const dimensions of [[640, 480], [720, 1280]]) {
+  test(`dark receiver frame follows native ${dimensions.join('x')} geometry without tinting the tracked region`, async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 390, height: 900 });
+    await mockedCameraFrames(page);
+    await page.addInitScript(([width, height]) => {
+      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', { configurable: true, value: async () => {
+        const camera = document.createElement('canvas'); camera.width = width; camera.height = height;
+        const context = camera.getContext('2d')!; context.fillStyle = '#fff'; context.fillRect(0, 0, width, height);
+        context.fillStyle = '#000'; context.fillRect(100, 100, 120, 120);
+        return camera.captureStream(1);
+      } });
+    }, dimensions);
+    await beginTrial(page, 'auto_region');
+    const first = await capturedImage(page, 1);
+    expect([first.width, first.height]).toEqual(dimensions);
+    await mockedScan(page, first, true, smallAcceptedBox);
+    await capturedImage(page, 2);
+    const overlay = page.getByRole('img', { name: 'Tracked scan region' });
+    await expect(overlay).toBeVisible();
+    const visual = await overlay.evaluate(element => {
+      const svg = element as SVGSVGElement, dark = svg.querySelector<SVGRectElement>('.tracking-outline-dark')!, light = svg.querySelector<SVGRectElement>('.tracking-outline')!;
+      const mask = svg.querySelector<SVGPathElement>('.tracking-mask')!, video = document.querySelector('video')!, view = svg.viewBox.baseVal;
+      const bounds = video.getBoundingClientRect(), scale = Math.min(bounds.width / view.width, bounds.height / view.height);
+      const offsetX = bounds.left + (bounds.width - view.width * scale) / 2, offsetY = bounds.top + (bounds.height - view.height * scale) / 2;
+      const native = { x: dark.x.baseVal.value, y: dark.y.baseVal.value, width: dark.width.baseVal.value, height: dark.height.baseVal.value };
+      const projected = new DOMPoint(native.x, native.y).matrixTransform(dark.getScreenCTM()!);
+      const actual = dark.getBoundingClientRect(), middle = new DOMPoint(native.x + native.width / 2, native.y + native.height / 2);
+      const ds = getComputedStyle(dark), ls = getComputedStyle(light);
+      return { native, sameRect: ['x', 'y', 'width', 'height'].every(name => dark.getAttribute(name) === light.getAttribute(name)),
+        nativeDimensions: [video.videoWidth, video.videoHeight], offsetError: [projected.x - (offsetX + native.x * scale), projected.y - (offsetY + native.y * scale)],
+        sizeError: [actual.width - native.width * scale, actual.height - native.height * scale],
+        interiorFilled: mask.isPointInFill(middle), outsideFilled: mask.isPointInFill(new DOMPoint(1, 1)), fillRule: getComputedStyle(mask).fillRule,
+        pointerEvents: getComputedStyle(svg).pointerEvents, objectFit: getComputedStyle(video).objectFit,
+        dark: { stroke: ds.stroke, width: ds.strokeWidth, fill: ds.fill, effect: dark.getAttribute('vector-effect') },
+        light: { stroke: ls.stroke, width: ls.strokeWidth, fill: ls.fill, effect: light.getAttribute('vector-effect') }, overflow: document.documentElement.scrollWidth > innerWidth };
+    });
+    expect(visual.native).toEqual({ x: 76, y: 76, width: 168, height: 168 });
+    expect(visual.sameRect).toBe(true);
+    expect(visual.nativeDimensions).toEqual(dimensions);
+    for (const error of [...visual.offsetError, ...visual.sizeError]) expect(Math.abs(error), JSON.stringify(visual)).toBeLessThan(0.1);
+    expect(visual.interiorFilled).toBe(false); expect(visual.outsideFilled).toBe(true); expect(visual.fillRule).toBe('evenodd');
+    expect(visual.pointerEvents).toBe('none'); expect(visual.objectFit).toBe('contain');
+    expect(visual.dark).toEqual({ stroke: 'rgb(17, 24, 39)', width: '6px', fill: 'none', effect: 'non-scaling-stroke' });
+    expect(visual.light).toEqual({ stroke: 'rgb(255, 255, 255)', width: '2px', fill: 'none', effect: 'non-scaling-stroke' });
+    expect(visual.overflow).toBe(false);
+    await page.screenshot({ path: testInfo.outputPath(`receiver-dark-${dimensions.join('x')}.png`), fullPage: true });
+    await page.getByRole('button', { name: 'Stop', exact: true }).click();
+    await expect(overlay).toHaveCount(0);
+    await mockedScan(page, first, true, smallAcceptedBox, false);
+    await expect(overlay).toHaveCount(0);
+  });
+}
 
 test('intrinsic A-to-portrait-to-A resize invalidates held ROI geometry without rejecting progress', async ({ page }) => {
   await mockedCameraFrames(page); await beginTrial(page, 'auto_region');

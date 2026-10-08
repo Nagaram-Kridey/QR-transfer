@@ -72,6 +72,13 @@ and checksum linkage. An [opt-in ROI prototype](docs/benchmarks/BROWSER_AUTOFRAM
 for manual testing with experimental 15/20/30 fps sender targets. Full-frame remains default; measured speed
 gains and physical adoption remain pending. See CHECKPOINTS.md.
 
+The local CP-02D candidate adds dark framing to the sender and a contrasting receiver region
+outline/outside shade, including a portrait preview alignment repair. It awaits checkpoint approval
+and deployment. Receiver framing is visible in Auto region only after a valid frame is admitted;
+it marks the padded scan input, not a promised detection-speed gain. The
+[throughput debate/plan](docs/planning/THROUGHPUT_PLAN.md) covers density, capture and missing-frame
+feedback as gated future work, alongside the existing PWA/security/release sequence.
+
 ## Implementation
 
 The [larger-file capacity decision](docs/adr/004-experimental-repeat-capacity.md) expands repeat
