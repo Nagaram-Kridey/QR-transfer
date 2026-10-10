@@ -9,7 +9,7 @@ description = "Experimental offline screen-to-camera file transfer reference imp
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
-dependencies = ["segno>=1.6,<2", "opencv-python>=4.10,<5", "zxing-cpp>=2.3,<4"]
+dependencies = ["segno>=1.6,<2", "opencv-python>=4.10,<6", "zxing-cpp>=2.3,<4"]
 
 [project.scripts]
 lumenlink = "lumenlink.cli:main"
